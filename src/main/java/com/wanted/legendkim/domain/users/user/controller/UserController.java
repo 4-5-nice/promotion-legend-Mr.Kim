@@ -23,7 +23,7 @@ public class UserController {
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("signupDTO", new SignupDTO());
-        return "user/signup"; // void 대신 명시적으로 경로를 리턴해주는 것이 더 안전합니다.
+        return "user/signup";
     }
 
     @PostMapping("/signup")
@@ -35,13 +35,12 @@ public class UserController {
 
         if(result == null ){
             message = "이미 가입된 이메일입니다.";
-            mv.setViewName("user/signup"); // 중복 시 다시 회원가입 페이지로
+            mv.setViewName("user/signup");
         }else if(result == 0L) { // 0L로 수정
             message = "서버에서 오류가 발생하였습니다.";
             mv.setViewName("user/signup");
         }else if(result >= 1L){
             message = "회원가입이 완료되었습니다.";
-            // 로그인 페이지로 리다이렉트 하는 것이 좋습니다. (url 경로 주의)
             mv.setViewName("redirect:/auth/login");
         }
 

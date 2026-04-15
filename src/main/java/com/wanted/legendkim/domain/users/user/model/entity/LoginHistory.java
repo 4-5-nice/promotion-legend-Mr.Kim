@@ -12,12 +12,10 @@ public class LoginHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "history_id")
-    private Long historyId; // PK: BIGINT -> Long
+    private Long historyId;
 
-    // 💡 Tip: 지금은 단순 숫자(Long)로 매핑했지만,
-    // 나중에 User 객체를 직접 참조하고 싶다면 @ManyToOne을 사용할 수 있습니다.
     @Column(name = "user_id", nullable = false)
-    private Long userId; // FK: BIGINT -> Long
+    private Long userId;
 
     @Column(name = "is_success", nullable = false)
     private Boolean isSuccess;
