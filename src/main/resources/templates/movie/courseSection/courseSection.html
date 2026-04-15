@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>코스 & 섹션 등록 — 진급전설 김부장</title>
+  <link rel="stylesheet" th:href="@{/css/movie/courseSection/courseSection.css}" />
+</head>
+<body>
+
+<!-- ===========================
+     TOPBAR
+=========================== -->
+<header class="topbar">
+  <span class="topbar__logo">진급전설 김부장</span>
+  <button class="topbar__logout">로그아웃</button>
+</header>
+
+<!-- ===========================
+     SIDEBAR
+=========================== -->
+<aside class="sidebar">
+
+  <!-- Profile -->
+  <div class="sidebar__profile">
+    <img class="sidebar__avatar" src="https://placehold.co/48x48" alt="프로필 이미지" />
+    <div class="sidebar__profile-info">
+      <span class="sidebar__name">김부장</span>
+      <span class="sidebar__role">Senior Director</span>
+    </div>
+  </div>
+
+  <!-- Nav Items -->
+  <nav class="sidebar__nav">
+    <a href="#" class="sidebar__nav-item">
+      <div class="sidebar__nav-icon" style="width:18px; height:18px;"></div>
+      <span class="sidebar__nav-label">강의 등록</span>
+    </a>
+    <a href="#" class="sidebar__nav-item">
+      <div class="sidebar__nav-icon" style="width:16px; height:16px;"></div>
+      <span class="sidebar__nav-label">마이페이지</span>
+    </a>
+    <a href="#" class="sidebar__nav-item">
+      <div class="sidebar__nav-icon" style="width:18px; height:16px;"></div>
+      <span class="sidebar__nav-label">수강신청</span>
+    </a>
+    <a href="#" class="sidebar__nav-item">
+      <div class="sidebar__nav-icon" style="width:22px; height:19.5px;"></div>
+      <span class="sidebar__nav-label">전체강의</span>
+    </a>
+    <a href="#" class="sidebar__nav-item">
+      <div class="sidebar__nav-icon" style="width:20px; height:20px;"></div>
+      <span class="sidebar__nav-label">자유게시판</span>
+    </a>
+    <a href="#" class="sidebar__nav-item">
+      <div class="sidebar__nav-icon" style="width:19.85px; height:17px;"></div>
+      <span class="sidebar__nav-label">수강생 계정 관리</span>
+    </a>
+    <a href="#" class="sidebar__nav-item">
+      <div class="sidebar__nav-icon" style="width:18px; height:20px;"></div>
+      <span class="sidebar__nav-label">수강생 출결 관리</span>
+    </a>
+  </nav>
+
+  <!-- Active Item -->
+  <div class="sidebar__active-item">
+    <div class="sidebar__active-icon"></div>
+    <span class="sidebar__active-label">코스 &amp; 섹션</span>
+  </div>
+
+</aside>
+
+<!-- ===========================
+     MAIN CONTENT
+=========================== -->
+<main class="main-content">
+
+  <!-- Decorative BG Letter -->
+  <span class="bg-letter">E</span>
+
+  <div class="content-inner">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header__left">
+        <span class="page-header__sub">MANAGEMENT ADMINISTRATION</span>
+        <h1 class="page-header__title">코스 &amp; 섹션 등록</h1>
+      </div>
+    </div>
+
+    <!-- Forms Wrapper -->
+    <div class="forms-wrapper">
+
+      <!-- ==================
+           COURSE FORM CARD
+      ================== -->
+      <div class="card card--course">
+        <div class="card__header">
+          <div class="card__header-icon card__header-icon--gold"></div>
+          <span class="card__title">코스 등록</span>
+        </div>
+
+        <div class="card__body">
+
+          <!-- Course Name -->
+          <div class="form-field">
+            <label class="form-label form-label--gold">COURSE NAME</label>
+            <div class="form-input-wrapper">
+              <input
+                      class="form-input"
+                      type="text"
+                      placeholder="코스명을 입력하세요"
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-field">
+            <label class="form-label form-label--gold">DESCRIPTION</label>
+            <div class="form-input-wrapper form-input-wrapper--textarea">
+                            <textarea
+                                    class="form-textarea"
+                                    placeholder="코스에 대한 설명을 입력하세요"
+                            ></textarea>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="btn btn--course">
+            <span class="btn__label">코스 등록하기</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- ==================
+           SECTION FORMS
+      ================== -->
+      <div class="section-forms-container">
+
+        <!-- Section Form Card -->
+        <div class="card card--section">
+          <div class="card__header">
+            <div class="card__header-icon card__header-icon--navy"></div>
+            <span class="card__title">섹션 등록</span>
+          </div>
+
+          <div class="card__body">
+
+            <!-- Parent Course Select -->
+            <div class="form-field">
+              <label class="form-label form-label--navy">PARENT COURSE</label>
+              <div class="form-select-wrapper">
+                <select class="form-select">
+                  <option value="" disabled selected>코스를 선택하세요</option>
+                  <!-- 코스 목록은 서버에서 동적으로 렌더링 -->
+                </select>
+                <div class="form-select-chevron"></div>
+              </div>
+            </div>
+
+            <!-- Section Name -->
+            <div class="form-field form-field--pb">
+              <label class="form-label form-label--navy">SECTION NAME</label>
+              <div class="form-input-wrapper">
+                <input
+                        class="form-input"
+                        type="text"
+                        placeholder="섹션명을 입력하세요"
+                />
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="btn btn--section">
+              <span class="btn__label">섹션 등록하기</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Director's Note -->
+        <div class="directors-note">
+          <div class="directors-note__icon"></div>
+          <div class="directors-note__content">
+            <span class="directors-note__title">Director's Note:</span>
+            <p class="directors-note__body">
+              모든 코스명은 수강생의 커리어 패스에 직접적으로 노출됩니다.
+              직관적이면서도 권위 있는 명칭을 사용하십시오.
+              등록 후 섹션 순서는 드래그 앤 드롭으로 조정 가능합니다.
+            </p>
+          </div>
+        </div>
+
+      </div>
+      <!-- /section-forms-container -->
+
+    </div>
+    <!-- /forms-wrapper -->
+
+  </div>
+  <!-- /content-inner -->
+
+</main>
+
+</body>
+</html>

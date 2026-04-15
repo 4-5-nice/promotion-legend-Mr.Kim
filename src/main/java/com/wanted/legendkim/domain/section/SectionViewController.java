@@ -8,6 +8,6 @@ public class SectionViewController {
 
     @GetMapping("/admin/section/upload")
     public String sectionMoviePage() {
-        return "study/sectionMovie";
+        return "movie/movieUpload/movieUpload";
     }
 }
