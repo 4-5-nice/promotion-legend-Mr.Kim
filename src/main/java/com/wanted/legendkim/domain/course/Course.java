@@ -49,6 +49,13 @@ public class Course {
     @Column(name = "duedate")
     private int dueDate;
 
+    public static Course create(String title, String description) {
 
+        Course course = new Course();
+        course.title = title;
+        course.description = description;
+        return course;
+
+    }
 
 }
