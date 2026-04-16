@@ -67,4 +67,5 @@ public class FreeBoardController {
 
         return "redirect:/freeboard/user/freeboard";
     }
+    //test
 }
