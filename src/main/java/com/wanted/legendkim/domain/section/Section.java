@@ -3,6 +3,7 @@ package com.wanted.legendkim.domain.section;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wanted.legendkim.domain.course.Course;
+import com.wanted.legendkim.domain.enrollment.dto.SectionSummary;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -88,4 +89,6 @@ public class Section {
         this.videoUrl = videoUrl;
         this.uploadSuccess = true;
     }
+
+
 }
