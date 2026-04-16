@@ -66,4 +66,18 @@ public class FreeBoardService {
                 mine
         );
     }
+
+    @Transactional
+    public void writePost(String title, String content, String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
+        BoardUser user = boardUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        Post post = new Post(user, title, content);
+
+        postRepository.save(post);
+    }
 }

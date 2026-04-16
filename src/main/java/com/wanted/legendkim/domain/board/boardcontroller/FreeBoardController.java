@@ -48,4 +48,23 @@ public class FreeBoardController {
 
         return "freeboard/user/freeboard-detail";
     }
+
+    @GetMapping("/freeboard-write")
+    public String writePage() {
+        return "freeboard/user/freeboard-write";
+    }
+
+    // 글 등록
+    @PostMapping("/freeboard-write")
+    public String writePost(
+            @RequestParam String title,
+            @RequestParam String content,
+            Principal principal
+    ) {
+        String email = principal != null ? principal.getName() : null;
+
+        freeBoardService.writePost(title, content, email);
+
+        return "redirect:/freeboard/user/freeboard";
+    }
 }

@@ -41,7 +41,16 @@ public class Post {
     }
 
     public void increaseViewCount() {
+        if(this.viewCount == null){
+            this.viewCount = 0L;
+        }
         this.viewCount++;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.viewCount = 0L;
     }
 
     public void update(String title, String content) {
