@@ -1,6 +1,7 @@
 package com.wanted.legendkim.domain.section;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wanted.legendkim.domain.course.Course;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -51,32 +52,40 @@ public class Section {
         - DB 의 Course_id 컬럼을 FK로 사용해서 COURSES 테이블과 연결.
      */
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    // title 컬럼 설정
+    // title 컬럼 구성
     @Column(nullable = false)
     private String title;
 
-    // 영상 URL 컬럼 설정
+    // video_url 컬럼 구성
     @Column(name = "video_url")
     private String videoUrl;
 
-    // 업로드 성공 여부 컬럼 설정
+    // uploadSuccess 컬럼 구성
     @Column(name = "upload_success")
     private Boolean uploadSuccess;
 
-    // @AllArgsConstructor 와 @Setter 가 없는 상황이기 때문에
-    // 우리는 객체를 안전하게 생성하기 위해 static 메서드를 사용한다.
-    public static Section create(Course course, String title, String fileName) {
 
+    public static Section create(Course course, String title) {
         Section section = new Section();
         section.course = course;
         section.title = title;
-        section.videoUrl = fileName;
-        // uploadSuccess 는 생성 시점에서 항상 False 여야만 하는 규칙이라 내부에서 고정 한다.
+        // Section 생성 시점에는 영상이 없기 때문에 false 로 고정.
+        // 우리는 생성자 내부에서 강제로 고정해서 실수로 true 로 만드는 것을
+        // 차단할 수 있다.
         section.uploadSuccess = false;
         return section;
+    }
+
+    // 기존 방식에서는 @Setter가 없기 때문에 VideoUrl & uploadSuccess 를
+    // 외부에서 변경할 수 없었다. 따라서 videoUrl은 업로드된 파일의 UUID 파일명을
+    // 저장하고, uploadSuccess = true 값으로 업로드 완료 상태로 변경을 한다.
+    public void uploadVideo(String videoUrl) {
+        this.videoUrl = videoUrl;
+        this.uploadSuccess = true;
     }
 }

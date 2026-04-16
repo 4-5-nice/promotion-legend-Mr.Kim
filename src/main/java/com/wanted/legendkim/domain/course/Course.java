@@ -1,5 +1,6 @@
 package com.wanted.legendkim.domain.course;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wanted.legendkim.domain.section.Section;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,8 +11,8 @@ import java.util.List;
 
 // Section 엔티티와 동일한 이유로 @Setter 와
 // @AllArgsConstructor 미사용
-@Entity
-@Table(name = "courses")
+@Entity // DB 와 매핑하는 클래스를 선언
+@Table(name = "courses") // DB 에 실제 생성될 때 테이블을 courses 로 명명
 @Getter
 @NoArgsConstructor
 
@@ -24,9 +25,15 @@ public class Course {
     @Column(name = "course_id")
     private Long id;
 
-    // Course 1개에 section 여러 개, 관계 주인은 Section 성능을 위해 Lazy
+    /* comment.
+        JsonIgnore
+        우리의 프로젝트에서는 Course -> Section -> Course 로 연결이 되면
+        JSON 변환 시 순환 참조가 발생하게 된다.
+        이를 위해 우리는 @JsonIgnore 어노테이션을 사용하게 된다.
+     */
+
+    @JsonIgnore
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    // 여러 Section 을 담아야하기 때문에 리스트 사용
     private List<Section> sections = new ArrayList<>();
 
     // user_id 컬럼 설명
@@ -49,6 +56,15 @@ public class Course {
     @Column(name = "duedate")
     private int dueDate;
 
+    // 비즈니스 로직 캡슐화
+    // 우리는 이를 통해서 규칙이 추가되었을 경우 이 메서드만 수정하면 된다.
+    public static Course create(String title, String description) {
 
+        Course course = new Course();
+        course.title = title;
+        course.description = description;
+        return course;
+
+    }
 
 }
