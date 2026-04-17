@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>코스 & 섹션 등록 — 진급전설 김부장</title>
+  <link rel="stylesheet" th:href="@{/css/movie/courseSection/courseSection.css}" />
+  <link rel="stylesheet" th:href="@{/css/movie/videoUpload/movieUpload.css}" />
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ===========================
+     TOPBAR
+=========================== -->
+<header class="topbar">
+  <span class="topbar__logo">진급전설 김부장</span>
+  <button class="topbar__logout">로그아웃</button>
+</header>
+
+<!-- ===========================
+     SIDEBAR
+=========================== -->
+<aside class="sidebar">
+  <div class="sidebar-profile">
+    <img class="profile-avatar" src="/images/movieUpload/kim.jpg" alt="김부장 프로필">
+    <div class="profile-info">
+      <div class="profile-name">김부장</div>
+      <div class="profile-role">Senior Director</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="/admin/section/upload" class="nav-item active">
+      <svg width="17" height="14" viewBox="0 0 17 14" fill="none"><path d="M5.83333 10H7.5V7.5H10V5.83333H7.5V3.33333H5.83333V5.83333H3.33333V7.5H5.83333V10ZM1.66667 13.3333C1.20833 13.3333 0.815972 13.1701 0.489583 12.8438C0.163194 12.5174 0 12.125 0 11.6667V1.66667C0 1.20833 0.163194 0.815972 0.489583 0.489583C0.815972 0.163194 1.20833 0 1.66667 0H11.6667C12.125 0 12.5174 0.163194 12.8438 0.489583C13.1701 0.815972 13.3333 1.20833 13.3333 1.66667V5.41667L16.6667 2.08333V11.25L13.3333 7.91667V11.6667C13.3333 12.125 13.1701 12.5174 12.8438 12.8438C12.5174 13.1701 12.125 13.3333 11.6667 13.3333H1.66667ZM1.66667 11.6667H11.6667V1.66667H1.66667V11.6667Z" fill="#172554"/></svg>
+      <span class="nav-label">강의 등록</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M3.20833 12.5833C3.91667 12.0417 4.70833 11.6146 5.58333 11.3021C6.45833 10.9896 7.375 10.8333 8.33333 10.8333C9.29167 10.8333 10.2083 10.9896 11.0833 11.3021C11.9583 11.6146 12.75 12.0417 13.4583 12.5833C13.9444 12.0139 14.3229 11.3681 14.5938 10.6458C14.8646 9.92361 15 9.15278 15 8.33333C15 6.48611 14.3507 4.91319 13.0521 3.61458C11.7535 2.31597 10.1806 1.66667 8.33333 1.66667C6.48611 1.66667 4.91319 2.31597 3.61458 3.61458C2.31597 4.91319 1.66667 6.48611 1.66667 8.33333C1.66667 9.15278 1.80208 9.92361 2.07292 10.6458C2.34375 11.3681 2.72222 12.0139 3.20833 12.5833ZM8.33333 9.16667C7.51389 9.16667 6.82292 8.88542 6.26042 8.32292C5.69792 7.76042 5.41667 7.06944 5.41667 6.25C5.41667 5.43056 5.69792 4.73958 6.26042 4.17708C6.82292 3.61458 7.51389 3.33333 8.33333 3.33333C9.15278 3.33333 9.84375 3.61458 10.4062 4.17708C10.9688 4.73958 11.25 5.43056 11.25 6.25C11.25 7.06944 10.9688 7.76042 10.4062 8.32292C9.84375 8.88542 9.15278 9.16667 8.33333 9.16667ZM8.33333 16.6667C7.18056 16.6667 6.09722 16.4479 5.08333 16.0104C4.06944 15.5729 3.1875 14.9792 2.4375 14.2292C1.6875 13.4792 1.09375 12.5972 0.65625 11.5833C0.21875 10.5694 0 9.48611 0 8.33333C0 7.18056 0.21875 6.09722 0.65625 5.08333C1.09375 4.06944 1.6875 3.1875 2.4375 2.4375C3.1875 1.6875 4.06944 1.09375 5.08333 0.65625C6.09722 0.21875 7.18056 0 8.33333 0C9.48611 0 10.5694 0.21875 11.5833 0.65625C12.5972 1.09375 13.4792 1.6875 14.2292 2.4375C14.9792 3.1875 15.5729 4.06944 16.0104 5.08333C16.4479 6.09722 16.6667 7.18056 16.6667 8.33333C16.6667 9.48611 16.4479 10.5694 16.0104 11.5833C15.5729 12.5972 14.9792 13.4792 14.2292 14.2292C13.4792 14.9792 12.5972 15.5729 11.5833 16.0104C10.5694 16.4479 9.48611 16.6667 8.33333 16.6667ZM8.33333 15C9.06944 15 9.76389 14.8924 10.4167 14.6771C11.0694 14.4618 11.6667 14.1528 12.2083 13.75C11.6667 13.3472 11.0694 13.0382 10.4167 12.8229C9.76389 12.6076 9.06944 12.5 8.33333 12.5C7.59722 12.5 6.90278 12.6076 6.25 12.8229C5.59722 13.0382 5 13.3472 4.45833 13.75C5 14.1528 5.59722 14.4618 6.25 14.6771C6.90278 14.8924 7.59722 15 8.33333 15ZM8.33333 7.5C8.69444 7.5 8.99306 7.38194 9.22917 7.14583C9.46528 6.90972 9.58333 6.61111 9.58333 6.25C9.58333 5.88889 9.46528 5.59028 9.22917 5.35417C8.99306 5.11806 8.69444 5 8.33333 5C7.97222 5 7.67361 5.11806 7.4375 5.35417C7.20139 5.59028 7.08333 5.88889 7.08333 6.25C7.08333 6.61111 7.20139 6.90972 7.4375 7.14583C7.67361 7.38194 7.97222 7.5 8.33333 7.5Z" fill="#94A3B8"/></svg>
+      <span class="nav-label">마이페이지</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="15" height="17" viewBox="0 0 15 17" fill="none"><path d="M1.66667 16.6667C1.20833 16.6667 0.815972 16.5035 0.489583 16.1771C0.163194 15.8507 0 15.4583 0 15V3.33333C0 2.875 0.163194 2.48264 0.489583 2.15625C0.815972 1.82986 1.20833 1.66667 1.66667 1.66667H2.5V0H4.16667V1.66667H10.8333V0H12.5V1.66667H13.3333C13.7917 1.66667 14.184 1.82986 14.5104 2.15625C14.8368 2.48264 15 2.875 15 3.33333V15C15 15.4583 14.8368 15.8507 14.5104 16.1771C14.184 16.5035 13.7917 16.6667 13.3333 16.6667H1.66667Z" fill="#94A3B8"/></svg>
+      <span class="nav-label">수강신청</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="19" height="14" viewBox="0 0 19 14" fill="none"><path d="M9.16667 13.3333C8.5 12.8056 7.77778 12.3958 7 12.1042C6.22222 11.8125 5.41667 11.6667 4.58333 11.6667C4 11.6667 3.42708 11.7431 2.86458 11.8958C2.30208 12.0486 1.76389 12.2639 1.25 12.5417C0.958333 12.6944 0.677083 12.6875 0.40625 12.5208C0.135417 12.3542 0 12.1111 0 11.7917V1.75C0 1.59722 0.0381944 1.45139 0.114583 1.3125C0.190972 1.17361 0.305556 1.06944 0.458333 1C1.09722 0.666667 1.76389 0.416667 2.45833 0.25C3.15278 0.0833333 3.86111 0 4.58333 0C5.38889 0 6.17708 0.104167 6.94792 0.3125C7.71875 0.520833 8.45833 0.833333 9.16667 1.25C9.875 0.833333 10.6146 0.520833 11.3854 0.3125C12.1562 0.104167 12.9444 0 13.75 0C14.4722 0 15.1806 0.0833333 15.875 0.25C16.5694 0.416667 17.2361 0.666667 17.875 1C18.0278 1.06944 18.1424 1.17361 18.2188 1.3125C18.2951 1.45139 18.3333 1.59722 18.3333 1.75V11.7917C18.3333 12.1111 18.1979 12.3542 17.9271 12.5208C17.6562 12.6875 17.375 12.6944 17.0833 12.5417C16.5694 12.2639 16.0312 12.0486 15.4688 11.8958C14.9062 11.7431 14.3333 11.6667 13.75 11.6667C12.9167 11.6667 12.1111 11.8125 11.3333 12.1042C10.5556 12.3958 9.83333 12.8056 9.16667 13.3333Z" fill="#94A3B8"/></svg>
+      <span class="nav-label">전체강의</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M16.6667 16.6667L13.3333 13.3333H5C4.54167 13.3333 4.14931 13.1701 3.82292 12.8438C3.49653 12.5174 3.33333 12.125 3.33333 11.6667V10.8333H12.5C12.9583 10.8333 13.3507 10.6701 13.6771 10.3438C14.0035 10.0174 14.1667 9.625 14.1667 9.16667V3.33333H15C15.4583 3.33333 15.8507 3.49653 16.1771 3.82292C16.5035 4.14931 16.6667 4.54167 16.6667 5V16.6667ZM1.66667 8.47917L2.64583 7.5H10.8333V1.66667H1.66667V8.47917ZM0 12.5V1.66667C0 1.20833 0.163194 0.815972 0.489583 0.489583C0.815972 0.163194 1.20833 0 1.66667 0H10.8333C11.2917 0 11.684 0.163194 12.0104 0.489583C12.3368 0.815972 12.5 1.20833 12.5 1.66667V7.5C12.5 7.95833 12.3368 8.35069 12.0104 8.67708C11.684 9.00347 11.2917 9.16667 10.8333 9.16667H3.33333L0 12.5Z" fill="#94A3B8"/></svg>
+      <span class="nav-label">자유게시판</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="17" height="15" viewBox="0 0 17 15" fill="none"><path d="M6.66667 6.66667C5.75 6.66667 4.96528 6.34028 4.3125 5.6875C3.65972 5.03472 3.33333 4.25 3.33333 3.33333C3.33333 2.41667 3.65972 1.63194 4.3125 0.979167C4.96528 0.326389 5.75 0 6.66667 0C7.58333 0 8.36806 0.326389 9.02083 0.979167C9.67361 1.63194 10 2.41667 10 3.33333C10 4.25 9.67361 5.03472 9.02083 5.6875C8.36806 6.34028 7.58333 6.66667 6.66667 6.66667Z" fill="#94A3B8"/></svg>
+      <span class="nav-label">수강생 계정 관리</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="17" height="14" viewBox="0 0 17 14" fill="none"><path d="M11.2917 13.6667L8.41667 10.7917L9.58333 9.625L11.2917 11.3333L15.5 7.125L16.6667 8.29167L11.2917 13.6667Z" fill="#94A3B8"/></svg>
+      <span class="nav-label">수강생 출결 관리</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <button class="btn-course-section active" onclick="location.href='/admin/course/section'">코스 &amp; 섹션</button>
+  </div>
+</aside>
+
+<!-- ===========================
+     MAIN CONTENT
+=========================== -->
+<div class="main">
+
+  <!-- Decorative BG Letter -->
+  <span class="bg-letter">E</span>
+
+  <div class="content-inner">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header__left">
+        <span class="page-header__sub">MANAGEMENT ADMINISTRATION</span>
+        <h1 class="page-header__title">코스 &amp; 섹션 등록</h1>
+      </div>
+    </div>
+
+    <!-- Forms Wrapper -->
+    <div class="forms-wrapper">
+
+      <!-- ==================
+           COURSE FORM CARD
+      ================== -->
+      <div class="card card--course">
+        <div class="card__header">
+          <div class="card__header-icon card__header-icon--gold"></div>
+          <span class="card__title">코스 등록</span>
+        </div>
+
+        <div class="card__body">
+
+          <!-- Course Name -->
+          <div class="form-field">
+            <label class="form-label form-label--gold">COURSE NAME</label>
+            <div class="form-input-wrapper">
+              <input
+                      id="course-title"
+                      class="form-input"
+                      type="text"
+                      placeholder="코스명을 입력하세요"
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-field">
+            <label class="form-label form-label--gold">DESCRIPTION</label>
+            <div class="form-input-wrapper form-input-wrapper--textarea">
+                            <textarea
+                                    id="course-description"
+                                    class="form-textarea"
+                                    placeholder="코스에 대한 설명을 입력하세요"
+                            ></textarea>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="btn btn--course" onclick="registerCourse()">
+            <span class="btn__label">코스 등록하기</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- ==================
+           SECTION FORMS
+      ================== -->
+      <div class="section-forms-container">
+
+        <!-- Section Form Card -->
+        <div class="card card--section">
+          <div class="card__header">
+            <div class="card__header-icon card__header-icon--navy"></div>
+            <span class="card__title">섹션 등록</span>
+          </div>
+
+          <div class="card__body">
+
+            <!-- Parent Course Select -->
+            <div class="form-field">
+              <label class="form-label form-label--navy">PARENT COURSE</label>
+              <div class="form-select-wrapper">
+                <select id="section-course-select" class="form-select">
+                  <option value="" disabled selected>코스를 선택하세요</option>
+                </select>
+                <div class="form-select-chevron"></div>
+              </div>
+            </div>
+
+            <!-- Section Name -->
+            <div class="form-field form-field--pb">
+              <label class="form-label form-label--navy">SECTION NAME</label>
+              <div class="form-input-wrapper">
+                <input
+                        id="section-title"
+                        class="form-input"
+                        type="text"
+                        placeholder="섹션명을 입력하세요"
+                />
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="btn btn--section" onclick="registerSection()">
+              <span class="btn__label">섹션 등록하기</span>
+            </button>
+
+            <!-- 영상 등록 페이지 이동 버튼 -->
+            <button class="btn btn--course" onclick="location.href='/admin/section/upload'">
+              <span class="btn__label">영상 등록 페이지로 이동</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Director's Note -->
+        <div class="directors-note">
+          <div class="directors-note__icon"></div>
+          <div class="directors-note__content">
+            <span class="directors-note__title">Director's Note:</span>
+            <p class="directors-note__body">
+              모든 코스명은 수강생의 커리어 패스에 직접적으로 노출됩니다.
+              직관적이면서도 권위 있는 명칭을 사용하십시오.
+              등록 후 섹션 순서는 드래그 앤 드롭으로 조정 가능합니다.
+            </p>
+          </div>
+        </div>
+
+      </div>
+      <!-- /section-forms-container -->
+
+    </div>
+    <!-- /forms-wrapper -->
+
+  </div>
+  <!-- /content-inner -->
+
+</div>
+
+</div>
+<script>
+  // 코스 등록
+  function registerCourse() {
+    const title = document.getElementById('course-title').value.trim();
+    const description = document.getElementById('course-description').value.trim();
+
+    if (!title) { alert('코스명을 입력해주세요.'); return; }
+    if (!description) { alert('코스 설명을 입력해주세요.'); return; }
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+
+    fetch('/admin/courses', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('코스 등록 실패');
+      return response.text();
+    })
+    .then(() => {
+      alert('김부장의 칭찬 : 코스 등록 완료! 역시 믿을 수 있어.');
+      document.getElementById('course-title').value = '';
+      document.getElementById('course-description').value = '';
+      loadCourses(); // 섹션 등록 셀렉트박스 갱신
+    })
+    .catch(() => alert('❌ 코스 등록에 실패했습니다.'));
+  }
+
+  // 섹션 등록
+  function registerSection() {
+    const courseId = document.getElementById('section-course-select').value;
+    const title = document.getElementById('section-title').value.trim();
+
+    if (!courseId) { alert('코스를 선택해주세요.'); return; }
+    if (!title) { alert('섹션명을 입력해주세요.'); return; }
+
+    const formData = new FormData();
+    formData.append('title', title);
+
+    fetch(`/admin/courses/${courseId}/sections`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('섹션 등록 실패');
+      return response.json();
+    })
+    .then(() => {
+      alert('김부장의 칭찬 : 섹션 등록 완료! 좋아, 계속 이 기세로 가.');
+      document.getElementById('section-title').value = '';
+    })
+    .catch(() => alert('❌ 섹션 등록에 실패했습니다.'));
+  }
+
+  // 코스 목록 불러오기 (섹션 셀렉트박스용)
+  function loadCourses() {
+    fetch('/admin/courses')
+    .then(response => {
+      if (!response.ok) return;
+      return response.json();
+    })
+    .then(courses => {
+      if (!courses) return;
+      const select = document.getElementById('section-course-select');
+      select.innerHTML = '<option value="" disabled selected>코스를 선택하세요</option>';
+      courses.forEach(course => {
+        const option = document.createElement('option');
+        option.value = course.id;
+        option.textContent = course.title;
+        select.appendChild(option);
+      });
+    });
+  }
+
+  // 페이지 로드 시 코스 목록 불러오기
+  document.addEventListener('DOMContentLoaded', loadCourses);
+</script>
+
+</body>
+</html>
