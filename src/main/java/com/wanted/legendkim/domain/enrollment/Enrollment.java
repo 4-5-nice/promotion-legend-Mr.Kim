@@ -41,6 +41,10 @@ public class Enrollment {
     @Column(name = "finish_date")
     private LocalDateTime finishDate;
 
+    @Column(name = "progress")
+    private int progress;
+
+
     // 객체 생성을 외부에서 직접 하지 않고, 비즈니스 규칙에 따라 생성하도록 강제.
     public static Enrollment create(Long userId, Course course) {
         Enrollment enrollment = new Enrollment();
@@ -57,6 +61,10 @@ public class Enrollment {
     public void complete() {
         this.status = EnrollmentStatus.COMPLETED; // 상태를 완료로 변경
         this.finishDate = now();
+    }
+
+    public void updateProgress(int progress) {
+        this.progress = progress;
     }
 
 }
