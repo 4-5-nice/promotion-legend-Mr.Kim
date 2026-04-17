@@ -9,7 +9,6 @@
 <div class="app-layout">
     <aside class="sidebar">
         <div class="profile-section">
-            <!-- 비로그인 -->
             <div sec:authorize="isAnonymous()" class="profile-info">
                 <div class="profile-img-wrap">
                     <img th:src="@{/images/userImg/unknown-profile.jpeg}" alt="Guest">
@@ -17,59 +16,55 @@
                 <div class="profile-name">게스트</div>
                 <div class="profile-role">GUEST / 로그인이 필요합니다</div>
             </div>
-            <!-- 로그인 -->
             <div sec:authorize="isAuthenticated()" class="profile-info">
                 <div class="profile-img-wrap active">
                     <img th:src="@{/images/userImg/unknown-profile.jpeg}" alt="User">
                 </div>
-                <div class="profile-name"><span sec:authentication="name">사용자</span> 팀장님</div>
-                <div class="profile-role">SENIOR DIRECTOR</div>
+                <div class="profile-name">
+                    <span th:text="${#authentication.principal.name}">사용자</span> 님
+                </div>
+                <div class="profile-role" th:text="${#authentication.principal.loginUser.rank}">RANK</div>
             </div>
         </div>
 
         <nav class="nav-menu">
-            <!-- 마이페이지: 공통 이동 -->
-            <a href="/mypage" class="nav-item active">
+            <a href="/myPage/info" class="nav-item active">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                 마이페이지
             </a>
 
-            <!-- 수강신청 -->
             <a sec:authorize="isAnonymous()" href="#" class="nav-item" onclick="showLoginModal(); return false;">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
                 수강신청
             </a>
-            <a sec:authorize="isAuthenticated()" href="/enrollment" class="nav-item">
+            <a sec:authorize="isAuthenticated()" href="/user/lectures" class="nav-item">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
                 수강신청
             </a>
 
-            <!-- 전체강의 -->
             <a sec:authorize="isAnonymous()" href="#" class="nav-item" onclick="showLoginModal(); return false;">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19V6a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v13"/><path d="M4 17h14"/><path d="M6 17v2"/><path d="M18 17v2"/></svg>
                 전체강의
             </a>
-            <a sec:authorize="isAuthenticated()" href="/course" class="nav-item">
+            <a sec:authorize="isAuthenticated()" href="/user/lectures" class="nav-item">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19V6a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v13"/><path d="M4 17h14"/><path d="M6 17v2"/><path d="M18 17v2"/></svg>
                 전체강의
             </a>
 
-            <!-- 문제게시판 -->
             <a sec:authorize="isAnonymous()" href="#" class="nav-item" onclick="showLoginModal(); return false;">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6M7 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="7" y="2" width="10" height="4" rx="1"/></svg>
                 문제게시판
             </a>
-            <a sec:authorize="isAuthenticated()" href="/question" class="nav-item">
+            <a sec:authorize="isAuthenticated()" href="/questionboard/user/questionboard/list" class="nav-item">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6M7 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="7" y="2" width="10" height="4" rx="1"/></svg>
                 문제게시판
             </a>
 
-            <!-- 자유게시판 -->
             <a sec:authorize="isAnonymous()" href="#" class="nav-item" onclick="showLoginModal(); return false;">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v12H4z"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
                 자유게시판
             </a>
-            <a sec:authorize="isAuthenticated()" href="/board" class="nav-item">
+            <a sec:authorize="isAuthenticated()" href="/freeboard/user/freeboard/posts" class="nav-item">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v12H4z"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
                 자유게시판
             </a>
@@ -80,11 +75,9 @@
         <header class="top-header">
             <div class="brand-title">진급전설 김부장</div>
             <div class="header-actions">
-                <!-- 비로그인: 로그인 버튼 -->
                 <div sec:authorize="isAnonymous()">
                     <a th:href="@{/auth/login}" class="btn-primary">로그인</a>
                 </div>
-                <!-- 로그인: 로그아웃 버튼 -->
                 <div sec:authorize="isAuthenticated()">
                     <form th:action="@{/logout}" method="post" class="inline-form">
                         <button type="submit" class="btn-dark">로그아웃</button>
@@ -95,29 +88,24 @@
 
         <main class="dashboard-content">
 
-            <!-- 히어로 배너 -->
             <section class="hero-banner">
                 <div class="hero-bg-text">LEGEND</div>
                 <div class="hero-text-content">
                     <span class="badge">EXCLUSIVE OFFERS</span>
                     <h2>임원 승진의 전설,<br>김부장이 직접 전수하는<br>성공 비기 7단계</h2>
-                    <!-- 비로그인: 모달 -->
                     <button sec:authorize="isAnonymous()" class="btn-gold" onclick="showLoginModal()">지금 바로 시작하기</button>
-                    <!-- 로그인: 수강신청 이동 -->
-                    <a sec:authorize="isAuthenticated()" href="/enrollment" class="btn-gold">지금 바로 시작하기</a>
+                    <a sec:authorize="isAuthenticated()" href="/user/lectures" class="btn-gold">지금 바로 시작하기</a>
                 </div>
             </section>
 
-            <!-- 자유게시판 + 우측 카드 -->
             <div class="board-section-grid">
                 <div class="board-section">
                     <div class="section-header">
                         <h3 class="section-title">자유게시판</h3>
                         <a sec:authorize="isAnonymous()" href="#" class="section-more" onclick="showLoginModal(); return false;">더보기</a>
-                        <a sec:authorize="isAuthenticated()" href="/board" class="section-more">더보기</a>
+                        <a sec:authorize="isAuthenticated()" href="/freeboard/user/freeboard/posts" class="section-more">더보기</a>
                     </div>
                     <div class="board-list">
-                        <!-- 비로그인: div + 모달 -->
                         <div sec:authorize="isAnonymous()" class="board-item" onclick="showLoginModal()">
                             <div class="board-item-meta"><span class="board-tag">커리어</span><span class="board-time">2시간 전</span></div>
                             <div class="board-title">하반기 승진 대상자 명단이 곧 발표된다고 하네요. 다들 준비되셨나요?</div>
@@ -134,18 +122,17 @@
                             <div class="board-preview">단순 기록이 아니라 '의사결정의 근거'를 남기는 방식이 정말 충격적이었습니다.</div>
                         </div>
 
-                        <!-- 로그인: a 태그로 실제 게시글 이동 (th:each로 교체 권장) -->
-                        <a sec:authorize="isAuthenticated()" href="/board/1" class="board-item board-item-link">
+                        <a sec:authorize="isAuthenticated()" href="/freeboard/user/freeboard/1" class="board-item board-item-link">
                             <div class="board-item-meta"><span class="board-tag">커리어</span><span class="board-time">2시간 전</span></div>
                             <div class="board-title">하반기 승진 대상자 명단이 곧 발표된다고 하네요. 다들 준비되셨나요?</div>
                             <div class="board-preview">부장급 승진 준비하시는 분들 계신가요? 이번에 평가 기준이 조금 바뀌었다는 소문...</div>
                         </a>
-                        <a sec:authorize="isAuthenticated()" href="/board/2" class="board-item board-item-link">
+                        <a sec:authorize="isAuthenticated()" href="/freeboard/user/freeboard/2" class="board-item board-item-link">
                             <div class="board-item-meta"><span class="board-tag">네트워킹</span><span class="board-time">5시간 전</span></div>
                             <div class="board-title">강남역 인근 시니어 매니저 모임 제안합니다.</div>
                             <div class="board-preview">서로 직급은 다르지만 전략 기획이라는 공통분모로 모여서 인사이트를 나누면 좋을 ...</div>
                         </a>
-                        <a sec:authorize="isAuthenticated()" href="/board/3" class="board-item board-item-link">
+                        <a sec:authorize="isAuthenticated()" href="/freeboard/user/freeboard/3" class="board-item board-item-link">
                             <div class="board-item-meta"><span class="board-tag">팁&amp;노하우</span><span class="board-time">어제</span></div>
                             <div class="board-title">회의록 작성의 정석: 김부장님의 강의를 듣고 실천해본 후기</div>
                             <div class="board-preview">단순 기록이 아니라 '의사결정의 근거'를 남기는 방식이 정말 충격적이었습니다.</div>
@@ -153,13 +140,11 @@
                     </div>
                 </div>
 
-                <!-- 우측 카드 -->
                 <div class="side-cards">
                     <div class="hiring-card">
                         <span class="badge-gold">NOW HIRING</span>
                         <h3>글로벌 전략 기획팀<br>시니어 매니저 채용 중</h3>
                         <p>Executive Editorial의 검증된 학습<br>이수자를 우선 채용합니다.</p>
-                        <!-- 원티드 광고: 로그인 무관 외부 링크 -->
                         <button class="btn-white" onclick="window.open('https://www.wanted.co.kr', '_blank')">상세 정보 보기</button>
                     </div>
 
@@ -179,16 +164,14 @@
                 </div>
             </div>
 
-            <!-- 추천 커리큘럼 -->
             <div class="curriculum-section">
                 <div class="section-header">
                     <h3 class="section-title">추천 커리큘럼</h3>
                     <a sec:authorize="isAnonymous()" href="#" class="section-more" onclick="showLoginModal(); return false;">전체보기</a>
-                    <a sec:authorize="isAuthenticated()" href="/course" class="section-more">전체보기</a>
+                    <a sec:authorize="isAuthenticated()" href="/user/lectures" class="section-more">전체보기</a>
                 </div>
                 <div class="curriculum-list">
 
-                    <!-- 첫 번째: 기본 펼침 -->
                     <div class="curriculum-item expanded">
                         <div class="curriculum-item-header" onclick="toggleCurriculum(this)">
                             <div class="curriculum-item-left">
@@ -208,15 +191,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- 수강신청 버튼: 비로그인 모달 / 로그인 이동 -->
                             <button sec:authorize="isAnonymous()" class="btn-enroll" onclick="showLoginModal()">수강 신청</button>
-                            <a sec:authorize="isAuthenticated()" href="/enrollment?courseId=1" class="btn-enroll">수강 신청</a>
+                            <a sec:authorize="isAuthenticated()" href="/user/lectures/1" class="btn-enroll">수강 신청</a>
                         </div>
                     </div>
 
-                    <!-- 두 번째 -->
                     <div class="curriculum-item">
-                        <!-- 비로그인: 모달만 -->
                         <div class="curriculum-item-header" sec:authorize="isAnonymous()" onclick="showLoginModal()">
                             <div class="curriculum-item-left">
                                 <span class="curriculum-arrow">▸</span>
@@ -224,7 +204,6 @@
                                 <span class="curriculum-name">팀워크를 넘어선 임팩트: 조직 관리의 미학</span>
                             </div>
                         </div>
-                        <!-- 로그인: 아코디언 열림 -->
                         <div class="curriculum-item-header" sec:authorize="isAuthenticated()" onclick="toggleCurriculum(this)">
                             <div class="curriculum-item-left">
                                 <span class="curriculum-arrow">▸</span>
@@ -243,11 +222,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <a sec:authorize="isAuthenticated()" href="/enrollment?courseId=2" class="btn-enroll">수강 신청</a>
+                            <a sec:authorize="isAuthenticated()" href="/user/lectures/2" class="btn-enroll">수강 신청</a>
                         </div>
                     </div>
 
-                    <!-- 세 번째 -->
                     <div class="curriculum-item">
                         <div class="curriculum-item-header" sec:authorize="isAnonymous()" onclick="showLoginModal()">
                             <div class="curriculum-item-left">
@@ -274,7 +252,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a sec:authorize="isAuthenticated()" href="/enrollment?courseId=3" class="btn-enroll">수강 신청</a>
+                            <a sec:authorize="isAuthenticated()" href="/user/lectures/3" class="btn-enroll">수강 신청</a>
                         </div>
                     </div>
 
@@ -284,7 +262,10 @@
     </div>
 </div>
 
-<!-- 로그인 필요 모달 -->
+<footer class="main-footer">
+    © 2024 LEGEND OF PROMOTION. ALL STRATEGIC RIGHTS RESERVED.
+</footer>
+
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <h3>접근 제한</h3>

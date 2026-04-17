@@ -1,5 +1,6 @@
 package com.wanted.legendkim.domain.users.auth.handler;
 
+import com.wanted.legendkim.domain.users.auth.model.dto.AuthDetails;
 import com.wanted.legendkim.domain.users.user.model.dao.LoginLogRepository;
 import com.wanted.legendkim.domain.users.user.model.entity.LoginHistory;
 import com.wanted.legendkim.domain.users.user.model.service.MemberService;
@@ -24,19 +25,20 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String email = authentication.getName();
 
-        // 실패 횟수 초기화
+        AuthDetails userDetails = (AuthDetails) authentication.getPrincipal();
+
+        String email = userDetails.getEmail();
+        Long userId = userDetails.getUserId();
+
         memberService.resetLoginFailCount(email);
 
-        // 성공 로그 저장 (LoginHistory 엔티티 생성자에 맞게 수정 필요)
         loginLogRepository.save(
                 new LoginHistory(
-                        email,
-                        LocalDateTime.now(),
-                        true,
-                        request.getRemoteAddr()
-                )
+                userId,
+                true,
+                null,
+                LocalDateTime.now())
         );
 
         super.onAuthenticationSuccess(request, response, authentication);

@@ -1,6 +1,7 @@
 package com.wanted.legendkim.domain.users.user.model.service;
 
 import com.wanted.legendkim.domain.users.user.model.dao.UserRepository;
+import com.wanted.legendkim.domain.users.user.model.dto.LoginUserDTO;
 import com.wanted.legendkim.domain.users.user.model.dto.SignupDTO;
 import com.wanted.legendkim.domain.users.user.model.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,14 @@ public class MemberService {
             return 0L;
         }
     }
+
+    public LoginUserDTO findByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        // 엔티티를 DTO로 변환 (ModelMapper 사용)
+        return userOptional.map(user -> modelMapper.map(user, LoginUserDTO.class)).orElse(null);
+    }
+
     @Transactional
     public void incrementLoginFailCount(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
