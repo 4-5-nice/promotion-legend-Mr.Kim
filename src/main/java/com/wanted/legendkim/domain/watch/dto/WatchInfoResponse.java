@@ -1,4 +1,4 @@
-package com.wanted.legendkim.domain.enrollment.dto;
+package com.wanted.legendkim.domain.watch.dto;
 
 import com.wanted.legendkim.domain.enrollment.Enrollment;
 import lombok.*;
@@ -10,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-
 public class WatchInfoResponse {
 
     private String courseTitle;
@@ -25,5 +24,4 @@ public class WatchInfoResponse {
                 sections
         );
     }
-
 }

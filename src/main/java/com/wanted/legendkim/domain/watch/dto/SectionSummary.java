@@ -1,4 +1,4 @@
-package com.wanted.legendkim.domain.enrollment.dto;
+package com.wanted.legendkim.domain.watch.dto;
 
 import com.wanted.legendkim.domain.section.Section;
 import lombok.*;
@@ -8,7 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-
 public class SectionSummary {
 
     private Long sectionId;
@@ -22,5 +21,4 @@ public class SectionSummary {
                 section.getVideoUrl()
         );
     }
-
 }
