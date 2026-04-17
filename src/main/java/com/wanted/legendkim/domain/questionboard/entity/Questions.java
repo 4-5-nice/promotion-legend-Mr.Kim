@@ -1,0 +1,96 @@
+package com.wanted.legendkim.domain.questionboard.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@Table(name = "QUESTIONS")
+public class Questions {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "question_id")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private QuestionBoardUser user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "section_id", nullable = false)
+    private Section section;
+
+    @Column(nullable = false, length = 255)
+    private String title;
+
+    @Column(name = "option1", nullable = false, length = 255)
+    private String option1;
+
+    @Column(name = "option2", nullable = false, length = 255)
+    private String option2;
+
+    @Column(name = "option3", nullable = false, length = 255)
+    private String option3;
+
+    @Column(name = "option4", nullable = false, length = 255)
+    private String option4;
+
+    @Column(name = "option5", nullable = false, length = 255)
+    private String option5;
+
+    @Column(nullable = false)
+    private Integer answer;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "view_count")
+    private Long viewCount;
+
+    public Questions(
+            QuestionBoardUser user,
+            Course course,
+            Section section,
+            String title,
+            String option1,
+            String option2,
+            String option3,
+            String option4,
+            String option5,
+            Integer answer
+    ) {
+        this.user = user;
+        this.course = course;
+        this.section = section;
+        this.title = title;
+        this.option1 = option1;
+        this.option2 = option2;
+        this.option3 = option3;
+        this.option4 = option4;
+        this.option5 = option5;
+        this.answer = answer;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+        if (this.viewCount == null) {
+            this.viewCount = 0L;
+        }
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
+    }
+}

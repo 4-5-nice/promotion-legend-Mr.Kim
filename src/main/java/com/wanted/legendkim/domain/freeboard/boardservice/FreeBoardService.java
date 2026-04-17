@@ -1,16 +1,15 @@
-package com.wanted.legendkim.domain.board.boardservice;
+package com.wanted.legendkim.domain.freeboard.boardservice;
 
-import com.wanted.legendkim.domain.board.dao.PostRepository;
-import com.wanted.legendkim.domain.board.dao.BoardUserRepository;
-import com.wanted.legendkim.domain.board.dto.FreeBoardDTO;
-import com.wanted.legendkim.domain.board.entity.Post;
-import com.wanted.legendkim.domain.board.entity.BoardUser;
-import com.wanted.legendkim.global.config.ContextConfig;
+import com.wanted.legendkim.domain.freeboard.dao.FreeBoardPostRepository;
+import com.wanted.legendkim.domain.freeboard.dao.FreeBoardUserRepository;
+import com.wanted.legendkim.domain.freeboard.dto.FreeBoardDTO;
+import com.wanted.legendkim.domain.freeboard.dto.FreeBoardDetailDTO;
+import com.wanted.legendkim.domain.freeboard.entity.FreeBoardPost;
+import com.wanted.legendkim.domain.freeboard.entity.FreeBoardUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -18,37 +17,35 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class FreeBoardService {
 
-    private final PostRepository postRepository;
-    private final BoardUserRepository boardUserRepository;
+    private final FreeBoardPostRepository freeBoardPostRepository;
+    private final FreeBoardUserRepository freeBoardUserRepository;
 
     public List<FreeBoardDTO> getPosts(String filter, String email) {
-        List<Post> posts;
+        List<FreeBoardPost> posts;
 
         if ("mine".equalsIgnoreCase(filter)) {
-            BoardUser user = boardUserRepository.findByEmail(email)
+            FreeBoardUser user = freeBoardUserRepository.findByEmail(email)
                     .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-            posts = postRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+            posts = freeBoardPostRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
         } else {
-            posts = postRepository.findAllByOrderByCreatedAtDesc();
+            posts = freeBoardPostRepository.findAllByOrderByCreatedAtDesc();
         }
 
         return posts.stream()
                 .map(post -> new FreeBoardDTO(
                         post.getId(),
                         post.getTitle(),
-                        null,
                         post.getUser().getName(),
                         post.getViewCount(),
-                        post.getCreatedAt().toLocalDate().toString(),
-                        false
+                        post.getCreatedAt().toLocalDate().toString()
                 ))
                 .toList();
     }
 
     @Transactional
-    public FreeBoardDTO getPostDetail(Long postId, String email) {
-        Post post = postRepository.findById(postId)
+    public FreeBoardDetailDTO getPostDetail(Long postId, String email) {
+        FreeBoardPost post = freeBoardPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         post.increaseViewCount();
@@ -56,7 +53,7 @@ public class FreeBoardService {
         boolean mine = email != null
                 && post.getUser().getEmail().equals(email);
 
-        return new FreeBoardDTO(
+        return new FreeBoardDetailDTO(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
@@ -73,11 +70,11 @@ public class FreeBoardService {
             throw new IllegalArgumentException("로그인이 필요합니다.");
         }
 
-        BoardUser user = boardUserRepository.findByEmail(email)
+        FreeBoardUser user = freeBoardUserRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        Post post = new Post(user, title, content);
+        FreeBoardPost post = new FreeBoardPost(user, title, content);
 
-        postRepository.save(post);
+        freeBoardPostRepository.save(post);
     }
 }

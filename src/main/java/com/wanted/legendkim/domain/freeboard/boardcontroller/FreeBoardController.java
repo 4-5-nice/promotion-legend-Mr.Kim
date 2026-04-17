@@ -1,14 +1,14 @@
-package com.wanted.legendkim.domain.board.boardcontroller;
+package com.wanted.legendkim.domain.freeboard.boardcontroller;
 
-import com.wanted.legendkim.domain.board.boardservice.FreeBoardService;
-import com.wanted.legendkim.domain.board.dto.FreeBoardDTO;
+import com.wanted.legendkim.domain.freeboard.boardservice.FreeBoardService;
+import com.wanted.legendkim.domain.freeboard.dto.FreeBoardDTO;
 import com.wanted.legendkim.domain.comment.commentservice.FreeCommentService;
 import com.wanted.legendkim.domain.comment.dto.FreeCommentDTO;
+import com.wanted.legendkim.domain.freeboard.dto.FreeBoardDetailDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.List;
@@ -46,7 +46,7 @@ public class FreeBoardController {
     ) {
         String email = principal != null ? principal.getName() : null;
 
-        FreeBoardDTO post = freeBoardService.getPostDetail(postId, email);
+        FreeBoardDetailDTO post = freeBoardService.getPostDetail(postId, email);
         List<FreeCommentDTO> comments = freeCommentService.getComments(postId);
 
         model.addAttribute("post", post);

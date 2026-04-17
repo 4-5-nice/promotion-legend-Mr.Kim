@@ -1,9 +1,9 @@
 package com.wanted.legendkim.domain.comment.commentservice;
 
-import com.wanted.legendkim.domain.board.dao.BoardUserRepository;
-import com.wanted.legendkim.domain.board.dao.PostRepository;
-import com.wanted.legendkim.domain.board.entity.BoardUser;
-import com.wanted.legendkim.domain.board.entity.Post;
+import com.wanted.legendkim.domain.freeboard.dao.FreeBoardUserRepository;
+import com.wanted.legendkim.domain.freeboard.dao.FreeBoardPostRepository;
+import com.wanted.legendkim.domain.freeboard.entity.FreeBoardUser;
+import com.wanted.legendkim.domain.freeboard.entity.FreeBoardPost;
 import com.wanted.legendkim.domain.comment.dao.FreeCommentRepository;
 import com.wanted.legendkim.domain.comment.dto.FreeCommentDTO;
 import com.wanted.legendkim.domain.comment.entity.FreeComment;
@@ -20,8 +20,8 @@ import java.util.List;
 public class FreeCommentService {
 
     private final FreeCommentRepository freeCommentRepository;
-    private final PostRepository postRepository;
-    private final BoardUserRepository boardUserRepository;
+    private final FreeBoardPostRepository postRepository;
+    private final FreeBoardUserRepository boardUserRepository;
 
     private static final DateTimeFormatter COMMENT_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
@@ -37,10 +37,10 @@ public class FreeCommentService {
             throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
         }
 
-        Post post = postRepository.findById(postId)
+        FreeBoardPost post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        BoardUser user = boardUserRepository.findByEmail(email)
+        FreeBoardUser user = boardUserRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         FreeComment freeComment = new FreeComment(post, user, content);

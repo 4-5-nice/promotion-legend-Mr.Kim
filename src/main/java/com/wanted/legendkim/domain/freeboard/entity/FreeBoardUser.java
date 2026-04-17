@@ -1,4 +1,4 @@
-package com.wanted.legendkim.domain.board.entity;
+package com.wanted.legendkim.domain.freeboard.entity;
 
 
 import jakarta.persistence.Column;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class BoardUser {
+public class FreeBoardUser {
 
     @Id
     @Column(name = "user_id")

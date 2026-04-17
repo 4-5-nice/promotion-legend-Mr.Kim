@@ -1,7 +1,7 @@
 package com.wanted.legendkim.domain.comment.entity;
 
-import com.wanted.legendkim.domain.board.entity.BoardUser;
-import com.wanted.legendkim.domain.board.entity.Post;
+import com.wanted.legendkim.domain.freeboard.entity.FreeBoardUser;
+import com.wanted.legendkim.domain.freeboard.entity.FreeBoardPost;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,11 +22,11 @@ public class FreeComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    private FreeBoardPost post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private BoardUser user;
+    private FreeBoardUser user;
 
     @Column(nullable = false, length = 200)
     private String content;
@@ -39,7 +39,7 @@ public class FreeComment {
         this.createdAt = LocalDateTime.now();
     }
 
-    public FreeComment(Post post, BoardUser user, String content) {
+    public FreeComment(FreeBoardPost post, FreeBoardUser user, String content) {
         this.post = post;
         this.user = user;
         this.content = content;

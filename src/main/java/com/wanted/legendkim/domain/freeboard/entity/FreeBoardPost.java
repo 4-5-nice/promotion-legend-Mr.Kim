@@ -1,4 +1,4 @@
-package com.wanted.legendkim.domain.board.entity;
+package com.wanted.legendkim.domain.freeboard.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "free_boards")
-public class Post {
+public class FreeBoardPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private BoardUser user;
+    private FreeBoardUser user;
 
     @Column(nullable = false)
     private String title;
@@ -34,7 +34,7 @@ public class Post {
     @Column(name = "view_count")
     private Long viewCount;
 
-    public Post(BoardUser user, String title, String content) {
+    public FreeBoardPost(FreeBoardUser user, String title, String content) {
         this.user = user;
         this.title = title;
         this.content = content;

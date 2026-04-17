@@ -1,16 +1,11 @@
-package com.wanted.legendkim.domain.board.dto;
+package com.wanted.legendkim.domain.freeboard.dto;
 
-import com.wanted.legendkim.domain.board.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @AllArgsConstructor
-public class FreeBoardDTO {
+public class FreeBoardDetailDTO {
 
     private Long id;
     private String title;
