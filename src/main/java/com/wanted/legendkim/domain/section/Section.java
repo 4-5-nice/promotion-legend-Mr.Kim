@@ -76,8 +76,7 @@ public class Section {
         section.course = course;
         section.title = title;
         // Section 생성 시점에는 영상이 없기 때문에 false 로 고정.
-        // 우리는 생성자 내부에서 강제로 고정해서 실수로 true 로 만드는 것을
-        // 차단할 수 있다.
+        // 우리는 생성자 내부에서 강제로 고정해서 실수로 true 로 만드는 것을 차단
         section.uploadSuccess = false;
         return section;
     }
