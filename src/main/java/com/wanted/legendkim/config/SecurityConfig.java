@@ -22,7 +22,7 @@ public class SecurityConfig {
             // CSRF: 위조 요청 방지 기능 - 임시로 꺼둠 (파일 업로드 API 호출 허용을 위해)
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // 모든 요청은 로그인한 사용자만 접근 가능
+                .requestMatchers("/video/**").permitAll()
                 .anyRequest().authenticated()
             )
             // Spring 기본 로그인 폼 사용

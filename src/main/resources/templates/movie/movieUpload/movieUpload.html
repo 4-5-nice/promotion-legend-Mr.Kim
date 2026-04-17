@@ -333,7 +333,8 @@
     if (!courseId) { alert('코스를 먼저 선택해주세요.'); return; }
 
     const sectionSelect = document.getElementById('section-select');
-    const title = sectionSelect.options[sectionSelect.selectedIndex].text;
+    const sectionId = sectionSelect.value;
+    if (!sectionId) { alert('섹션을 선택해주세요.'); return; }
 
     // 프로그레스바 애니메이션 시작
     document.getElementById('file-card').classList.remove('hidden');
@@ -345,29 +346,15 @@
       document.getElementById('progress-pct').textContent = Math.floor(pct) + '%';
     }, 200);
 
-    // 1단계 : 섹션 등록 → sectionId 응답 받기
-    const sectionFormData = new FormData();
-    sectionFormData.append('title', title);
+    // 섹션 select에서 고른 sectionId로 바로 영상 업로드 (섹션 중복 생성 없음)
+    const videoFormData = new FormData();
+    videoFormData.append('courseId', courseId);
+    videoFormData.append('sectionId', sectionId);
+    videoFormData.append('file', currentFile);
 
-    fetch(`/admin/courses/${courseId}/sections`, {
+    fetch(`/admin/lectures/${sectionId}/video`, {
       method: 'POST',
-      body: sectionFormData
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('섹션 등록 실패');
-      return response.json(); // sectionId (Long) 반환
-    })
-    .then(sectionId => {
-      // 2단계 : 영상 업로드
-      const videoFormData = new FormData();
-      videoFormData.append('courseId', courseId);
-      videoFormData.append('sectionId', sectionId);
-      videoFormData.append('file', currentFile);
-
-      return fetch(`/admin/lectures/${sectionId}/video`, {
-        method: 'POST',
-        body: videoFormData
-      });
+      body: videoFormData
     })
     .then(response => {
       if (!response.ok) throw new Error('영상 업로드 실패');

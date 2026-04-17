@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>진급전설 김부장 — 수강 페이지</title>
-    <link rel="stylesheet" href="lecture.css" />
+    <title th:text="${watchInfo.courseTitle} + ' - 진급전설 김부장'">진급전설 김부장 — 수강 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/movie/movie.css}" />
 </head>
 <body>
 
@@ -25,7 +25,6 @@
         </div>
     </div>
     <div class="nav__actions">
-        <button class="nav__cta">이사로 승진하기</button>
         <img class="nav__avatar"
              src="https://placehold.co/32x32"
              alt="프로필" />
@@ -44,67 +43,44 @@
 
         <!-- Course Header -->
         <div class="sidebar-left__header">
-            <div class="sidebar-left__course-title">임원 교육 과정</div>
+            <div class="sidebar-left__course-title" th:text="${watchInfo.courseTitle}">임원 교육 과정</div>
             <div class="sidebar-left__course-tag">MANAGEMENT 101</div>
         </div>
 
-        <!-- Section List -->
-        <div class="sidebar-left__sections">
+            <div class="sidebar-left__sections">
 
-            <!-- Module 1 (expanded) -->
+            <!-- 섹션 리스트 — DB 데이터 바인딩 -->
             <div class="module">
                 <div class="module__header">
-                    <span class="module__title">모듈 1: 경영 전략의 기초</span>
+                    <span class="module__title" th:text="${watchInfo.courseTitle}">모듈</span>
                     <span class="module__chevron"></span>
                 </div>
 
-                <!-- Lecture 01 — active -->
-                <div class="lecture-item lecture-item--active">
-                    <div class="lecture-item__dot lecture-item__dot--active"></div>
-                    <div class="lecture-item__info">
-                        <span class="lecture-item__title lecture-item__title--active">
-                            01. 전설적인 김부장의 사고방식
-                        </span>
-                        <span class="lecture-item__duration">12:45</span>
+                <th:block th:each="section, stat : ${watchInfo.sections}">
+                    <div th:if="${stat.first}"
+                         class="lecture-item lecture-item--active"
+                         th:attr="data-video='/video/' + ${section.videoUrl}, data-title=${section.title}"
+                         onclick="changeVideo(this)">
+                        <div class="lecture-item__dot lecture-item__dot--active"></div>
+                        <div class="lecture-item__info">
+                            <span class="lecture-item__title lecture-item__title--active" th:text="${section.title}">강의 제목</span>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Lecture 02 — inactive -->
-                <div class="lecture-item lecture-item--inactive">
-                    <div class="lecture-item__dot lecture-item__dot--inactive"></div>
-                    <div class="lecture-item__info">
-                        <span class="lecture-item__title lecture-item__title--inactive">
-                            02. 리더십의 수직적 구조 이해
-                        </span>
-                        <span class="lecture-item__duration">18:20</span>
+                    <div th:unless="${stat.first}"
+                         class="lecture-item lecture-item--inactive"
+                         th:attr="data-video='/video/' + ${section.videoUrl}, data-title=${section.title}"
+                         onclick="changeVideo(this)">
+                        <div class="lecture-item__dot lecture-item__dot--inactive"></div>
+                        <div class="lecture-item__info">
+                            <span class="lecture-item__title lecture-item__title--inactive" th:text="${section.title}">강의 제목</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Module 2 (collapsed) -->
-            <div class="module">
-                <div class="module__header module__header--inactive">
-                    <span class="module__title module__title--inactive">모듈 2: 실전 고속 승진</span>
-                    <span class="module__chevron"></span>
-                </div>
+                </th:block>
             </div>
 
         </div>
 
-        <!-- Progress Card -->
-        <div class="progress-card">
-            <div class="progress-card__inner">
-                <div class="progress-card__label">PROMOTION PROGRESS</div>
-                <div class="progress-card__row">
-                    <span class="progress-card__level">Level 4</span>
-                    <span class="progress-card__percent">85% Complete</span>
-                </div>
-                <div class="progress-card__bar-bg">
-                    <div class="progress-card__bar-fill"></div>
-                </div>
-                <span class="progress-card__deco">김</span>
-            </div>
-        </div>
+
 
     </aside>
 
@@ -115,107 +91,58 @@
 
         <!-- Video Player -->
         <div class="video-player">
-            <video src="" autoplay muted loop></video>
-            <div class="video-player__overlay">
-
-                <!-- Top: title badge + settings -->
-                <div class="video-player__top">
-                    <div class="video-player__title-badge">
-                        01. 전설적인 김부장의 사고방식
-                    </div>
-                    <button class="video-player__settings">
-                        <!-- Settings icon -->
-                        <svg viewBox="0 0 20 20" width="20" height="20">
-                            <path d="M10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            <path fill-rule="evenodd" d="M10 1a9 9 0 1 0 0 18A9 9 0 0 0 10 1zM2 10a8 8 0 1 1 16 0A8 8 0 0 1 2 10z" clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Bottom: seekbar + controls -->
-                <div class="video-player__controls">
-                    <div class="video-player__seekbar">
-                        <div class="video-player__seekbar-fill"></div>
-                        <div class="video-player__seekbar-thumb"></div>
-                    </div>
-                    <div class="video-player__bottom">
-                        <div class="video-player__left-controls">
-                            <!-- Play -->
-                            <button class="video-player__btn">
-                                <svg width="11" height="14" viewBox="0 0 11 14">
-                                    <path d="M0 0L11 7L0 14V0Z"/>
-                                </svg>
-                            </button>
-                            <!-- Skip -->
-                            <button class="video-player__btn">
-                                <svg width="13" height="12" viewBox="0 0 13 12">
-                                    <path d="M0 0h2v12H0V0zm3 6L13 0v12L3 6z"/>
-                                </svg>
-                            </button>
-                            <!-- Volume -->
-                            <button class="video-player__btn">
-                                <svg width="18" height="18" viewBox="0 0 18 18">
-                                    <path d="M1 5h4l5-4v16l-5-4H1V5zm13.07.93a7 7 0 0 1 0 8.14M11.54 3.39a10 10 0 0 1 0 11.22"/>
-                                </svg>
-                            </button>
-                            <span class="video-player__time">06:22 / 12:45</span>
-                        </div>
-                        <div class="video-player__right-controls">
-                            <button class="video-player__speed">1.25x</button>
-                            <!-- Fullscreen -->
-                            <button class="video-player__btn">
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="white">
-                                    <path d="M1 1h5V3H3v3H1V1zm11 0h5v5h-2V3h-3V1zM1 12h2v3h3v2H1v-5zm14 3h-3v2h5v-5h-2v3z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <video id="main-video" th:attr="src='/video/' + ${watchInfo.sections[0].videoUrl}" controls style="width:100%; height:100%;"></video>
         </div>
 
         <!-- Tab Bar -->
         <div class="tab-bar">
             <div class="tab-bar__tabs">
-                <button class="tab-bar__tab tab-bar__tab--active">강의 노트</button>
-                <button class="tab-bar__tab tab-bar__tab--inactive">자료실</button>
+                <button class="tab-bar__tab tab-bar__tab--active" onclick="switchTab(this, 'tab-notes')">강의 노트</button>
+                <button class="tab-bar__tab tab-bar__tab--inactive" onclick="switchTab(this, 'tab-materials')">자료실</button>
+                <button class="tab-bar__tab tab-bar__tab--inactive" onclick="switchTab(this, 'tab-board')">문제 게시판</button>
             </div>
-            <button class="tab-bar__quiz-btn">퀴즈 시작하기 →</button>
         </div>
 
-        <!-- Lecture Notes Card -->
-        <div class="notes-card">
-            <h2 class="notes-card__title">전략적 사고의 세 가지 축</h2>
-            <p class="notes-card__body">
-                훌륭한 임원은 단순히 일을 잘하는 사람이 아닙니다. 조직의 전체 맥락을
-                읽고, 부장급 이상의 시야를 확보해야 합니다. 오늘 강의에서는 다음의 핵심 가치를 다룹니다:
-            </p>
-            <div class="notes-card__items">
-
-                <div class="notes-item">
-                    <div class="notes-item__num">01</div>
-                    <div class="notes-item__content">
-                        <span class="notes-item__heading notes-item__heading--light">
-                            수직적 정렬 (Vertical Alignment)
-                        </span>
-                        <span class="notes-item__desc">
-                            CEO의 비전이 말단 직원에게까지 어떻게 전달되는가에 대한 메커니즘을 이해하십시오.
-                        </span>
+        <!-- 강의 노트 -->
+        <div id="tab-notes" class="tab-content">
+            <div class="notes-card">
+                <h2 class="notes-card__title">전략적 사고의 세 가지 축</h2>
+                <p class="notes-card__body">
+                    훌륭한 임원은 단순히 일을 잘하는 사람이 아닙니다. 조직의 전체 맥락을
+                    읽고, 부장급 이상의 시야를 확보해야 합니다. 오늘 강의에서는 다음의 핵심 가치를 다룹니다:
+                </p>
+                <div class="notes-card__items">
+                    <div class="notes-item">
+                        <div class="notes-item__num">01</div>
+                        <div class="notes-item__content">
+                            <span class="notes-item__heading notes-item__heading--light">수직적 정렬 (Vertical Alignment)</span>
+                            <span class="notes-item__desc">CEO의 비전이 말단 직원에게까지 어떻게 전달되는가에 대한 메커니즘을 이해하십시오.</span>
+                        </div>
+                    </div>
+                    <div class="notes-item">
+                        <div class="notes-item__num">02</div>
+                        <div class="notes-item__content">
+                            <span class="notes-item__heading notes-item__heading--bold">자원 배분의 결단력</span>
+                            <span class="notes-item__desc">한정된 예산과 인력을 어디에 집중할 것인가? 이것이 부장과 이사의 차이를 만듭니다.</span>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="notes-item">
-                    <div class="notes-item__num">02</div>
-                    <div class="notes-item__content">
-                        <span class="notes-item__heading notes-item__heading--bold">
-                            자원 배분의 결단력
-                        </span>
-                        <span class="notes-item__desc">
-                            한정된 예산과 인력을 어디에 집중할 것인가? 이것이 부장과 이사의 차이를 만듭니다.
-                        </span>
-                    </div>
-                </div>
+        <!-- 자료실 -->
+        <div id="tab-materials" class="tab-content" style="display:none;">
+            <div class="notes-card">
+                <h2 class="notes-card__title">자료실</h2>
+                <p class="notes-card__body">자료실 기능은 준비 중입니다.</p>
+            </div>
+        </div>
 
+        <!-- 문제 게시판 -->
+        <div id="tab-board" class="tab-content" style="display:none;">
+            <div class="notes-card">
+                <h2 class="notes-card__title">문제 게시판</h2>
+                <p class="notes-card__body">문제 게시판 기능은 준비 중입니다.</p>
             </div>
         </div>
 
@@ -233,7 +160,7 @@
                      src="https://placehold.co/56x56"
                      alt="김부장" />
                 <div>
-                    <div class="instructor-card__name">김부장 (Director Kim)</div>
+                    <div class="instructor-card__name" th:text="${watchInfo.instructorName}">김부장</div>
                     <div class="instructor-card__role">전략 운영 총괄</div>
                 </div>
             </div>
@@ -242,7 +169,6 @@
                 "진급은 실력이 아니라 태도에서 시작됩니다.
                 당신의 다음 스테이지를 위해 내가 직접 가이드하겠습니다."
             </p>
-            <button class="instructor-card__btn">멘토에게 질문하기</button>
         </div>
 
         <!-- Next Lecture -->
@@ -261,5 +187,54 @@
 
 </div><!-- /.layout -->
 
+<script>
+    // 영상 변경
+    function changeVideo(el) {
+        const videoUrl = el.getAttribute('data-video');
+
+        const video = document.getElementById('main-video');
+        video.src = videoUrl;
+        video.load();
+        video.play();
+
+        // 사이드바 active 상태 교체
+        document.querySelectorAll('.lecture-item').forEach(item => {
+            item.classList.remove('lecture-item--active');
+            item.classList.add('lecture-item--inactive');
+            const dot = item.querySelector('.lecture-item__dot');
+            dot.classList.remove('lecture-item__dot--active');
+            dot.classList.add('lecture-item__dot--inactive');
+            const span = item.querySelector('.lecture-item__title');
+            span.classList.remove('lecture-item__title--active');
+            span.classList.add('lecture-item__title--inactive');
+        });
+
+        el.classList.remove('lecture-item--inactive');
+        el.classList.add('lecture-item--active');
+        const dot = el.querySelector('.lecture-item__dot');
+        dot.classList.remove('lecture-item__dot--inactive');
+        dot.classList.add('lecture-item__dot--active');
+        const span = el.querySelector('.lecture-item__title');
+        span.classList.remove('lecture-item__title--inactive');
+        span.classList.add('lecture-item__title--active');
+    }
+
+    // 탭 전환
+    function switchTab(btn, targetId) {
+        // 탭 버튼 active 교체
+        document.querySelectorAll('.tab-bar__tab').forEach(t => {
+            t.classList.remove('tab-bar__tab--active');
+            t.classList.add('tab-bar__tab--inactive');
+        });
+        btn.classList.remove('tab-bar__tab--inactive');
+        btn.classList.add('tab-bar__tab--active');
+
+        // 콘텐츠 show/hide
+        document.querySelectorAll('.tab-content').forEach(c => {
+            c.style.display = 'none';
+        });
+        document.getElementById(targetId).style.display = 'block';
+    }
+</script>
 </body>
 </html>
