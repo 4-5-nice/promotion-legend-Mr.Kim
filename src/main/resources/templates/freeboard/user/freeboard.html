@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>자유게시판</title>
+    <link rel="stylesheet" href="/css/freeboard.css">
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="profile-box">
+            <div class="profile-img"></div>
+            <h3>김부장</h3>
+            <p>SENIOR DIRECTOR</p>
+        </div>
+
+        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
+        <button type="button" onclick="location.href='/user/lectures'">전체 강의</button>
+        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
+        <button type="button" class="active" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+    </aside>
+
+    <main class="content">
+
+        <header class="top-header">
+            <h2>진급전설 김부장</h2>
+        </header>
+
+        <section class="board-title">
+            <p>COMMUNICATION HUB</p>
+            <h1>자유게시판</h1>
+            <span>부장님의 인사이트와 동료들의 성공 노하우가 공유되는 공간입니다.</span>
+
+            <button type="button" class="write-btn" onclick="location.href='/freeboard/user/freeboard/freeboard-write'">
+                글쓰기
+            </button>
+        </section>
+
+        <section class="filter-area">
+            <button type="button" id="allBtn" class="filter-btn active">
+                전체글
+            </button>
+
+            <button type="button" id="mineBtn" class="filter-btn">
+                내가 쓴 글
+            </button>
+        </section>
+
+        <section class="board-list">
+            <table>
+                <thead>
+                <tr>
+                    <th>NO.</th>
+                    <th>SUBJECT / TITLE</th>
+                    <th>AUTHOR</th>
+                    <th>VIEWS</th>
+                    <th>DATE</th>
+                </tr>
+                </thead>
+
+                <tbody id="postTableBody">
+                <tr>
+                    <td colspan="5" class="empty">게시글을 불러오는 중입니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const allBtn = document.getElementById("allBtn");
+        const mineBtn = document.getElementById("mineBtn");
+
+        allBtn.addEventListener("click", function () {
+            loadPosts("all");
+        });
+
+        mineBtn.addEventListener("click", function () {
+            loadPosts("mine");
+        });
+
+        loadPosts("all");
+    });
+
+    function loadPosts(filter) {
+        fetch(`/freeboard/user/freeboard/posts?filter=${filter}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("게시글 목록을 불러오지 못했습니다.");
+                }
+                return response.json();
+            })
+            .then(posts => {
+                changeActiveButton(filter);
+                renderPosts(posts);
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById("postTableBody").innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty">게시글을 불러오는 중 오류가 발생했습니다.</td>
+                    </tr>
+                `;
+            });
+    }
+
+    function renderPosts(posts) {
+        const tbody = document.getElementById("postTableBody");
+        tbody.innerHTML = "";
+
+        if (!posts || posts.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty">게시글이 없습니다.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        posts.forEach(post => {
+            tbody.insertAdjacentHTML("beforeend", `
+                <tr class="post-row" data-post-id="${post.id}">
+                    <td>${post.id}</td>
+                    <td class="title">${post.title}</td>
+                    <td>${post.authorName}</td>
+                    <td>${post.viewCount}</td>
+                    <td>${post.createdAt}</td>
+                </tr>
+            `);
+        });
+
+        document.querySelectorAll(".post-row").forEach(row => {
+            row.addEventListener("click", function () {
+                const postId = this.dataset.postId;
+                location.href = `/freeboard/user/freeboard/${postId}`;
+            });
+        });
+    }
+
+    function changeActiveButton(filter) {
+        document.getElementById("allBtn").classList.toggle("active", filter === "all");
+        document.getElementById("mineBtn").classList.toggle("active", filter === "mine");
+    }
+</script>
+
+</body>
+</html>
