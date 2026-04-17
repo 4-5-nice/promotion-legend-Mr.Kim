@@ -2,6 +2,8 @@ package com.wanted.legendkim.domain.board.boardcontroller;
 
 import com.wanted.legendkim.domain.board.boardservice.FreeBoardService;
 import com.wanted.legendkim.domain.board.dto.FreeBoardDTO;
+import com.wanted.legendkim.domain.comment.commentservice.FreeCommentService;
+import com.wanted.legendkim.domain.comment.dto.FreeCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import java.util.List;
 public class FreeBoardController {
 
     private final FreeBoardService freeBoardService;
+    private final FreeCommentService freeCommentService;
 
     @GetMapping
     public String freeBoardPage() {
@@ -36,15 +39,18 @@ public class FreeBoardController {
 
     // 상세 조회
     @GetMapping("/{postId}")
-    public String detail(@PathVariable Long postId,
-                         Principal principal,
-                         Model model) {
-
-        String email = principal.getName();
+    public String detail(
+            @PathVariable Long postId,
+            Principal principal,
+            Model model
+    ) {
+        String email = principal != null ? principal.getName() : null;
 
         FreeBoardDTO post = freeBoardService.getPostDetail(postId, email);
+        List<FreeCommentDTO> comments = freeCommentService.getComments(postId);
 
         model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
 
         return "freeboard/user/freeboard-detail";
     }
@@ -67,5 +73,6 @@ public class FreeBoardController {
 
         return "redirect:/freeboard/user/freeboard";
     }
+
 
 }
