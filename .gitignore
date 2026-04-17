@@ -37,4 +37,5 @@ out/
 .vscode/
 
 ### YML ###
-.yml
+<<<<<<< HEAD
+*.yml
