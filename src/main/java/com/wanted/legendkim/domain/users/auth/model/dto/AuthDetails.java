@@ -1,51 +1,74 @@
 package com.wanted.legendkim.domain.users.auth.model.dto;
 
-import com.wanted.legendkim.domain.users.user.model.entity.User;
+import com.wanted.legendkim.domain.users.user.model.dto.LoginUserDTO;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
 
 public class AuthDetails implements UserDetails {
 
-    private final User user;
+    private LoginUserDTO loginUser;
 
-    public AuthDetails(User user) {
-        this.user = user;
+    public AuthDetails(LoginUserDTO loginUser) {
+        this.loginUser = loginUser;
     }
 
     public Long getUserId() {
-        return user.getUserId();
+        return loginUser.getUserId();
     }
 
     public String getEmail() {
-        return user.getEmail();
+        return loginUser.getEmail();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        loginUser.getRole().forEach(role -> authorities.add(() -> role));
+
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return loginUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return loginUser.getEmail();
+    }
+
+    public String getName() {
+        return loginUser.getName();
+    }
+
+    public LoginUserDTO getLoginUser() {
+        return loginUser;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !Boolean.TRUE.equals(user.getLocked());
+        // 계정 잠금 여부 확인
+        return !Boolean.TRUE.equals(loginUser.getIsLocked());
+    }
+
+    //사용자 같은지 확인
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuthDetails that)) return false;
+
+        // userId 기준으로 동일 사용자 판단
+        return Objects.equals(this.getEmail(), that.getEmail());
     }
 
     @Override
-    public boolean isEnabled() {
-        return user.getDeletedAt() == null;
+    public int hashCode() {
+        return Objects.hash(this.getEmail());
     }
+
 }
