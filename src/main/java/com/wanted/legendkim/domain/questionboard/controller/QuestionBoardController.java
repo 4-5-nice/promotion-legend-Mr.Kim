@@ -1,6 +1,9 @@
 package com.wanted.legendkim.domain.questionboard.controller;
 
+import com.wanted.legendkim.domain.comment.commentservice.QuestionCommentService;
 import com.wanted.legendkim.domain.questionboard.dto.QuestionBoardDTO;
+import com.wanted.legendkim.domain.questionboard.dto.QuestionDetailDTO;
+import com.wanted.legendkim.domain.questionboard.dto.QuestionSolveResponseDTO;
 import com.wanted.legendkim.domain.questionboard.dto.SectionDTO;
 import com.wanted.legendkim.domain.questionboard.service.QuestionBoardService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -18,6 +22,7 @@ import java.util.List;
 public class QuestionBoardController {
 
     private final QuestionBoardService questionBoardService;
+    private final QuestionCommentService questionCommentService;
 
     // 문제 게시판 페이지 불러오기
     @GetMapping
@@ -34,9 +39,8 @@ public class QuestionBoardController {
     // 문제 목록 불러오기
     @GetMapping("/list")
     @ResponseBody
-    public ResponseEntity<List<QuestionBoardDTO>> getQuestionList(
-            @RequestParam String rank,
-            Principal principal
+    public ResponseEntity<List<QuestionBoardDTO>> getQuestionList(@RequestParam String rank,
+                                                                  Principal principal
     ) {
         String email = principal.getName();
         // 사용자 email 가져오기
@@ -86,5 +90,50 @@ public class QuestionBoardController {
         ); // 문제 만들기
 
         return "redirect:/questionboard/user/questionboard"; // 문제 등록 후 문제 게시판으로 이동
+    }
+
+    // 문제 상세 조회
+    @GetMapping("/{questionId}")
+    public String questionDetailPage(@PathVariable Long questionId, Model model, Principal principal,
+                                     RedirectAttributes redirectAttributes
+                                  // RedirectAttributes 는 alert 메세지를 띄우기 위함
+    ) {
+        String email = principal.getName(); // 사용자 이메일 가져오기
+
+        try {
+            QuestionDetailDTO question = questionBoardService.getQuestionDetail(questionId, email);
+                                                    // 문제 상세 정보를 가져오기
+
+            model.addAttribute("question", question); // question에 담긴 값들을 model에 저장
+
+            // 내가 풀었는지 안 풀었는지 확인
+            if (question.isSolved()) { // 풀었으면 댓글 정보도 model에 추가
+                model.addAttribute("comments", questionCommentService.getComments(questionId, email));
+            } else { // 안 풀었으면 빈 리스트 담기
+                model.addAttribute("comments", List.of());
+            }
+
+            return "questionboard/user/questionboard-detail"; // model 객체를 전송
+        } catch (IllegalArgumentException e) { // 상세 조회에 문제가 생겼을 경우에만 실행
+            redirectAttributes.addFlashAttribute("alertMessage", e.getMessage());
+            //               에러메세지를 다음 페이지에서 보여주기 위해 잠시 저장
+            return "redirect:/questionboard/user/questionboard"; // 그리고 문제 게시판으로 다시 이동
+        }
+    }
+
+    // 정답 제출
+    @PostMapping("/{questionId}/solve")
+    @ResponseBody
+    public ResponseEntity<QuestionSolveResponseDTO> solveQuestion(@PathVariable Long questionId,
+                                                                  @RequestParam Integer selectedAnswer,
+                                                                  Principal principal) {
+        String email = principal.getName(); // 로그인 한 사용자 이메일 가져오기
+
+        QuestionSolveResponseDTO result = questionBoardService.solveQuestion(questionId, selectedAnswer, email);
+                                                  // 문제를 푸는 기능
+
+        return ResponseEntity.ok(result);
+        // HTTP에 응답을 보내는 코드
+        // 응답 전체에.200으로 응담.응답body에 들어갈 데이터
     }
 }

@@ -9,6 +9,8 @@ public class QuestionBoardDTO {
 
     private Long id;
     private String title;
+    private String courseTitle;
+    private String sectionTitle;
     private String authorName;
     private String authorRank;
     private String createdAt;

@@ -90,8 +90,4 @@ public class Questions {
             this.viewCount = 0L; // 조회수는 0으로 세팅
         }
     }
-
-    public void increaseViewCount() {
-        this.viewCount++;
-    }
 }

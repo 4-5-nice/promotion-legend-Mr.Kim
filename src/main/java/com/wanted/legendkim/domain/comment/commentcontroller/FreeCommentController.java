@@ -23,8 +23,8 @@ public class FreeCommentController {
         String email = principal.getName();
         // 작성자 email 가져오기
 
-        freeCommentService.writeComment(postId, content, email);
+        freeCommentService.writeComment(postId, content, email); // 댓글 쓰는 기능
 
-        return "redirect:/freeboard/user/freeboard/" + postId;
+        return "redirect:/freeboard/user/freeboard/" + postId; // 다시 게시글 상세 페이지로 이동
     }
 }

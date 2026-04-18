@@ -42,10 +42,8 @@ public class FreeBoardController {
 
     // 상세 조회
     @GetMapping("/{postId}")
-    public String detail(
-            @PathVariable Long postId, // url 경로의 변수값(게시글 아이디) 받아오기
-            Principal principal,
-            Model model
+    public String detail(@PathVariable Long postId, // url 경로의 변수값(게시글 아이디) 받아오기
+                         Principal principal,Model model
     ) {
         String email = principal.getName();
         // principal에 저장된 email 꺼내오기

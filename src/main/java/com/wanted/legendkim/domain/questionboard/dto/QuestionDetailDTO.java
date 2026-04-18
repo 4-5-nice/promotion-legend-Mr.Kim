@@ -19,4 +19,9 @@ public class QuestionDetailDTO {
     private String authorRank;
     private String createdAt;
     private Long viewCount;
+    private String courseTitle;
+    private String sectionTitle;
+    private boolean solved;
+    private Integer myAnswer;
+    private Boolean correct;
 }

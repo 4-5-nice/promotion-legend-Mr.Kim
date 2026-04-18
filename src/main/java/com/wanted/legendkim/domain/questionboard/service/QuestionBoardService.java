@@ -1,17 +1,9 @@
 package com.wanted.legendkim.domain.questionboard.service;
 
-import com.wanted.legendkim.domain.questionboard.dao.CourseRepository;
-import com.wanted.legendkim.domain.questionboard.dao.QuestionBoardRepository;
-import com.wanted.legendkim.domain.questionboard.dao.QuestionBoardUserRepository;
-import com.wanted.legendkim.domain.questionboard.dao.SectionRepository;
-import com.wanted.legendkim.domain.questionboard.dto.CourseDTO;
-import com.wanted.legendkim.domain.questionboard.dto.QuestionBoardDTO;
-import com.wanted.legendkim.domain.questionboard.dto.SectionDTO;
-import com.wanted.legendkim.domain.questionboard.entity.Course;
-import com.wanted.legendkim.domain.questionboard.entity.QuestionBoardUser;
-import com.wanted.legendkim.domain.questionboard.entity.Questions;
-import com.wanted.legendkim.domain.questionboard.entity.Rank;
-import com.wanted.legendkim.domain.questionboard.entity.Section;
+import com.wanted.legendkim.domain.comment.dao.QuestionCommentRepository;
+import com.wanted.legendkim.domain.questionboard.dao.*;
+import com.wanted.legendkim.domain.questionboard.dto.*;
+import com.wanted.legendkim.domain.questionboard.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +20,7 @@ public class QuestionBoardService {
     private final QuestionBoardRepository questionBoardRepository;
     private final CourseRepository courseRepository;
     private final SectionRepository sectionRepository;
+    private final QuestionSubmissionRepository questionSubmissionRepository;
 
     // DB의 날짜 정보를 문자열로 변환
     private static final DateTimeFormatter DATE_FORMATTER =
@@ -57,14 +50,20 @@ public class QuestionBoardService {
 
         return questions.stream()
                 .filter(question -> question.getUser().getRank().isHigherThan(requestedRank))
-                .map(question -> new QuestionBoardDTO(
-                        question.getId(),
-                        question.getTitle(),
-                        question.getUser().getName(),
-                        question.getUser().getRank().getLabel(),
-                        question.getCreatedAt().format(DATE_FORMATTER),
-                        false
-                ))
+                .map(question -> {
+                    boolean solved = questionSubmissionRepository.existsByQuestion_IdAndUser_Id(question.getId(), user.getId());
+
+                    return new QuestionBoardDTO(
+                            question.getId(),
+                            question.getTitle(),
+                            question.getCourse().getTitle(),
+                            question.getSection().getTitle(),
+                            question.getUser().getName(),
+                            question.getUser().getRank().getLabel(),
+                            question.getCreatedAt().format(DATE_FORMATTER),
+                            solved
+                    );
+                })
                 .toList(); // 조회한 문제의 entity List에서 하나씩 빼서 DTO로 변환해서 반환
     }
 
@@ -166,5 +165,93 @@ public class QuestionBoardService {
         );
 
         questionBoardRepository.save(question); // 문제 등록하기
+    }
+
+    @Transactional
+    public QuestionDetailDTO getQuestionDetail(Long questionId, String email) {
+
+        // 로그인 한 사용자 정보를 이메일로 찾기
+        QuestionBoardUser user = questionBoardUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        // 문제 아이디로 문제 정보 찾기
+        Questions question = questionBoardRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
+
+        // 문제 상세 조회 권한 증명하기
+        validateQuestionAccess(user.getRank(), question);
+
+        QuestionSubmission submission = questionSubmissionRepository
+                .findByQuestion_IdAndUser_Id(questionId, user.getId()).orElse(null);
+        // 문제 아이디로 찾은 문제에 대해서 유저 아이디로 찾은 유저가 푼 이력을 찾기. 없으면 null
+
+        boolean solved = submission != null; // submission에 값이 있으면 true, null이면 false
+        Integer myAnswer = solved ? submission.getSelectedAnswer() : null;
+        // solved가 true면 submission에 저장된 내가 고른 답을 가져온다. 아니면 null
+
+        Boolean correct = solved ? submission.getIsCorrect() : null;
+        // solved가 true면 submission에 저장된 나의 정답 유무를 가져온다. 아니면 null
+
+        return new QuestionDetailDTO(
+                question.getId(),
+                question.getTitle(),
+                question.getOption1(),
+                question.getOption2(),
+                question.getOption3(),
+                question.getOption4(),
+                question.getOption5(),
+                question.getAnswer(),
+                question.getUser().getName(),
+                question.getUser().getRank().getLabel(),
+                question.getCreatedAt().format(DATE_FORMATTER),
+                question.getViewCount(),
+                question.getCourse().getTitle(),
+                question.getSection().getTitle(),
+                solved,
+                myAnswer,
+                correct
+        ); // entity 값들과 앞에서 만든 값들을 DTO로 만들어서 반환
+    }
+
+    private void validateQuestionAccess(Rank myRank, Questions question) {
+        Rank authorRank = question.getUser().getRank(); // 문제 출제자의 직급을 가져오기
+
+        // 사용자보다 상위의 직급이 낸 문제가 아니면 볼 수 없게 했다.
+        if (!authorRank.isHigherThan(myRank)) {
+            throw new IllegalArgumentException("하등한 것들한테 관심을 주지 말자. 우리가 바라볼 것은 오직 위다!");
+        }
+    }
+
+    @Transactional
+    public QuestionSolveResponseDTO solveQuestion(Long questionId, Integer selectedAnswer, String email) {
+        if (selectedAnswer == null || selectedAnswer < 1 || selectedAnswer > 5) {
+            throw new IllegalArgumentException("정답은 1번부터 5번 중 하나를 선택해야 합니다.");
+        } // 만일 답을 선택하지 않았을 경우 띄우는 알림
+
+        // 이메일로 사용자 정보 찾기
+        QuestionBoardUser user = questionBoardUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        // 문제 아이디로 문제 정보 찾기
+        Questions question = questionBoardRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
+
+        boolean correct = question.getAnswer().equals(selectedAnswer);
+        // 위에서 가져온 문제의 정보에서 답을 가져와서 사용자가 고른 답과 비교하여 같으면 true 아니면 false
+
+        QuestionSubmission submission = new QuestionSubmission(
+                question,
+                user,
+                selectedAnswer,
+                correct
+        ); // 위에서 도출한 정보들을 모아서 문제 제출 객체 생성
+
+        questionSubmissionRepository.save(submission); // 그걸 persistence context에 연결
+
+        return new QuestionSolveResponseDTO(
+                correct,
+                question.getAnswer(),
+                selectedAnswer
+        ); // 정답 유무와 정답과 고른 답을 DTO로 만들어서 반환
     }
 }
