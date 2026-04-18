@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "com.wanted.legendkim")
 public class ContextConfig {
 
-
    @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
