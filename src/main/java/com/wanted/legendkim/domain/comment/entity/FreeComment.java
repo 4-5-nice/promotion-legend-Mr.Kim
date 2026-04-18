@@ -34,9 +34,9 @@ public class FreeComment {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
+    @PrePersist // DB에 insert 직전에 자동으로 실행되는 어노테이션.(update는 적용 안됨)
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now(); // 현재 시간 찍기
     }
 
     public FreeComment(FreeBoardPost post, FreeBoardUser user, String content) {

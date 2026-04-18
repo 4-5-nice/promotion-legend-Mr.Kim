@@ -40,7 +40,7 @@
                 <span>상위 직급자만 출제가 가능합니다.</span>
                 <button type="button"
                         class="write-btn"
-                        onclick="location.href='/questionboard/user/questionboard/write'">
+                        onclick="goToWritePage()">
                     문제 출제하기
                 </button>
             </div>
@@ -72,8 +72,18 @@
 </div>
 
 <script th:inline="javascript">
+    const myRank = /*[[${myRank}]]*/ "INTERN";
+
+    function goToWritePage() {
+        if (myRank === "INTERN") {
+            alert("승진하세요");
+            return;
+        }
+
+        location.href = "/questionboard/user/questionboard/write";
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
-        const myRank = /*[[${myRank}]]*/ "INTERN";
         const rankButtons = document.querySelectorAll(".rank-btn");
 
         rankButtons.forEach(button => {

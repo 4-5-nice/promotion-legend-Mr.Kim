@@ -80,13 +80,14 @@ public class Questions {
         this.answer = answer;
     }
 
+    // DB에 insert 직전에 자동으로 실행되는 어노테이션.(update는 적용 안됨)
     @PrePersist
     public void prePersist() {
         if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
+            this.createdAt = LocalDateTime.now(); // 현재 날짜 찍기
         }
         if (this.viewCount == null) {
-            this.viewCount = 0L;
+            this.viewCount = 0L; // 조회수는 0으로 세팅
         }
     }
 

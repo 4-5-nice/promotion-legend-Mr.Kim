@@ -34,7 +34,7 @@ public class FreeBoardController {
                                        // filter로 보여줄 게시글 구분할 것이다. all은 전체, mine은 자기글
                                        Principal principal // Principal 은 로그인 한 사용자 정보를 나타내는 객체
     ) {
-        String email = principal != null ? principal.getName() : null;
+        String email = principal.getName();
         // 우리는 로그인을 email 로 해서 식별값이 email이다. principal에 담긴 email을 꺼낸다.
         // 여기서 getName은 이름이 아니라 식별값 이름이라는 뜻. (우리의 경우에 email의 값)
         return freeBoardService.getPosts(filter, email);
@@ -47,7 +47,7 @@ public class FreeBoardController {
             Principal principal,
             Model model
     ) {
-        String email = principal != null ? principal.getName() : null;
+        String email = principal.getName();
         // principal에 저장된 email 꺼내오기
 
         // 게시글 상세정보 가져오기
@@ -74,7 +74,7 @@ public class FreeBoardController {
             @RequestParam String content,
             Principal principal
     ) {
-        String email = principal != null ? principal.getName() : null;
+        String email = principal.getName();
         // 로그인 한 사용자 email 가져오기
 
         freeBoardService.writePost(title, content, email);
