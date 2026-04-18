@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <meta charset="utf-8"/>
+    <meta content="width=1440, initial-scale=1.0" name="viewport"/>
+    <title>진급전설 김부장 - 출결 조회</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;700&family=Alata&display=swap" rel="stylesheet"/>
+    <style data-purpose="typography">
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .font-alata { font-family: 'Alata', sans-serif; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+    </style>
+    <style data-purpose="custom-layout">
+        .sidebar-active {
+            background-color: white;
+            color: #000666;
+            font-weight: 600;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .calendar-cell {
+            min-height: 120px;
+            border-right: 1px solid #E5E7EB;
+            border-bottom: 1px solid #E5E7EB;
+            background: white;
+        }
+        .calendar-cell:nth-child(7n) { border-right: none; }
+        .calendar-header-cell {
+            padding: 12px 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #767683;
+            text-transform: uppercase;
+        }
+        .watermark-text {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 280px;
+            line-height: 1;
+            font-weight: 900;
+            color: #000666;
+            opacity: 0.03;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+            transform: translate(15%, 15%);
+        }
+    </style>
+</head>
+<body class="bg-[#F9F9FB]">
+<div class="relative min-h-screen flex">
+    <div class="watermark-text font-alata">PROMOTION</div>
+    <aside class="w-[288px] bg-[#F3F3F5] border-r border-[#F3F3F5]/50 flex flex-col fixed h-full z-20">
+        <div class="pt-24 px-6 pb-12 flex flex-col items-center">
+            <div class="w-20 h-20 rounded-xl overflow-hidden mb-4 border border-gray-200 shadow-sm">
+                <img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ui8rEqwwR4qhXnqvVOyU-RIesnqHcBtVcpGDuQ0bxmNVxKPCegowdLx-lxeMekunoytGd4NtBnyOHzLcp30bFFHJC5e8lMlMHkOFw_1TBnazh2IsKxJ2hvf2ke9mTMqbaXtIJG0-DHNF_P-63l-KUtBNPfTmKNA3fk8VUkdttCR0XUhd_Xl7nFSuw_GD-3L5r67BPpixOHHNm0JONwOe7lsY_j88ixizL8vhfTtQ-LQQONkX30KqKQCSbM5J40d_r8WNkbhDtcw-w"/>
+            </div>
+            <div class="text-center">
+                <h2 class="text-[#000666] text-xl font-bold mb-1" th:text="${#strings.substring(user.name, 0, 1) + user.rank}">김부장</h2>
+                <p class="text-[#767683] text-xs font-medium uppercase tracking-wider" th:text="${user.name} + ', 믿겠네'">김부장, SENIOR DIRECTOR</p>
+            </div>
+        </div>
+        <nav class="flex-1 px-4 space-y-1">
+            <button onclick="location.href='/myPage/info'" class="w-full flex items-center gap-3 px-4 py-3 text-[#767683] hover:bg-white/50 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-xl">person</span>
+                <span class="text-sm">나의 정보</span>
+            </button>
+            <button onclick="location.href='/myPage/courses'" class="w-full flex items-center gap-3 px-4 py-3 text-[#767683] hover:bg-white/50 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-xl">menu_book</span>
+                <span class="text-sm">신청한 강의 조회</span>
+            </button>
+            <button onclick="location.href='/myPage/attendance'" class="w-full flex items-center gap-3 px-4 py-3 sidebar-active shadow-sm rounded-lg">
+                <span class="material-symbols-outlined text-xl">calendar_today</span>
+                <span class="text-sm">출결 조회</span>
+            </button>
+            <button onclick="location.href='/myPage/quizhistory'" class="w-full flex items-center gap-3 px-4 py-3 text-[#767683] hover:bg-white/50 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-xl">task_alt</span>
+                <span class="text-sm">내가 푼 문제</span>
+            </button>
+            <button onclick="location.href='/auth/reset-password'" class="w-full flex items-center gap-3 px-4 py-3 text-[#767683] hover:bg-white/50 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-xl">lock</span>
+                <span class="text-sm">비밀번호 변경</span>
+            </button>
+            <button onclick="location.href='/myPage/endjourney'" class="w-full flex items-center gap-3 px-4 py-3 text-[#767683] hover:bg-white/50 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-xl">logout</span>
+                <span class="text-sm">회원 탈퇴</span>
+            </button>
+        </nav>
+        <div class="p-6 border-t border-gray-200">
+            <button title="support@legeno.com" class="flex items-center gap-2 text-[#767683] text-sm hover:text-gray-900 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                지원
+            </button>
+        </div>
+    </aside>
+    <main class="flex-1 ml-[288px] relative z-10">
+        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-10 fixed top-0 right-0 left-[288px] z-30">
+            <div class="flex items-center cursor-pointer" onclick="location.href='/'">
+                <span class="text-[#000666] font-bold text-xl">진급전설 김부장</span>
+            </div>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="bg-[#000666] text-white px-5 py-2 rounded text-sm font-medium hover:bg-[#00044d] transition-colors">
+                    로그아웃
+                </button>
+            </form>
+        </header>
+        <div class="pt-32 pb-12 px-12 max-w-6xl mx-auto">
+            <div class="flex justify-between items-end mb-12">
+                <div class="space-y-2">
+                    <span class="text-[#735C00] font-manrope font-bold text-sm tracking-[0.1em] uppercase">MANAGEMENT LOGISTICS</span>
+                    <h1 class="text-[#000666] text-5xl font-normal font-alata">출결 조회</h1>
+                </div>
+                <div class="text-right">
+                    <p id="current-month-display" class="text-[#767683] text-sm mb-1">2024년 10월 기준</p>
+                    <p class="font-manrope font-bold">
+                        <span class="text-[#000666] text-lg">Promotion Status: </span>
+                        <span class="text-[#735C00] text-lg" th:text="${user.rank}">Platinum Elite</span>
+                    </p>
+                </div>
+            </div>
+            <section class="grid grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-8 rounded-lg border-l-4 border-[#000666] shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="material-symbols-outlined text-[#000666]">person_check</span>
+                        <span class="text-[#767683] text-sm">총 출근일</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-[#000666] text-4xl font-bold" th:text="${stats.totalAttendance}">22</span>
+                        <span class="text-[#000666] text-lg font-medium">일</span>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg border-l-4 border-[#735C00] shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="material-symbols-outlined text-[#735C00]">schedule</span>
+                        <span class="text-[#767683] text-sm">지각 횟수</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-[#735C00] text-4xl font-bold" th:text="${stats.lateCount}">2</span>
+                        <span class="text-[#735C00] text-lg font-medium">회</span>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg border-l-4 border-[#BA1A1A] shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="material-symbols-outlined text-[#BA1A1A]">close</span>
+                        <span class="text-[#767683] text-sm">결근 횟수</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-[#BA1A1A] text-4xl font-bold" th:text="${stats.absentCount}">0</span>
+                        <span class="text-[#BA1A1A] text-lg font-medium">회</span>
+                    </div>
+                </div>
+            </section>
+            <section class="bg-[#F3F3F5] rounded-2xl p-8 mb-12">
+                <div class="flex items-center justify-between mb-10">
+                    <div class="flex items-center gap-8">
+                        <div class="flex items-center gap-4">
+                            <button onclick="moveMonth(-1)" class="p-1 hover:bg-gray-200 rounded transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+                            <h2 id="calendar-title" class="text-2xl font-bold text-[#000666]">2024. 10</h2>
+                            <button onclick="moveMonth(1)" class="p-1 hover:bg-gray-200 rounded transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex items-center gap-2 px-3 py-1 bg-white rounded-full text-[10px] font-bold">
+                            <div class="w-2 h-2 rounded-full bg-[#5C8D40]"></div>출근
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-white rounded-full text-[10px] font-bold">
+                            <div class="w-2 h-2 rounded-full bg-[#EAB308]"></div>지각
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-white rounded-full text-[10px] font-bold">
+                            <div class="w-2 h-2 rounded-full bg-[#BA1A1A]"></div>결근
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-white rounded-full text-[10px] font-bold">
+                            <div class="w-2 h-2 rounded-full bg-[#60A5FA]"></div>공결
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-[#E5E7EB] rounded-lg overflow-hidden bg-white">
+                    <div class="calendar-grid bg-[#F3F3F5]">
+                        <div class="calendar-header-cell">SUN</div>
+                        <div class="calendar-header-cell">MON</div>
+                        <div class="calendar-header-cell">TUE</div>
+                        <div class="calendar-header-cell">WED</div>
+                        <div class="calendar-header-cell">THU</div>
+                        <div class="calendar-header-cell">FRI</div>
+                        <div class="calendar-header-cell">SAT</div>
+                    </div>
+                    <div id="calendar-body" class="calendar-grid">
+                    </div>
+                </div>
+            </section>
+            <div class="grid grid-cols-12 gap-8 items-start">
+                <div class="col-span-8 bg-[#000666]/[0.85] text-white p-10 rounded-2xl shadow-xl relative overflow-hidden">
+                    <h3 class="text-2xl font-bold mb-6">Director’s Insight</h3>
+                    <p class="text-gray-200 leading-relaxed mb-10 text-lg">
+                        "성실함은 모든 커리어의 기초입니다. 10월 상반기 동안의 출결 상태는 매우 양호합니다. 지각 횟수가 2회 발생했으나, 모두 15분 이내로 조정 가능한 범위입니다. 다음 진급 심사 시 성실도 항목에서 가점을 받을 수 있도록 현재의 페이스를 유지하십시오."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded bg-white/20 flex items-center justify-center">
+                            <img alt="Icon" class="w-6 h-6 object-contain filter invert opacity-50" src="https://lh3.googleusercontent.com/aida/ADBb0ui8rEqwwR4qhXnqvVOyU-RIesnqHcBtVcpGDuQ0bxmNVxKPCegowdLx-lxeMekunoytGd4NtBnyOHzLcp30bFFHJC5e8lMlMHkOFw_1TBnazh2IsKxJ2hvf2ke9mTMqbaXtIJG0-DHNF_P-63l-KUtBNPfTmKNA3fk8VUkdttCR0XUhd_Xl7nFSuw_GD-3L5r67BPpixOHHNm0JONwOe7lsY_j88ixizL8vhfTtQ-LQQONkX30KqKQCSbM5J40d_r8WNkbhDtcw-w"/>
+                        </div>
+                        <span class="text-xs font-bold tracking-widest uppercase text-gray-300">Verified by Senior Lead Kim</span>
+                    </div>
+                </div>
+                <div class="col-span-4 bg-[#F3F3F5] p-10 rounded-2xl h-full flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-[#000666] font-bold text-sm tracking-widest uppercase mb-8">Promotion Tracker</h3>
+                        <div class="mb-8">
+                            <div class="flex justify-between items-end mb-3">
+                                <span class="text-[#767683] text-[10px] font-bold uppercase tracking-tight">Attendance Rate</span>
+                                <span class="text-[#000666] text-xl font-bold">98%</span>
+                            </div>
+                            <div class="flex gap-1">
+                                <div class="h-2 flex-1 bg-[#735C00] rounded-l-sm"></div>
+                                <div class="h-2 flex-1 bg-[#735C00]"></div>
+                                <div class="h-2 flex-1 bg-[#735C00]"></div>
+                                <div class="h-2 flex-1 bg-[#735C00]/30 rounded-r-sm"></div>
+                            </div>
+                        </div>
+                        <p class="text-[#767683] text-sm leading-relaxed mb-12">
+                            You are 2 days away from the "Unbroken Spirit" monthly achievement medal. Keep going!
+                        </p>
+                    </div>
+                    <button class="flex items-center justify-between text-[#000666] font-bold text-sm hover:underline transition-all">
+                        View Promotion Roadmap
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <footer class="mt-20 pt-8 border-t border-gray-200 flex justify-between items-center text-[#767683] text-sm">
+                <p>출결 기록에 이상이 있나요? 운영팀에 문의해 주세요.</p>
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    <span class="font-bold text-[#000666]">support@legeno.com</span>
+                </div>
+            </footer>
+        </div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    const rawAttendanceData = /*[[${attendanceList}]]*/ [];
+
+    const attendanceMap = {};
+    if (rawAttendanceData && rawAttendanceData.length > 0) {
+        rawAttendanceData.forEach(item => {
+            if (item.targetDate) {
+                const d = new Date(item.targetDate);
+                if(!isNaN(d.getTime())) {
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const normalizedKey = `${y}-${m}-${day}`;
+
+                    // 시간 추출 (HH:mm 형식)
+                    const hours = String(d.getHours()).padStart(2, '0');
+                    const minutes = String(d.getMinutes()).padStart(2, '0');
+                    item.displayTime = `${hours}:${minutes}`; // DTO 객체에 시간 필드 임시 추가
+
+                    attendanceMap[normalizedKey] = item;
+                }
+            }
+        });
+    }
+
+    let currentViewDate = new Date(2026, 3, 16);
+
+    function renderCalendar() {
+        const year = currentViewDate.getFullYear();
+        const month = currentViewDate.getMonth();
+
+        document.getElementById('calendar-title').innerText = `${year}. ${month + 1}`;
+        document.getElementById('current-month-display').innerText = `${year}년 ${month + 1}월 기준`;
+
+        const calendarBody = document.getElementById('calendar-body');
+        calendarBody.innerHTML = '';
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
+        const prevLastDate = new Date(year, month, 0).getDate();
+
+        for (let i = firstDay; i > 0; i--) {
+            calendarBody.innerHTML += `<div class="calendar-cell p-3 text-[#BDBDC7]">${prevLastDate - i + 1}</div>`;
+        }
+
+        const today = new Date();
+        for (let i = 1; i <= lastDate; i++) {
+            const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === i;
+            const todayClass = isToday ? 'ring-2 ring-[#000666] ring-inset relative' : '';
+            const todayBadge = isToday ? '<span class="bg-[#000666] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase">Today</span>' : '';
+
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const record = attendanceMap[dateKey];
+
+            let content = '';
+            if (record) {
+                // 부장님, 지각이나 출근 시 옆에 (08:52) 이런 식으로 시간이 붙습니다.
+                const timeStr = record.displayTime ? `<span class="opacity-80 ml-1">${record.displayTime}</span>` : '';
+
+                if (record.status === 'PRESENT') {
+                    content = `<div class="bg-[#F0F8EC] text-[#5C8D40] text-[10px] p-1 rounded flex items-center border-l-2 border-[#5C8D40]">출근 ${timeStr}</div>`;
+                } else if (record.status === 'LATE') {
+                    content = `<div class="bg-[#FFFBEB] text-[#735C00] text-[10px] p-1 rounded flex items-center border-l-2 border-[#735C00]">지각 ${timeStr}</div>`;
+                } else if (record.status === 'ABSENT') {
+                    content = `<div class="bg-[#FEF2F2] text-[#BA1A1A] text-[10px] p-1 rounded flex items-center border-l-2 border-[#BA1A1A]">결근</div>`;
+                } else if (record.status === 'EXCUSED') {
+                    content = `<div class="bg-[#EFF6FF] text-[#60A5FA] text-[10px] p-1 rounded flex items-center border-l-2 border-[#60A5FA]">공결</div>`;
+                }
+            }
+
+            calendarBody.innerHTML += `
+                <div class="calendar-cell p-3 flex flex-col justify-between ${todayClass}">
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold ${isToday ? 'text-[#000666]' : ''}">${i}</span>
+                        ${todayBadge}
+                    </div>
+                    <div class="mt-2 space-y-1">${content}</div>
+                </div>`;
+        }
+    }
+
+    function moveMonth(offset) {
+        currentViewDate.setMonth(currentViewDate.getMonth() + offset);
+        renderCalendar();
+    }
+
+    renderCalendar();
+    /* ]]> */
+</script>
+</body>
+</html>
