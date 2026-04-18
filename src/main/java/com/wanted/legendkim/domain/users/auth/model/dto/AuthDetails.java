@@ -50,6 +50,10 @@ public class AuthDetails implements UserDetails {
         return loginUser;
     }
 
+    public Boolean getIsPaid() {
+        return loginUser.getIsPaid();
+    }
+
     @Override
     public boolean isAccountNonLocked() {
         // 계정 잠금 여부 확인

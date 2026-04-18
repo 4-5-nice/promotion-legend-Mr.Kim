@@ -23,6 +23,7 @@ public class LoginUserDTO {
     private Boolean isLocked;
     private Integer vacationCoupon;
     private Integer loginFailCount;
+    private Boolean isPaid;
 
     public List<String> getRole(){
         if(this.role != null && this.role.length()>0){

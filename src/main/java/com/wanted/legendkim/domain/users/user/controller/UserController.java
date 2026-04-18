@@ -33,6 +33,12 @@ public class UserController {
         Long result = memberService.regist(signupDTO);
         String message = null;
 
+        if (signupDTO.getBirthDate() != null && signupDTO.getBirthDate().isAfter(java.time.LocalDate.now())) {
+            mv.addObject("message", "생년월일은 미래 날짜를 선택할 수 없습니다.");
+            mv.setViewName("user/signup"); // 다시 회원가입 창으로!
+            return mv;
+        }
+
         if(result == null ){
             message = "이미 가입된 이메일입니다.";
             mv.setViewName("user/signup");

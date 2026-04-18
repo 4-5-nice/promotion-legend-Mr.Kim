@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>결제 완료 - 진급전설 김부장</title>
+  <link rel="stylesheet" th:href="@{/css/usercss/payment-receipt.css}">
+  <link href="https://fonts.googleapis.com/css2?family=Alata&family=Manrope:wght@400;700;800;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 상단 헤더 -->
+<header class="receipt-header">
+  <div class="receipt-header-inner">
+    <span class="receipt-brand">진급전설 김부장</span>
+    <div class="receipt-header-right">
+      <span class="receipt-header-label">Payment Receipt</span>
+      <svg class="receipt-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+  </div>
+</header>
+
+<main class="receipt-main">
+
+  <!-- 배경 블러 오브 -->
+  <div class="receipt-bg-orb receipt-bg-orb--blue"></div>
+  <div class="receipt-bg-orb receipt-bg-orb--gold"></div>
+
+  <div class="receipt-container">
+
+    <!-- ===== 메인 카드 ===== -->
+    <div class="receipt-card">
+
+      <!-- 좌측: 다크 패널 -->
+      <div class="receipt-left">
+        <div class="receipt-left-bg"></div>
+
+        <div class="receipt-left-top">
+          <!-- 체크 아이콘 -->
+          <div class="receipt-check-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+
+          <div class="receipt-left-title-wrap">
+            <h2 class="receipt-left-title">결제가 성공적으로<br>완료되었습니다</h2>
+          </div>
+          <p class="receipt-left-desc">
+            김부장의 전설적인 커리큘럼에 합류하신<br>
+            것을 환영합니다. 이제 당신의 진급은 현<br>
+            실이 됩니다.
+          </p>
+        </div>
+
+        <div class="receipt-left-bottom">
+          <div class="receipt-seal-line"></div>
+          <p class="receipt-seal-label">OFFICIAL CERTIFICATION SEAL</p>
+          <!-- 메달 아이콘 -->
+          <div class="receipt-medal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 80" fill="none">
+              <!-- 리본 좌 -->
+              <path d="M20 0 L30 28 L10 28 Z" fill="rgba(255,255,255,0.18)"/>
+              <!-- 리본 우 -->
+              <path d="M40 0 L50 28 L30 28 Z" fill="rgba(255,255,255,0.18)"/>
+              <!-- 메달 원 -->
+              <circle cx="30" cy="52" r="22" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+              <!-- 별 -->
+              <polygon points="30,38 33,47 43,47 35,53 38,62 30,56 22,62 25,53 17,47 27,47" fill="rgba(255,255,255,0.35)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우측: 영수증 상세 -->
+      <div class="receipt-right">
+
+        <!-- 헤더 행 -->
+        <div class="receipt-right-header">
+          <div class="receipt-right-header-left">
+            <p class="receipt-summary-label">PURCHASE SUMMARY</p>
+            <h3 class="receipt-summary-title">결제 상세 정보</h3>
+          </div>
+          <div class="receipt-receipt-no">
+            <p class="receipt-no-label">Receipt No.</p>
+            <p class="receipt-no-value"
+               th:text="${receiptNo != null ? receiptNo : 'KBJ-2023-882193'}">KBJ-2023-882193</p>
+          </div>
+        </div>
+
+        <!-- 상품 정보 -->
+        <div class="receipt-details">
+          <div class="receipt-product-row">
+            <div class="receipt-product-thumb">
+              <img th:src="@{/images/course/data-strategy.jpg}"
+                   onerror="this.style.background='#EEEEF0';this.removeAttribute('src')"
+                   alt="강의 이미지">
+            </div>
+            <div class="receipt-product-info">
+              <p class="receipt-product-tag">MANAGEMENT MASTERCLASS</p>
+              <p class="receipt-product-name">전설의 김부장: 1% 리더가 되는 초고속<br>진급 코스</p>
+              <div class="receipt-product-instructor">
+                <span class="receipt-instructor-dot"></span>
+                <span th:text="${instructorName != null ? '강사: ' + instructorName + ' (Director Kim)' : '강사: 김부장 (Director Kim)'}">강사: 김부장 (Director Kim)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 구분선 + 결제 정보 -->
+          <div class="receipt-info-rows">
+            <div class="receipt-info-row">
+              <span class="receipt-info-label">결제 일시</span>
+              <span class="receipt-info-value receipt-info-value--mono"
+                    th:text="${paymentDate != null ? paymentDate : '2023년 10월 24일 14:32:05'}">2023년 10월 24일 14:32:05</span>
+            </div>
+            <div class="receipt-info-row">
+              <span class="receipt-info-label">할부 기간</span>
+              <span class="receipt-info-value"
+                    th:text="${installment != null ? installment : '일시불'}">일시불</span>
+            </div>
+          </div>
+
+          <!-- 총액 + 버튼 -->
+          <div class="receipt-total-area">
+            <div class="receipt-total-row">
+              <div class="receipt-total-left">
+                <p class="receipt-total-eng">Total Amount Paid</p>
+                <p class="receipt-total-amount"
+                   th:text="${totalAmount != null ? totalAmount : '₩12,000,000'}">₩12,000,000</p>
+              </div>
+              <div class="receipt-promo-badge">
+                <span class="receipt-promo-icon"></span>
+                <span>PROMOTION PASS</span>
+              </div>
+            </div>
+
+            <a th:href="@{/auth/login}" class="receipt-goto-btn">
+              로그인 페이지로 이동
+              <span class="receipt-btn-arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 김부장의 메시지 카드 ===== -->
+    <div class="receipt-message-card">
+      <div class="receipt-message-inner">
+        <p class="receipt-message-title">김부장의 메시지</p>
+        <p class="receipt-message-quote">"투자는 배신하지 않습니다. 당신의 연봉이 증명할 것입니다."</p>
+      </div>
+    </div>
+
+    <!-- ===== 하단 안내 ===== -->
+    <div class="receipt-footer-note">
+      <p class="receipt-notice">본 영수증은 (주)진급전설에서 발행된 공식 문서입니다. 결제 취소 및 환불은 학습지원센터를 통해 문의 바랍니다.</p>
+      <div class="receipt-payment-logos">
+        <span>VISA</span>
+        <span>MASTERCARD</span>
+        <span>KCP</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

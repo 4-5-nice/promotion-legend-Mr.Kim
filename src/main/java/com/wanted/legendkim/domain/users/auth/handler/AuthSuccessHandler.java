@@ -41,6 +41,15 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 LocalDateTime.now())
         );
 
-        super.onAuthenticationSuccess(request, response, authentication);
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().contains("ADMIN"));
+
+        if (isAdmin) {
+            // 관리자일 경우 관리자 전용 대시보드로 이동
+            getRedirectStrategy().sendRedirect(request, response, "/admin/main"); // 👈 관리자 URL
+        } else {
+            // 일반 유저일 경우 메인 페이지로 이동
+            getRedirectStrategy().sendRedirect(request, response, "/"); // 👈 일반 유저 URL
+        }
     }
 }
