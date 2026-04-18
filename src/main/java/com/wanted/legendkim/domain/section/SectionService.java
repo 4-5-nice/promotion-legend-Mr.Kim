@@ -77,8 +77,13 @@ public class SectionService {
         Path dirPath = Paths.get(uploadDir);
         Files.createDirectories(dirPath);
 
-        // 4. 파일명 UUID 로 변환 - 같은 이름의 파일 충돌을 방지한다.
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        // 4. 파일명을 UUID만으로 구성 (한글, 공백, 특수문자 전부 제거)
+        String extension = "";
+        String original = file.getOriginalFilename();
+        if (original != null && original.contains(".")) {
+            extension = original.substring(original.lastIndexOf("."));
+        }
+        String fileName = UUID.randomUUID() + extension;
 
         // 5. 파일 저장
         Path filePath = dirPath.resolve(fileName);

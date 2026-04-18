@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>강의 수강신청 - 진급전설 김부장</title>
+    <link rel="stylesheet" th:href="@{/css/enrollment/enrollmentList.css}" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="nav__left">
+        <div class="nav__logo">진급전설 김부장</div>
+        <div class="nav__links">
+            <a href="#" class="nav__link">대시보드</a>
+            <a href="#" class="nav__link nav__link--active">강의 수강신청</a>
+            <a href="#" class="nav__link">전체 강의</a>
+            <a href="#" class="nav__link">마이페이지</a>
+        </div>
+    </div>
+    <div class="nav__right">
+        <img class="nav__avatar" src="https://placehold.co/32x32" alt="프로필" />
+        <span class="nav__logout">로그아웃</span>
+    </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar__label">승진 트랙</div>
+        <div class="sidebar__sub">전설의 경로</div>
+        <nav class="sidebar__nav">
+            <div class="sidebar__item">인턴</div>
+            <div class="sidebar__item">계약직</div>
+            <div class="sidebar__item">정규직</div>
+            <div class="sidebar__item">대리</div>
+            <div class="sidebar__item sidebar__item--active">과장</div>
+            <div class="sidebar__item">부장</div>
+            <div class="sidebar__item">이사</div>
+            <div class="sidebar__item">명예퇴직</div>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- Header -->
+        <div class="page-header">
+            <div class="page-header__eyebrow">
+                <span class="page-header__line"></span>
+                <span class="page-header__eyebrow-text">새로운 기회</span>
+            </div>
+            <h1 class="page-header__title">강의 수강신청</h1>
+            <p class="page-header__desc">전설적인 커리어의 다음 단계가 여기서 시작됩니다. 김부장님이 엄선한 강의로 승진 트랙을 가속하세요.</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab filter-tab--active" onclick="filterCourses('전체')">전체 강의</button>
+            <button class="filter-tab" onclick="filterCourses('리더십')">리더십</button>
+            <button class="filter-tab" onclick="filterCourses('전략')">전략</button>
+            <button class="filter-tab" onclick="filterCourses('커뮤니케이션')">커뮤니케이션</button>
+        </div>
+
+        <!-- Course List -->
+        <div class="course-list" id="course-list">
+            <!-- JS로 동적 렌더링 -->
+        </div>
+
+        <!-- Footer CTA -->
+        <div class="footer-cta">
+            <div class="footer-cta__icon"></div>
+            <div class="footer-cta__title">공식 우수 수료증</div>
+            <div class="footer-cta__desc">완료한 강의 하나하나가 전설적인 임원이 되는 길을 향한 한 걸음입니다. 이사진에 의해 검증됩니다.</div>
+        </div>
+
+    </main>
+</div>
+
+<script th:inline="javascript">
+    // 현재 로그인 userId — 실제 구현 시 세션에서 가져와야 함
+    const USER_ID = 1;
+
+    let allCourses = [];
+
+    // 코스 목록 불러오기
+    async function loadCourses() {
+        try {
+            const res = await fetch('/admin/courses');
+            allCourses = await res.json();
+            renderCourses(allCourses);
+        } catch (e) {
+            document.getElementById('course-list').innerHTML = '<p style="color:#94A3B8; padding:24px;">강의 목록을 불러오지 못했습니다.</p>';
+        }
+    }
+
+    // 코스 카드 렌더링
+    function renderCourses(courses) {
+        const list = document.getElementById('course-list');
+        if (!courses.length) {
+            list.innerHTML = '<p style="color:#94A3B8; padding:24px;">등록된 강의가 없습니다.</p>';
+            return;
+        }
+
+        list.innerHTML = courses.map(course => `
+            <div class="course-card" data-id="${course.id}">
+                <div class="course-card__thumb">
+                    <img src="https://placehold.co/432x224" alt="${course.title}" />
+                    <div class="course-card__badge">D-${course.dueDate}</div>
+                    <div class="course-card__point">800 포인트</div>
+                </div>
+                <div class="course-card__body">
+                    <div class="course-card__meta">
+                        <span class="course-card__category">리더십</span>
+                        <span class="course-card__level">고급</span>
+                    </div>
+                    <div class="course-card__title">${course.title}</div>
+                    <div class="course-card__desc">${course.description || '김부장님이 엄선한 강의입니다.'}</div>
+                    <div class="course-card__info">
+                        <span>${course.dueDate}주</span>
+                        <span>10강</span>
+                    </div>
+                    <div class="course-card__btns">
+                        <button class="course-card__btn--detail" onclick="location.href='/user/lectures/${course.id}/detail'">상세 보기</button>
+                        <button class="course-card__btn" onclick="enroll(${course.id})">수강신청</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 필터
+    function filterCourses(category) {
+        document.querySelectorAll('.filter-tab').forEach(btn => btn.classList.remove('filter-tab--active'));
+        event.target.classList.add('filter-tab--active');
+
+        if (category === '전체') {
+            renderCourses(allCourses);
+        } else {
+            // 카테고리 필드 없으므로 일단 전체 표시 — 추후 category 컬럼 추가 시 필터링
+            renderCourses(allCourses);
+        }
+    }
+
+    // 수강신청
+    async function enroll(courseId) {
+        try {
+            const res = await fetch('/user/enrollments/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: USER_ID, courseId: courseId })
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                alert('수강신청 실패: ' + msg);
+                return;
+            }
+
+            const data = await res.json();
+            const enrollmentId = data.enrollmentId;
+
+            alert('수강신청이 완료되었습니다!');
+            // 바로 수강 페이지로 이동
+            window.location.href = `/user/enrollments/${enrollmentId}/watch`;
+
+        } catch (e) {
+            alert('수강신청 중 오류가 발생했습니다.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCourses);
+</script>
+</body>
+</html>

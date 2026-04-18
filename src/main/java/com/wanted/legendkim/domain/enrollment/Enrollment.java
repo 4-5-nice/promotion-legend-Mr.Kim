@@ -67,4 +67,8 @@ public class Enrollment {
         this.progress = progress;
     }
 
+    public void expire() {
+        this.status = EnrollmentStatus.EXPIRED;
+    }
+
 }

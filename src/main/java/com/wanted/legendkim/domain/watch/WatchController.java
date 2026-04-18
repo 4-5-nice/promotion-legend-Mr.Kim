@@ -22,6 +22,7 @@ public class WatchController {
 
         WatchInfoResponse response = watchService.getWatchInfo(enrollmentId);
         model.addAttribute("watchInfo", response);
+        model.addAttribute("enrollmentId", enrollmentId);
         return "movie/movie";
     }
 }

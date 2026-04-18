@@ -59,7 +59,7 @@
                 <th:block th:each="section, stat : ${watchInfo.sections}">
                     <div th:if="${stat.first}"
                          class="lecture-item lecture-item--active"
-                         th:attr="data-video='/video/' + ${section.videoUrl}, data-title=${section.title}"
+                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}"
                          onclick="changeVideo(this)">
                         <div class="lecture-item__dot lecture-item__dot--active"></div>
                         <div class="lecture-item__info">
@@ -68,7 +68,7 @@
                     </div>
                     <div th:unless="${stat.first}"
                          class="lecture-item lecture-item--inactive"
-                         th:attr="data-video='/video/' + ${section.videoUrl}, data-title=${section.title}"
+                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}"
                          onclick="changeVideo(this)">
                         <div class="lecture-item__dot lecture-item__dot--inactive"></div>
                         <div class="lecture-item__info">
@@ -91,7 +91,10 @@
 
         <!-- Video Player -->
         <div class="video-player">
-            <video id="main-video" th:attr="src='/video/' + ${watchInfo.sections[0].videoUrl}" controls style="width:100%; height:100%;"></video>
+            <video id="main-video"
+                   th:with="firstUrl=${watchInfo.sections != null and !#lists.isEmpty(watchInfo.sections) ? watchInfo.sections[0].videoUrl : ''}"
+                   th:attr="src=${firstUrl != null and #strings.startsWith(firstUrl, 'http')} ? ${firstUrl} : ('/video/' + ${firstUrl})"
+                   controls style="width:100%; height:100%;"></video>
         </div>
 
         <!-- Tab Bar -->
@@ -187,10 +190,53 @@
 
 </div><!-- /.layout -->
 
-<script>
+<!-- ========================
+     수강 완료 Alert 모달
+     ======================== -->
+<div id="complete-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:36px 40px; max-width:400px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+        <div style="font-size:2rem; margin-bottom:12px;">🎓</div>
+        <h2 style="font-size:1.2rem; font-weight:700; color:#1a2340; margin-bottom:8px;">수강이 완료되었습니다!</h2>
+        <p style="font-size:0.95rem; color:#555; margin-bottom:28px;">문제 게시판으로 넘어가시겠습니까?</p>
+        <div style="display:flex; gap:12px; justify-content:center;">
+            <button onclick="handleComplete()" style="padding:10px 28px; background:#b8a062; color:#fff; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer;">예</button>
+            <button onclick="closeModal()" style="padding:10px 28px; background:#eee; color:#333; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer;">아니오</button>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const enrollmentId = /*[[${enrollmentId}]]*/ null;
+
+    // 수강 완료 처리 후 리다이렉트
+    async function handleComplete() {
+        try {
+            await fetch(`/user/enrollments/${enrollmentId}/complete`, {
+                method: 'PATCH'
+            });
+        } catch (e) {
+            console.error('완료 처리 실패', e);
+        }
+        window.location.href = '/board';
+    }
+
+    // 모달 닫기
+    function closeModal() {
+        document.getElementById('complete-modal').style.display = 'none';
+    }
+
+    // 영상 종료 감지
+    document.addEventListener('DOMContentLoaded', function () {
+        const video = document.getElementById('main-video');
+        video.addEventListener('ended', function () {
+            document.getElementById('complete-modal').style.display = 'flex';
+        });
+    });
+
     // 영상 변경
     function changeVideo(el) {
-        const videoUrl = el.getAttribute('data-video');
+        const rawUrl = el.getAttribute('data-video');
+        const videoUrl = (rawUrl && rawUrl.startsWith('http')) ? rawUrl : '/video/' + rawUrl;
 
         const video = document.getElementById('main-video');
         video.src = videoUrl;

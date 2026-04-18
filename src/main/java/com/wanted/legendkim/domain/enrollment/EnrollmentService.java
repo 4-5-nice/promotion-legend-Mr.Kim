@@ -24,6 +24,14 @@ public class EnrollmentService {
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new IllegalArgumentException("신청할 정보를 찾을 수 없습니다..." + request));
 
+        // 이미 수강신청한 경우 기존 enrollment 반환
+        List<Enrollment> existing = enrollmentRepository.findByCourseId(request.getCourseId());
+        for (Enrollment e : existing) {
+            if (e.getUserId().equals(request.getUserId())) {
+                return EnrollmentResponse.of(e);
+            }
+        }
+
         Enrollment enrollment = Enrollment.create(request.getUserId(), course);
         enrollmentRepository.save(enrollment);
         return EnrollmentResponse.of(enrollment);
@@ -56,4 +64,5 @@ public class EnrollmentService {
         enrollment.complete();
         enrollmentRepository.save(enrollment);
     }
+
 }

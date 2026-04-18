@@ -95,15 +95,18 @@ public class SectionController {
     // 이를 위해 우리는 정규식을 작성해 확장자까지 온전하게 fileName에 담아준다.
     @GetMapping("/video/{fileName:.+}")
     public ResponseEntity<Resource> serveVideo(@PathVariable String fileName) throws MalformedURLException {
-        // 안전하게 directory 에 경로와 파일 이름을 합쳐서 절대 경로를 만들어낸다.
-        Path filePath = Paths.get(uploadDir).resolve(fileName);
-        // 로컬 파일 시스템에 있는 파일을 Spring 에서 전송할 수 있는 리소스 객체로 변환한다.
+        // URL 인코딩된 파일명 디코딩 처리 (공백 등 특수문자 포함 파일명 대응)
+        String decodedFileName;
+        try {
+            decodedFileName = java.net.URLDecoder.decode(fileName, java.nio.charset.StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            decodedFileName = fileName;
+        }
+        Path filePath = Paths.get(uploadDir).resolve(decodedFileName);
         Resource resource = new UrlResource(filePath.toUri());
         return ResponseEntity.ok()
-                // HTTP 에게 mp4 영상 파일을 명시
                 .contentType(MediaType.parseMediaType("video/mp4"))
-                // 브라우저에서 재생할 수 있게 유도한다.
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + decodedFileName + "\"")
                 .body(resource);
     }
 }
