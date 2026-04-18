@@ -344,3 +344,18 @@ body {
         width: 100%;
     }
 }
+
+.home-title-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #2d347e;
+    cursor: pointer;
+}
+
+.home-title-btn:hover {
+    opacity: 0.85;
+}
