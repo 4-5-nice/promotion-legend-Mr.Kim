@@ -40,17 +40,19 @@ public class FreeBoardPost {
         this.content = content;
     }
 
+    // 조회수에 1을 더하는 메소드
     public void increaseViewCount() {
         if(this.viewCount == null){
-            this.viewCount = 0L;
+            this.viewCount = 0L; // 혹시 모를 NPE를 막기 위한 코드
         }
         this.viewCount++;
     }
 
+    // DB에 insert 직전에 자동으로 실행되는 어노테이션.(update는 적용 안됨)
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.viewCount = 0L;
+        this.createdAt = LocalDateTime.now(); // 현재 시간 찍기
+        this.viewCount = 0L; // 혹시 모를 조회수 null 값 방지
     }
 
     public void update(String title, String content) {

@@ -11,5 +11,4 @@ public class FreeBoardDTO {
     private String authorName;
     private Long viewCount;
     private String createdAt;
-//    private boolean mine;
 }
