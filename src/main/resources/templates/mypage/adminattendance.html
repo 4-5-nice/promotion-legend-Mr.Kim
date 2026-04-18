@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>출결 관리 - Management Logistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
+    <style data-purpose="custom-config">
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F4F7F9;
+        }
+        .active-menu {
+            background-color: white;
+            color: #94A3B8;
+        }
+        .active-menu span, .active-menu svg {
+            color: #94A3B8;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .status-tag {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 2px;
+            margin-top: 2px;
+            display: block;
+        }
+        .status-check { color: #4CAF50; }
+        .status-late { color: #FFB300; }
+        .status-absent { color: #E53935; }
+        .status-off { color: #1E88E5; }
+
+        .bg-status-check { background-color: #E8F5E9; color: #4CAF50; }
+        .bg-status-late { background-color: #FFF8E1; color: #FFB300; }
+        .bg-status-absent { background-color: #FFEBEE; color: #E53935; }
+        .bg-status-off { background-color: #E3F2FD; color: #1E88E5; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 z-10">
+    <a href="/" class="text-xl font-bold text-[#1A237E] hover:opacity-80 transition-opacity">진급전설 김부장</a>
+    <a href="/logout" class="bg-[#0D1146] text-white px-6 py-2 rounded text-sm font-medium hover:bg-opacity-90 inline-block">로그아웃</a>
+</header>
+<div class="flex flex-1">
+    <aside class="w-64 bg-[#F8F9FB] border-r border-gray-200 flex flex-col h-full flex-shrink-0">
+        <div class="p-8 flex flex-col items-center border-b border-gray-200">
+            <div class="w-16 h-20 bg-gray-300 rounded-lg overflow-hidden mb-3 shadow-md">
+                <img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ujnO6aKM0kf_oogd6KYCV4ijUfIwv4MfFiKYCfQd2nho4LCaJ4YRttyk3rCd2WVu2InDBuYp1DnC0pBs1yqjr53eG0h0UPg2egJfWLEHSnQIFRy2g4aYvISFKtFI7MKwHdeS4f2ugEsPnkpl2CJOW326VStw2-xVfbd1lxVyAfCBHEWJCwmhqlXybPSFIcWx_yu_bbPXZDFm-fVB24ImPYjGEiQizCY3-pdAQviBMTuo6yr1zNIGyt0X6KrfQ6niDXGnBtVU1Qf"/>
+            </div>
+            <h3 class="text-lg font-bold text-[#1A237E]" th:text="${#strings.substring(admin.name, 0, 1) + admin.rank}">홍대리</h3>
+        </div>
+        <nav class="flex-1 flex flex-col py-4">
+            <ul class="text-sm font-medium text-gray-400">
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer text-gray-700">
+                    <svg class="w-5 h-5 mr-3 text-[#1A237E]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    마이페이지
+                </li>
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    수강신청
+                </li>
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    전체강의
+                </li>
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    문제게시판
+                </li>
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    자유게시판
+                </li>
+                <li class="mt-4"></li>
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer group">
+                    <div class="absolute left-0 w-1.5 h-full bg-[#DDA853] opacity-0 group-hover:opacity-100"></div>
+                    <svg class="w-5 h-5 mr-3 text-[#DDA853]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    <span class="text-[#1A237E]">수강생 계정 관리</span>
+                </li>
+                <li class="flex items-center px-6 py-4 bg-white active-menu cursor-pointer relative shadow-sm">
+                    <div class="absolute left-0 w-1.5 h-full bg-[#DDA853] top-0"></div>
+                    <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    수강생 출결 관리
+                </li>
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    강의 등록
+                </li>
+                <li class="flex items-center px-6 py-4 hover:bg-gray-100 cursor-pointer">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12h3M18 15h3M18 18h3" />
+                    </svg>
+                    게시물 관리
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="flex-1 p-10 overflow-y-auto">
+        <div class="mb-8">
+            <p class="text-sm font-semibold text-[#A68943] tracking-widest uppercase mb-2">MANAGEMENT LOGISTICS</p>
+            <h1 class="text-4xl font-bold text-[#1A237E]">출결 관리</h1>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm mb-10 overflow-hidden flex relative border border-gray-100">
+            <div class="p-6 flex-1 flex gap-6">
+                <div class="flex flex-col justify-center">
+                    <p class="text-[10px] font-bold text-[#A68943] mb-1">MANAGEMENT CANDIDATE PROFILE</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2" th:text="${targetUser.name}">수강생명</h2>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="bg-[#F1F3F5] text-gray-600 px-2 py-0.5 rounded text-xs flex items-center">
+                            <span class="mr-1">🏆</span> 직급: <span th:text="${targetUser.rank}">직급</span>
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-400" th:text="${targetUser.email}">email@example.com</p>
+                </div>
+            </div>
+            <div class="w-32 bg-[#F8F9FB] flex flex-col items-center justify-center border-l border-gray-100 p-4">
+                <p class="text-xs text-gray-400 mb-1">총 출근일</p>
+                <p class="text-3xl font-bold text-[#1A237E]">
+                    <span th:text="${stats['totalAttendance'] != null ? stats['totalAttendance'] : 0}">0</span>
+                    <span class="text-sm font-normal text-gray-400">일</span>
+                </p>
+            </div>
+            <div class="absolute right-32 top-0 h-full w-4 bg-white transform -skew-x-[15deg]"></div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8">
+            <div class="flex justify-between items-center mb-10">
+                <div class="flex items-center gap-4">
+                    <h3 id="calendar-title" class="text-xl font-bold text-[#1A237E]">October 2024</h3>
+                    <div class="flex gap-2">
+                        <button onclick="moveMonth(-1)" class="p-1 text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </button>
+                        <button onclick="moveMonth(1)" class="p-1 text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex gap-4 text-[10px] font-medium text-gray-500">
+                    <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#4CAF50]"></span> 출근</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#FFB300]"></span> 지각</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#E53935]"></span> 결근</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#1E88E5]"></span> 공결</div>
+                </div>
+            </div>
+            <div>
+                <div class="calendar-grid border-b border-gray-100 pb-4 mb-4 text-center text-[10px] font-bold text-gray-400 tracking-widest">
+                    <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+                </div>
+                <div id="calendar-body" class="calendar-grid gap-y-12">
+                </div>
+            </div>
+            <div class="mt-12 flex justify-center">
+                <button class="bg-[#000666] text-white px-14 py-3 rounded-sm flex items-center justify-center gap-3 hover:bg-opacity-95 transition-all shadow-md">
+                    <i class="fa-solid fa-floppy-disk text-lg"></i>
+                    <span class="text-xl font-extrabold tracking-tight" style="font-family: 'Noto Sans KR', sans-serif;">저장</span>
+                </button>
+            </div>
+        </div>
+        <div class="bg-[#0D1146] text-white rounded-lg p-6 flex justify-between items-end">
+            <div>
+                <p class="text-[10px] text-blue-300 font-bold tracking-widest uppercase mb-1">MONTHLY TREND</p>
+                <h4 class="text-xl font-bold">Performance Consistent</h4>
+            </div>
+            <div class="flex items-end gap-1.5 h-12">
+                <div class="w-2 bg-white bg-opacity-20 rounded-t h-[40%]"></div>
+                <div class="w-2 bg-white bg-opacity-30 rounded-t h-[60%]"></div>
+                <div class="w-2 bg-white bg-opacity-50 rounded-t h-[75%]"></div>
+                <div class="w-2 bg-white bg-opacity-70 rounded-t h-[90%]"></div>
+                <div class="w-2 bg-white rounded-t h-full"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    const rawAttendanceData = /*[[${attendanceList}]]*/ [];
+    const attendanceMap = {};
+
+    // [수정] 데이터 초기화 시 시간(displayTime) 추출 로직 추가
+    if (rawAttendanceData && rawAttendanceData.length > 0) {
+        rawAttendanceData.forEach(item => {
+            if (item.targetDate) {
+                const d = new Date(item.targetDate);
+                if(!isNaN(d.getTime())) {
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const normalizedKey = `${y}-${m}-${day}`;
+
+                    // 시간 추출 (HH:mm 형식)
+                    const hours = String(d.getHours()).padStart(2, '0');
+                    const minutes = String(d.getMinutes()).padStart(2, '0');
+                    item.displayTime = `${hours}:${minutes}`;
+
+                    attendanceMap[normalizedKey] = item;
+                }
+            }
+        });
+    }
+
+    let currentViewDate = new Date();
+    let activeOptionKey = null;
+
+    function renderCalendar() {
+        const year = currentViewDate.getFullYear();
+        const month = currentViewDate.getMonth();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
+        const calendarBody = document.getElementById('calendar-body');
+        calendarBody.innerHTML = '';
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
+        const prevLastDate = new Date(year, month, 0).getDate();
+
+        const today = new Date();
+
+        for (let i = firstDay; i > 0; i--) {
+            calendarBody.innerHTML += `<div class="px-2 text-gray-300">${prevLastDate - i + 1}</div>`;
+        }
+
+        for (let i = 1; i <= lastDate; i++) {
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const record = attendanceMap[dateKey];
+            const isEditing = activeOptionKey === dateKey;
+            const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === i;
+
+            let cellStyle = `px-2 border-l border-gray-50 min-h-[100px] relative cursor-pointer ${isToday ? 'ring-2 ring-[#1A237E] ring-inset relative' : ''}`;
+            if(isEditing) cellStyle = "px-2 border-2 border-[#1A237E] bg-[#F8F9FB] min-h-[100px] relative z-20 cursor-pointer";
+
+            let statusTag = '';
+            if (record) {
+                const statusInfo = {
+                    'PRESENT': { text: '출근', class: 'bg-status-check' },
+                    'LATE': { text: '지각', class: 'bg-status-late' },
+                    'ABSENT': { text: '결근', class: 'bg-status-absent' },
+                    'EXCUSED': { text: '공결', class: 'bg-status-off' }
+                };
+                const info = statusInfo[record.status];
+
+                if(info) {
+                    // [수정] 출근/지각 시 옆에 시간 (HH:mm) 표시 형식 반영
+                    const timeStr = (record.displayTime && (record.status === 'PRESENT' || record.status === 'LATE'))
+                        ? `<span class="opacity-80 ml-1">(${record.displayTime})</span>` : '';
+
+                    statusTag = `<span class="status-tag ${info.class}">${info.text}${timeStr}</span>`;
+                }
+            }
+
+            const optionLayer = isEditing ? `
+                <div class="absolute top-10 left-0 w-32 bg-white shadow-xl border border-gray-100 rounded p-1">
+                    <div class="px-2 py-1.5 hover:bg-gray-50 cursor-pointer flex justify-between items-center" onclick="updateLocalStatus('${dateKey}', 'PRESENT', event)">
+                        <span class="text-[10px] text-[#4CAF50] font-bold">출근</span>
+                        ${record?.status === 'PRESENT' ? '<i class="fa-solid fa-check text-[8px] text-[#4CAF50]"></i>' : ''}
+                    </div>
+                    <div class="px-2 py-1.5 hover:bg-gray-50 cursor-pointer" onclick="updateLocalStatus('${dateKey}', 'LATE', event)">
+                        <span class="text-[10px] text-[#FFB300] font-bold">지각</span>
+                    </div>
+                    <div class="px-2 py-1.5 hover:bg-gray-50 cursor-pointer" onclick="updateLocalStatus('${dateKey}', 'ABSENT', event)">
+                        <span class="text-[10px] text-[#E53935] font-bold">결근</span>
+                    </div>
+                    <div class="px-2 py-1.5 hover:bg-gray-50 cursor-pointer border-t border-gray-50 mt-1" onclick="updateLocalStatus('${dateKey}', 'EXCUSED', event)">
+                        <span class="text-[10px] text-[#1E88E5] font-bold">공결</span>
+                    </div>
+                </div>` : '';
+
+            const todayBadge = isToday ? '<span class="bg-[#1A237E] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase">Today</span>' : '';
+
+            calendarBody.innerHTML += `
+                <div class="${cellStyle}" onclick="toggleEdit('${dateKey}', event)">
+                    <div class="flex justify-between items-start">
+                        <span class="text-sm font-bold ${isToday ? 'text-[#1A237E]' : 'text-gray-400'}">${i}</span>
+                        ${todayBadge}
+                    </div>
+                    ${statusTag}
+                    ${optionLayer}
+                </div>`;
+        }
+    }
+
+    function toggleEdit(key, event) {
+        event.stopPropagation();
+        activeOptionKey = (activeOptionKey === key) ? null : key;
+        renderCalendar();
+    }
+
+    function updateLocalStatus(key, status, event) {
+        event.stopPropagation();
+        if(!attendanceMap[key]) attendanceMap[key] = {};
+        attendanceMap[key].status = status;
+        activeOptionKey = null;
+        renderCalendar();
+    }
+
+    function moveMonth(offset) {
+        currentViewDate.setMonth(currentViewDate.getMonth() + offset);
+        activeOptionKey = null;
+        renderCalendar();
+    }
+
+    document.addEventListener('click', () => {
+        if(activeOptionKey) { activeOptionKey = null; renderCalendar(); }
+    });
+
+    renderCalendar();
+    /* ]]> */
+</script>
+</body>
+</html>
