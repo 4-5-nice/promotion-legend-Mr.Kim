@@ -26,9 +26,11 @@ public class CourseController {
      */
     public ResponseEntity<String> courseInput(
             @RequestParam("title") String title,
-            @RequestParam("description") String description) {
+            @RequestParam("description") String description,
+            @RequestParam("dueDate") int dueDate,
+            @RequestParam("track") String track) {
 
-        courseService.registerCourse(title, description);
+        courseService.registerCourse(title, description, dueDate, track);
         return ResponseEntity.ok("✅코스 등록를 성공했습니다!✅");
     }
 

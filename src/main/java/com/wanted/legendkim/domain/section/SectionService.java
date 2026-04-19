@@ -44,16 +44,14 @@ public class SectionService {
         return sectionRepository.findByCourseId(courseId);
     }
 
-    public Long registerSection(Long courseId, String title) {
+    public Long registerSection(Long courseId, String title, String note) {
 
-        // 없는 코스에 섹션을 등록하는 것을 방지한다.
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 코스입니다."));
 
-        Section section = Section.create(course, title);
+        Section section = Section.create(course, title, note);
         sectionRepository.save(section);
 
-        // 저장된 섹션의 ID 반환 (FE 2단계 영상 업로드 API 호출에 사용)
         return section.getId();
     }
 

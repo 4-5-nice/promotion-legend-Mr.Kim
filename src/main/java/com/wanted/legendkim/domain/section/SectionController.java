@@ -56,11 +56,11 @@ public class SectionController {
     // 새로운 리소스 생성
     @PostMapping("/admin/courses/{courseId}/sections")
     public ResponseEntity<Long> registerSection(
-            @PathVariable Long courseId, // URL 경로에서 추출
-            // 쿼리 파라미터 또는 폼 데이터에서 값을 추출한다.
-            @RequestParam("title") String title) {
-        Long sectionId = sectionService.registerSection(courseId, title);
-        return ResponseEntity.ok(sectionId); // 생성된 PK를 반환해준다.
+            @PathVariable Long courseId,
+            @RequestParam("title") String title,
+            @RequestParam(value = "note", required = false) String note) {
+        Long sectionId = sectionService.registerSection(courseId, title, note);
+        return ResponseEntity.ok(sectionId);
     }
 
     /* comment.

@@ -25,9 +25,6 @@
         </div>
     </div>
     <div class="nav__actions">
-        <img class="nav__avatar"
-             src="https://placehold.co/32x32"
-             alt="프로필" />
     </div>
 </nav>
 
@@ -59,7 +56,7 @@
                 <th:block th:each="section, stat : ${watchInfo.sections}">
                     <div th:if="${stat.first}"
                          class="lecture-item lecture-item--active"
-                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}"
+                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}, data-note=${section.note}"
                          onclick="changeVideo(this)">
                         <div class="lecture-item__dot lecture-item__dot--active"></div>
                         <div class="lecture-item__info">
@@ -68,7 +65,7 @@
                     </div>
                     <div th:unless="${stat.first}"
                          class="lecture-item lecture-item--inactive"
-                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}"
+                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}, data-note=${section.note}"
                          onclick="changeVideo(this)">
                         <div class="lecture-item__dot lecture-item__dot--inactive"></div>
                         <div class="lecture-item__info">
@@ -109,27 +106,10 @@
         <!-- 강의 노트 -->
         <div id="tab-notes" class="tab-content">
             <div class="notes-card">
-                <h2 class="notes-card__title">전략적 사고의 세 가지 축</h2>
-                <p class="notes-card__body">
-                    훌륭한 임원은 단순히 일을 잘하는 사람이 아닙니다. 조직의 전체 맥락을
-                    읽고, 부장급 이상의 시야를 확보해야 합니다. 오늘 강의에서는 다음의 핵심 가치를 다룹니다:
+                <h2 class="notes-card__title" id="note-title">강의 노트</h2>
+                <p class="notes-card__body" id="note-content"
+                   th:text="${watchInfo.sections != null and !#lists.isEmpty(watchInfo.sections) ? watchInfo.sections[0].note : '등록된 강의 노트가 없습니다.'}">
                 </p>
-                <div class="notes-card__items">
-                    <div class="notes-item">
-                        <div class="notes-item__num">01</div>
-                        <div class="notes-item__content">
-                            <span class="notes-item__heading notes-item__heading--light">수직적 정렬 (Vertical Alignment)</span>
-                            <span class="notes-item__desc">CEO의 비전이 말단 직원에게까지 어떻게 전달되는가에 대한 메커니즘을 이해하십시오.</span>
-                        </div>
-                    </div>
-                    <div class="notes-item">
-                        <div class="notes-item__num">02</div>
-                        <div class="notes-item__content">
-                            <span class="notes-item__heading notes-item__heading--bold">자원 배분의 결단력</span>
-                            <span class="notes-item__desc">한정된 예산과 인력을 어디에 집중할 것인가? 이것이 부장과 이사의 차이를 만듭니다.</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -160,10 +140,10 @@
         <div class="instructor-card">
             <div class="instructor-card__header">
                 <img class="instructor-card__avatar"
-                     src="https://placehold.co/56x56"
+                     src="/images/movieUpload/kim.jpg"
                      alt="김부장" />
                 <div>
-                    <div class="instructor-card__name" th:text="${watchInfo.instructorName}">김부장</div>
+                    <div class="instructor-card__name" th:text="${watchInfo.instructorName} ?: '김부장'">김부장</div>
                     <div class="instructor-card__role">전략 운영 총괄</div>
                 </div>
             </div>
@@ -174,17 +154,7 @@
             </p>
         </div>
 
-        <!-- Next Lecture -->
-        <div class="next-lecture">
-            <div class="next-lecture__label">다음 강의 예고</div>
-            <div class="next-lecture__thumb">
-                <img src="https://placehold.co/272x128" alt="다음 강의 썸네일" />
-                <div class="next-lecture__overlay">
-                    <div class="next-lecture__tag">COMING UP NEXT</div>
-                    <div class="next-lecture__title">02. 리더십의 수직적 구조 이해</div>
-                </div>
-            </div>
-        </div>
+
 
     </aside>
 
@@ -237,11 +207,17 @@
     function changeVideo(el) {
         const rawUrl = el.getAttribute('data-video');
         const videoUrl = (rawUrl && rawUrl.startsWith('http')) ? rawUrl : '/video/' + rawUrl;
+        const note = el.getAttribute('data-note') || '등록된 강의 노트가 없습니다.';
+        const title = el.getAttribute('data-title') || '강의 노트';
 
         const video = document.getElementById('main-video');
         video.src = videoUrl;
         video.load();
         video.play();
+
+        // 강의 노트 교체
+        document.getElementById('note-title').textContent = title;
+        document.getElementById('note-content').textContent = note;
 
         // 사이드바 active 상태 교체
         document.querySelectorAll('.lecture-item').forEach(item => {

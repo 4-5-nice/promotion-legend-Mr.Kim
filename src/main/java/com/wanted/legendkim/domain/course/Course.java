@@ -56,13 +56,18 @@ public class Course {
     @Column(name = "duedate")
     private int dueDate;
 
+    @Column(name = "track")
+    private String track;
+
     // 비즈니스 로직 캡슐화
     // 우리는 이를 통해서 규칙이 추가되었을 경우 이 메서드만 수정하면 된다.
-    public static Course create(String title, String description) {
+    public static Course create(String title, String description, int dueDate, String track) {
 
         Course course = new Course();
         course.title = title;
         course.description = description;
+        course.dueDate = dueDate;
+        course.track = track;
         return course;
 
     }

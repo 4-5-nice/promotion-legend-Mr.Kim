@@ -28,13 +28,27 @@ public class EnrollmentResponse {
     private LocalDateTime startAt;
     private LocalDateTime deadLineDate;
     private EnrollmentStatus status;
+    private boolean alreadyEnrolled; // 중복 수강신청 여부
 
     public static EnrollmentResponse of(Enrollment enrollment) {
-        return new EnrollmentResponse(enrollment.getId(),
-        enrollment.getCourse().getTitle(),
-        enrollment.getStartAt(),
-        enrollment.getDeadLineDate(),
-        enrollment.getStatus()
+        return new EnrollmentResponse(
+                enrollment.getId(),
+                enrollment.getCourse().getTitle(),
+                enrollment.getStartAt(),
+                enrollment.getDeadLineDate(),
+                enrollment.getStatus(),
+                false
+        );
+    }
+
+    public static EnrollmentResponse ofDuplicate(Enrollment enrollment) {
+        return new EnrollmentResponse(
+                enrollment.getId(),
+                enrollment.getCourse().getTitle(),
+                enrollment.getStartAt(),
+                enrollment.getDeadLineDate(),
+                enrollment.getStatus(),
+                true
         );
     }
 
