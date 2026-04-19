@@ -46,13 +46,15 @@
 
                     <div class="action-area" th:if="${post.mine}">
                         <button type="button"
-                                th:onclick="|location.href='/freeboard/user/freeboard/${post.id}/edit'|">
+                                th:onclick="|location.href='/freeboard/user/freeboard/${post.id}/freeboard-write'|">
                             수정
                         </button>
 
-                        <button type="button" class="delete-btn">
-                            삭제
-                        </button>
+                        <form th:action="@{/freeboard/user/freeboard/{postId}/delete(postId=${post.id})}"
+                              method="post"
+                              style="display:inline;">
+                            <button type="submit" class="delete-btn">삭제</button>
+                        </form>
                     </div>
                 </div>
 

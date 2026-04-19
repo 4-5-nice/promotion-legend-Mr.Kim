@@ -61,23 +61,53 @@ public class FreeBoardController {
 
     // 글 작성 페이지 불러오기
     @GetMapping("/freeboard-write")
-    public String writePage() {
+    public String writePage(Model model) {
+        model.addAttribute("isEdit", false);
+        // 현재 등록모드(false)인지 수정모드(true)인지 체크
         return "freeboard/user/freeboard-write";
     }
 
     // 글 등록
     @PostMapping("/freeboard-write")
-    public String writePost(
-            @RequestParam String title,
-            @RequestParam String content,
-            Principal principal
-    ) {
+    public String writePost(@RequestParam String title, @RequestParam String content, Principal principal) {
         String email = principal.getName();
         // 로그인 한 사용자 email 가져오기
 
         freeBoardService.writePost(title, content, email);
 
         return "redirect:/freeboard/user/freeboard"; // 다시 자유게시판 페이지로 이동
+    }
+
+    @GetMapping("/{postId}/freeboard-write")
+    public String editPage(@PathVariable Long postId, Principal principal, Model model) {
+        String email = principal.getName(); // 로그인 한 사용자 email 가져오기
+
+        FreeBoardDetailDTO post = freeBoardService.getEditPost(postId, email); // 게시글 수정하기
+
+        model.addAttribute("post", post); // 수정한 게시글 정보 담기
+        model.addAttribute("isEdit", true);
+        // 현재 등록모드(false)인지 수정모드(true)인지 체크
+
+        return "freeboard/user/freeboard-write"; // 수정 페이지로 이동
+    }
+
+    @PostMapping("/{postId}/freeboard-edit")
+    public String editPost(@PathVariable Long postId, @RequestParam String title,
+                           @RequestParam String content, Principal principal) {
+        String email = principal.getName(); // 사용자 email 가져오기
+
+        freeBoardService.editPost(postId, title, content, email); // 게시글 수정하기
+
+        return "redirect:/freeboard/user/freeboard/" + postId; // 다시 상세조회 페이지로 이동
+    }
+
+    @PostMapping("/{postId}/delete")
+    public String deletePost(@PathVariable Long postId, Principal principal) {
+        String email = principal.getName(); // 사용자 email 가져오기
+
+        freeBoardService.deletePost(postId, email); // 게시글 삭제하기
+
+        return "redirect:/freeboard/user/freeboard"; // 자유게시판 페이지로 이동
     }
 
 

@@ -55,7 +55,8 @@ public class FreeBoardPost {
         this.viewCount = 0L; // 혹시 모를 조회수 null 값 방지
     }
 
-    public void update(String title, String content) {
+    // 변경사항 수정하는 메서드
+    public void modify(String title, String content) {
         this.title = title;
         this.content = content;
     }

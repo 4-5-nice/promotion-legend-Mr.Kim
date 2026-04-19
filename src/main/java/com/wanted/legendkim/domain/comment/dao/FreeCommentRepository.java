@@ -8,4 +8,6 @@ import java.util.List;
 public interface FreeCommentRepository extends JpaRepository<FreeComment, Long> {
 
     List<FreeComment> findByPostIdOrderByCreatedAtAsc(Long postId);
+
+    void deleteByPostId(Long postId);
 }
