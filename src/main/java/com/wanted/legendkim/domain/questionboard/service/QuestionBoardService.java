@@ -210,7 +210,7 @@ public class QuestionBoardService {
                 question.getAnswer(),
                 question.getUser().getName(),
                 question.getUser().getRank().getLabel(),
-                question.getCreatedAt().format(DATE_FORMATTER),
+                question.getCreatedAt().toLocalDate().toString(),
                 question.getViewCount(),
                 question.getCourse().getTitle(),
                 question.getSection().getTitle(),

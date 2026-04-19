@@ -20,7 +20,7 @@ public class AdminFreeCommentService {
     private static final DateTimeFormatter COMMENT_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
-    public List<FreeCommentDTO> getAdminComments(Long postId) {
+    public List<FreeCommentDTO> getComments(Long postId) {
         return freeCommentRepository.findByPostIdOrderByCreatedAtAsc(postId)
                 .stream()
                 .map(comment -> new FreeCommentDTO(

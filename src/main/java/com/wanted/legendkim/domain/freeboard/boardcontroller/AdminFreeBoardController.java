@@ -34,7 +34,7 @@ public class AdminFreeBoardController {
     @GetMapping("/{postId}")
     public String detail(@PathVariable Long postId, Model model) {
         FreeBoardDetailDTO post = adminFreeBoardService.getAdminPostDetail(postId);
-        List<FreeCommentDTO> comments = adminFreeCommentService.getAdminComments(postId);
+        List<FreeCommentDTO> comments = adminFreeCommentService.getComments(postId);
 
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
@@ -42,7 +42,7 @@ public class AdminFreeBoardController {
         return "freeboard/admin/freeboard-detail";
     }
 
-    @PostMapping("/{postId}/delete")
+    @PostMapping("/{postId}/freeboard-delete")
     public String deletePost(@PathVariable Long postId) {
         adminFreeBoardService.deletePostByAdmin(postId);
         return "redirect:/freeboard/admin/freeboard";

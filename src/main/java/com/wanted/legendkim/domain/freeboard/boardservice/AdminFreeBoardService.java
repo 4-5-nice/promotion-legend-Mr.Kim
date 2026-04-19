@@ -34,7 +34,7 @@ public class AdminFreeBoardService {
                         post.getTitle(),
                         post.getUser().getName(),
                         post.getViewCount(),
-                        post.getCreatedAt().toLocalDate().toString()
+                        post.getCreatedAt().format(DETAIL_DATE_FORMATTER)
                 ))
                 .toList();
     }

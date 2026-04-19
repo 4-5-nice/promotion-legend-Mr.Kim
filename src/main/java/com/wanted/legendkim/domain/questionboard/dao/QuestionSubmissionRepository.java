@@ -13,4 +13,6 @@ public interface QuestionSubmissionRepository extends JpaRepository<QuestionSubm
     boolean existsByQuestion_IdAndUser_Id(Long questionId, Long userId);
 
     boolean existsByUser_IdAndSubmittedAtBetween(Long userId, LocalDateTime start, LocalDateTime end);
+
+    void deleteByQuestion_Id(Long questionId);
 }
