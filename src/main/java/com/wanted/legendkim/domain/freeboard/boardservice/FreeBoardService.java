@@ -145,4 +145,18 @@ public class FreeBoardService {
             throw new IllegalArgumentException("작성자만 할 수 있습니다.");
         } // 게시물을 쓴 사람의 이메일과 접속한 사람의 이메일을 비교해서 다르면 작성자가 아니라는 뜻
     }
+
+    @Transactional(readOnly = true)
+    public List<FreeBoardDTO> getAdminPosts() {
+        return freeBoardPostRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(post -> new FreeBoardDTO(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getUser().getName(),
+                        post.getViewCount(),
+                        post.getCreatedAt().toLocalDate().toString()
+                ))
+                .toList();
+    }
 }

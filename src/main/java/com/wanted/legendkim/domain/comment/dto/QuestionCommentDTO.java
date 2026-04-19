@@ -11,4 +11,5 @@ public class QuestionCommentDTO {
     private String authorName;
     private String content;
     private String createdAt;
+    private boolean mine;
 }

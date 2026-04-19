@@ -45,4 +45,9 @@ public class QuestionComment {
             this.createdAt = LocalDateTime.now(); // 현재 시간 찍기
         }
     }
+
+    // 댓글 변경하는 메서드
+    public void modify(String content) {
+        this.content = content;
+    }
 }

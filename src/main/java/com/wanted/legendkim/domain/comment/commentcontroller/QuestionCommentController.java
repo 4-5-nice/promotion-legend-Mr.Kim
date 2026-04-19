@@ -27,4 +27,24 @@ public class QuestionCommentController {
 
         return ResponseEntity.ok("댓글이 등록되었습니다."); // 댓글이 저장되면 200을 전달하면서 메세지 반환
     }
+
+    @PostMapping("/comments/{commentId}/edit")
+    public String editComment(@PathVariable Long commentId, @RequestParam String content, Principal principal
+    ) {
+        String email = principal.getName();// 작성자 email 가져오기
+
+        Long postId = questionCommentService.editComment(commentId, content, email); // 댓글 수정하기
+
+        return "redirect:/questionboard/user/questionboard/" + postId; // 다시 게시글 상세 페이지로 이동
+    }
+
+    @PostMapping("/comments/{commentId}/delete")
+    public String deleteComment(@PathVariable Long commentId, Principal principal
+    ) {
+        String email = principal.getName();// 작성자 email 가져오기
+
+        Long postId = questionCommentService.deleteComment(commentId, email); // 댓글 삭제
+
+        return "redirect:/questionboard/user/questionboard/" + postId; // 다시 게시글 상세 페이지로 이동
+    }
 }

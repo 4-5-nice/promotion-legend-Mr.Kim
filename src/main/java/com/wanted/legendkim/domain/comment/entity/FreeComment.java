@@ -45,7 +45,8 @@ public class FreeComment {
         this.content = content;
     }
 
-    public void update(String content) {
+    // 댓글 변경하는 메서드
+    public void modify(String content) {
         this.content = content;
     }
 }

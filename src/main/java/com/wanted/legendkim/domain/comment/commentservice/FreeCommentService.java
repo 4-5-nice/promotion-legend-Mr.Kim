@@ -55,7 +55,7 @@ public class FreeCommentService {
     }
 
     // 댓글 가져오기
-    public List<FreeCommentDTO> getComments(Long postId) {
+    public List<FreeCommentDTO> getComments(Long postId, String email) {
         return freeCommentRepository.findByPostIdOrderByCreatedAtAsc(postId)
                                   // 게시글 아이디로 댓글들을 날짜순으로 조회
                 .stream()
@@ -63,8 +63,51 @@ public class FreeCommentService {
                         comment.getId(),
                         comment.getUser().getName(),
                         comment.getContent(),
-                        comment.getCreatedAt().format(COMMENT_DATE_FORMATTER)
+                        comment.getCreatedAt().format(COMMENT_DATE_FORMATTER),
+                        email != null && comment.getUser().getEmail().equals(email)
                 ))
                 .toList();
     } // entity를 하나씩 빼서 FreeCommentDTO 리스트로 바꿔서 반환
+
+    @Transactional
+    public Long editComment(Long commentId, String content, String email) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
+        } // 댓글이 없으면 수정 불가
+
+        FreeComment comment = freeCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+        // 댓글 아이디로 댓글 정보 찾기
+
+        validateCommentWriter(comment, email); // 자기가 쓴 댓글만 수정 가능하게 제한
+
+        comment.modify(content.trim()); // 댓글 수정하기. trim으로 앞뒤 빈칸 없애기
+
+        return comment.getPost().getId(); // 그 댓글이 달린 게시물과 댓글 아이디 정보 반환
+    }
+
+    @Transactional
+    public Long deleteComment(Long commentId, String email) {
+        FreeComment comment = freeCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+        // 댓글 아이디로 댓글 정보 찾기
+
+        validateCommentWriter(comment, email); // 작성자가 아니면 삭제 불가하게 제한
+
+        Long postId = comment.getPost().getId(); // 댓글이 달린 게시물과 댓글 아이디 정보 저장
+
+        freeCommentRepository.delete(comment); // persistence context에서 삭제
+
+        return postId; // 아까 저장한 정보들 반환
+    }
+
+    private void validateCommentWriter(FreeComment comment, String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        } // 로그인 하지 않으면 불가
+
+        if (!comment.getUser().getEmail().equals(email)) {
+            throw new IllegalArgumentException("작성자만 할 수 있습니다.");
+        } // 작성자가 아니면 불가
+    }
 }

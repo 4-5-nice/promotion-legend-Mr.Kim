@@ -120,7 +120,39 @@
                             <strong th:text="${comment.authorName}"></strong>
                             <span th:text="${comment.createdAt}"></span>
                         </div>
-                        <p th:text="${comment.content}"></p>
+
+                        <p th:id="'comment-text-' + ${comment.id}"
+                           th:text="${comment.content}"></p>
+
+                        <div class="comment-action" th:if="${comment.mine}">
+                            <button type="button"
+                                    th:onclick="|toggleEditForm(${comment.id})|">
+                                수정
+                            </button>
+                            <button type="button"
+                                    th:onclick="|deleteComment(${comment.id})|">
+                                삭제
+                            </button>
+                        </div>
+
+                        <div class="comment-edit-form"
+                             th:id="'edit-form-' + ${comment.id}"
+                             style="display:none; margin-top:10px;"
+                             th:if="${comment.mine}">
+                            <textarea th:id="'edit-input-' + ${comment.id}"
+                                      maxlength="500"
+                                      th:text="${comment.content}"></textarea>
+                            <div class="comment-edit-actions">
+                                <button type="button"
+                                        th:onclick="|submitEditComment(${comment.id})|">
+                                    수정완료
+                                </button>
+                                <button type="button"
+                                        th:onclick="|toggleEditForm(${comment.id})|">
+                                    취소
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -211,6 +243,87 @@
         disableOptions();
         paintResult(selectedAnswer, actualCorrectAnswer);
         unlockComments();
+    }
+
+    function toggleEditForm(commentId) {
+        const form = document.getElementById(`edit-form-${commentId}`);
+        if (!form) return;
+
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+
+    function submitEditComment(commentId) {
+        if (!solvedState) {
+            alert("문제를 풀어야 댓글을 수정할 수 있습니다.");
+            return;
+        }
+
+        const input = document.getElementById(`edit-input-${commentId}`);
+        const content = input.value.trim();
+
+        if (!content) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        fetch(`/questionboard/user/questionboard/comments/${commentId}/edit`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `content=${encodeURIComponent(content)}`
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(message => {
+                        throw new Error(message || "댓글 수정에 실패했습니다.");
+                    });
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert("댓글이 수정되었습니다.");
+                location.reload();
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message || "댓글 수정 중 오류가 발생했습니다.");
+            });
+    }
+
+    function deleteComment(commentId) {
+        if (!solvedState) {
+            alert("문제를 풀어야 댓글을 삭제할 수 있습니다.");
+            return;
+        }
+
+        if (!confirm("댓글을 삭제하시겠습니까?")) {
+            return;
+        }
+
+        fetch(`/questionboard/user/questionboard/comments/${commentId}/delete`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(message => {
+                        throw new Error(message || "댓글 삭제에 실패했습니다.");
+                    });
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert("댓글이 삭제되었습니다.");
+                location.reload();
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message || "댓글 삭제 중 오류가 발생했습니다.");
+            });
     }
 
     document.addEventListener("DOMContentLoaded", function () {

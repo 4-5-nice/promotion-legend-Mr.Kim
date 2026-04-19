@@ -51,7 +51,7 @@ public class FreeBoardController {
         // 게시글 상세정보 가져오기
         FreeBoardDetailDTO post = freeBoardService.getPostDetail(postId, email);
         // 댓글들 불러오기
-        List<FreeCommentDTO> comments = freeCommentService.getComments(postId);
+        List<FreeCommentDTO> comments = freeCommentService.getComments(postId, email);
 
         model.addAttribute("post", post); // model에 게시글 정보 담아주기
         model.addAttribute("comments", comments); // model에 댓글 정보 담아주기
@@ -78,6 +78,7 @@ public class FreeBoardController {
         return "redirect:/freeboard/user/freeboard"; // 다시 자유게시판 페이지로 이동
     }
 
+    // 글 수정 페이지 불러오기
     @GetMapping("/{postId}/freeboard-write")
     public String editPage(@PathVariable Long postId, Principal principal, Model model) {
         String email = principal.getName(); // 로그인 한 사용자 email 가져오기
@@ -91,6 +92,7 @@ public class FreeBoardController {
         return "freeboard/user/freeboard-write"; // 수정 페이지로 이동
     }
 
+    // 글 수정
     @PostMapping("/{postId}/freeboard-edit")
     public String editPost(@PathVariable Long postId, @RequestParam String title,
                            @RequestParam String content, Principal principal) {
@@ -101,7 +103,8 @@ public class FreeBoardController {
         return "redirect:/freeboard/user/freeboard/" + postId; // 다시 상세조회 페이지로 이동
     }
 
-    @PostMapping("/{postId}/delete")
+    // 글 삭제
+    @PostMapping("/{postId}/freeboard-delete")
     public String deletePost(@PathVariable Long postId, Principal principal) {
         String email = principal.getName(); // 사용자 email 가져오기
 
