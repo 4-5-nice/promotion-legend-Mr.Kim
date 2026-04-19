@@ -12,4 +12,6 @@ public interface LoginLogRepository extends JpaRepository<LoginHistory, Long> {
     List<LoginHistory> findByUserId(Long userId);
 
     List<LoginHistory> findAllByOrderByCreatedAtDesc();
+
+    List<LoginHistory> findByUserIdOrderByCreatedAtDesc(Long userId);
 }
