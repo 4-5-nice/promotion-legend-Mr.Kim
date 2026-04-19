@@ -37,7 +37,7 @@ public class QuestionBoardUser {
     private Integer point;
 
     @Convert(converter = RankConverter.class)
-    @Column(nullable = false, length = 20)
+    @Column(name = "`rank`", nullable = false, length = 20)
     private Rank rank;
 
     @Column(name = "login_fail_count", nullable = false)
@@ -60,4 +60,16 @@ public class QuestionBoardUser {
 
     @Column(name = "identify_answer", length = 100)
     private String identifyAnswer;
+
+    // 점수를 반영하는 메서드
+    public void addPoint(int amount) {
+        if (this.point == null) {
+            this.point = 0;
+        }
+        this.point += amount;
+        if (this.point < 0) {
+            this.point = 0;
+        }
+        this.rank = Rank.fromPoint(this.point); // 포인트를 기반으로 직급 변경
+    }
 }

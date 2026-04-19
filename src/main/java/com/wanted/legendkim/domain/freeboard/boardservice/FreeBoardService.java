@@ -50,6 +50,7 @@ public class FreeBoardService {
 
     @Transactional
     public FreeBoardDetailDTO getPostDetail(Long postId, String email) {
+
         FreeBoardPost post = freeBoardPostRepository.findById(postId)
                                             // 게시글 아이디로 게시글 정보 가져오기
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
@@ -75,6 +76,7 @@ public class FreeBoardService {
 
     @Transactional
     public void writePost(String title, String content, String email) {
+
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("로그인이 필요합니다.");
         } // 로그인하지 않으면 글 작성 못하게하기 controller에서 담아서 보낸 email을 보고 비어있으면 로그인 하지 않은것.

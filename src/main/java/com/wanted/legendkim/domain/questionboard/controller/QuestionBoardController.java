@@ -124,16 +124,22 @@ public class QuestionBoardController {
     // 정답 제출
     @PostMapping("/{questionId}/solve")
     @ResponseBody
-    public ResponseEntity<QuestionSolveResponseDTO> solveQuestion(@PathVariable Long questionId,
+    public ResponseEntity<?> solveQuestion(@PathVariable Long questionId,
+       // < > 안에 ?로 타입을 정해두지 않았다.
+      // 성공시에는 DTO 타입을 반환하지만 실패시에는 String을 반환하기 때문에 미리 정해두지 않음.
                                                                   @RequestParam Integer selectedAnswer,
                                                                   Principal principal) {
-        String email = principal.getName(); // 로그인 한 사용자 이메일 가져오기
+        try {
+            String email = principal.getName(); // 로그인 한 사용자 이메일 가져오기
 
-        QuestionSolveResponseDTO result = questionBoardService.solveQuestion(questionId, selectedAnswer, email);
-                                                  // 문제를 푸는 기능
+            QuestionSolveResponseDTO result = questionBoardService.solveQuestion(questionId, selectedAnswer, email);
+            // 문제를 푸는 기능
 
-        return ResponseEntity.ok(result);
-        // HTTP에 응답을 보내는 코드
-        // 응답 전체에.200으로 응담.응답body에 들어갈 데이터
+            return ResponseEntity.ok(result);
+            // HTTP에 응답을 보내는 코드
+            // 응답 전체에.200으로 응담.응답body에 들어갈 데이터
+        } catch(IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // 실패시 에러문 반환
+        }
     }
 }

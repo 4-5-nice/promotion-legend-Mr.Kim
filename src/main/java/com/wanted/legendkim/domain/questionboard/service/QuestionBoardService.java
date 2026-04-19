@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class QuestionBoardService {
     }
 
     public List<QuestionBoardDTO> getQuestionList(String rank, String email) {
+
         QuestionBoardUser user = questionBoardUserRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         // email로 사용자 정보 조회
@@ -170,6 +173,10 @@ public class QuestionBoardService {
     @Transactional
     public QuestionDetailDTO getQuestionDetail(Long questionId, String email) {
 
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
         // 로그인 한 사용자 정보를 이메일로 찾기
         QuestionBoardUser user = questionBoardUserRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
@@ -224,6 +231,11 @@ public class QuestionBoardService {
 
     @Transactional
     public QuestionSolveResponseDTO solveQuestion(Long questionId, Integer selectedAnswer, String email) {
+
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
         if (selectedAnswer == null || selectedAnswer < 1 || selectedAnswer > 5) {
             throw new IllegalArgumentException("정답은 1번부터 5번 중 하나를 선택해야 합니다.");
         } // 만일 답을 선택하지 않았을 경우 띄우는 알림
@@ -236,8 +248,26 @@ public class QuestionBoardService {
         Questions question = questionBoardRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
 
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay(); // 오늘 날짜의 시작 시간 체크
+        LocalDateTime endOfDay = startOfDay.plusDays(1); // 오늘 날씨의 끝 시간
+
+        boolean alreadySolvedToday = questionSubmissionRepository
+                .existsByUser_IdAndSubmittedAtBetween(user.getId(), startOfDay, endOfDay);
+        // 사용자가 위에서 도출한 시간 사이에 문제를 제출한 이력이 있는가? (사용자가 오늘 문제를 풀었는가?)
+        // 푼 이력이 있으면 true 없으면 false
+
+        if (alreadySolvedToday) {
+            throw new IllegalArgumentException("문제는 하루에 하나만 풀 수 있습니다.");
+        } // 문제를 푼 이력이 있으면 풀지 못하게 에러 코드 전달
+
         boolean correct = question.getAnswer().equals(selectedAnswer);
         // 위에서 가져온 문제의 정보에서 답을 가져와서 사용자가 고른 답과 비교하여 같으면 true 아니면 false
+
+        if (correct) {
+            user.addPoint(5); // 정답이면 5점 반영
+        } else {
+            user.addPoint(-2); // 오답이면 -2점 반영
+        }
 
         QuestionSubmission submission = new QuestionSubmission(
                 question,

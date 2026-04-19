@@ -1,29 +1,31 @@
 package com.wanted.legendkim.domain.questionboard.entity;
 
 public enum Rank {
-    INTERN("인턴", 0),
-    CONTRACT("계약직", 1),
-    STAFF("정규직", 2),
-    ASSISTANT_MANAGER("대리", 3),
-    MANAGER("과장", 4),
-    DIRECTOR("부장", 5),
-    EXECUTIVE("임원", 6),
-    RETIRED("정년퇴직", 7);
+    INTERN("인턴", 0, 0),
+    CONTRACT("계약직", 1, 20),
+    STAFF("정규직", 2, 60),
+    ASSISTANT_MANAGER("대리", 3, 130),
+    MANAGER("과장", 4, 230),
+    DIRECTOR("부장", 5, 380),
+    EXECUTIVE("임원", 6, 580),
+    RETIRED("정년퇴직", 7, 800);
 
     private final String label;
     private final int level;
+    private final int requiredPoint;
 
-    Rank(String label, int level) {
+    Rank(String label, int level, int requiredPoint) {
         this.label = label;
         this.level = level;
+        this.requiredPoint = requiredPoint;
     }
 
     public String getLabel() {
         return label;
     }
 
-    public int getLevel() {
-        return level;
+    public int getRequiredPoint() {
+        return requiredPoint;
     }
 
     // 사용자가 특정 직급 목록을 조회할 수 있는가
@@ -45,5 +47,17 @@ public enum Rank {
             }
         }
         throw new IllegalArgumentException("지원하지 않는 직급입니다: " + dbData);
+    }
+
+    public static Rank fromPoint(int point) {
+        Rank result = INTERN;
+
+        for (Rank rank : values()) {
+            if (point >= rank.requiredPoint) {
+                result = rank;
+            }
+        }
+
+        return result;
     }
 }
