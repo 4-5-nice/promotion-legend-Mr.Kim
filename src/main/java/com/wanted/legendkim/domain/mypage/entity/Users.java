@@ -1,10 +1,7 @@
 package com.wanted.legendkim.domain.mypage.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
@@ -36,7 +33,7 @@ public class Users {
     @Column(name = "point")
     private int point;
 
-    @Column(name = "rank")
+    @Column(name = "`rank`")
     private String rank;
 
     @Column(name = "login_fail_count")
@@ -56,4 +53,10 @@ public class Users {
 
     @Column(name = "identify_question")
     private String identifyQuestion;
+
+    // Users.java
+    public void useVacation(int count) {
+        // 여기서 직접 계산해서 업데이트!
+        this.vacationCoupon -= count;
+    }
 }

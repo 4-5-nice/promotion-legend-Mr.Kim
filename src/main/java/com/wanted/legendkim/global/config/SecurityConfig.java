@@ -32,13 +32,13 @@ public class SecurityConfig {
                                            AuthFailHandler authFailHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/error").permitAll()
-                                .requestMatchers("/auth/**", "/user/signup").permitAll()
-                                //인증 없이 인가 permitAll()
-                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                                .requestMatchers("/user/**").hasAuthority("USER")
-                                .anyRequest().authenticated()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/error").permitAll()
+                        .requestMatchers("/auth/**", "/user/signup").permitAll()
+                        //인증 없이 인가 permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/user/**").hasAuthority("USER")
+                        .anyRequest().authenticated()
                         //다른 모든 요청은 최소한 로그인이 되어 있어야 접근할 수 있도록 차단
                 )
                 .exceptionHandling(conf -> conf

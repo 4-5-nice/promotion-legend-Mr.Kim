@@ -18,4 +18,8 @@ public interface QuestionSubmissionsRepository extends JpaRepository<QuestionSub
 
     // 3. 특정 유저가 틀린 문제 수 세기 (포인트 감점용)
     int countByUserIdAndIsCorrectFalse(Users user);
+
+    void deleteByQuestionId_UserId(Users user);
+
+    void deleteByUserId(Users user);
 }

@@ -2,10 +2,7 @@ package com.wanted.legendkim.domain.enrollment.dto;
 
 import com.wanted.legendkim.domain.enrollment.Enrollment;
 import com.wanted.legendkim.domain.enrollment.EnrollmentStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 

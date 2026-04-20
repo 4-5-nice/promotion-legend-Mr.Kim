@@ -1,17 +1,17 @@
 package com.wanted.legendkim.domain.mypage;
 
-import com.wanted.legendkim.domain.mypage.DTO.UsersDTO;
 import com.wanted.legendkim.domain.mypage.entity.Attendance;
-import com.wanted.legendkim.domain.mypage.service.AttendanceService;
-import com.wanted.legendkim.domain.mypage.service.EnrollmentsService;
-import com.wanted.legendkim.domain.mypage.service.QuestionSubmissionsService;
-import com.wanted.legendkim.domain.mypage.service.UsersService;
+import com.wanted.legendkim.domain.mypage.entity.Payments;
+import com.wanted.legendkim.domain.mypage.entity.Users;
+import com.wanted.legendkim.domain.mypage.repository.PaymentsRepository;
+import com.wanted.legendkim.domain.mypage.service.*;
+import com.wanted.legendkim.domain.mypage.DTO.UsersDTO;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -25,6 +25,15 @@ public class MyPageController {
     private final EnrollmentsService enrollmentService;
     private final AttendanceService attendanceService;
     private final QuestionSubmissionsService questionSubmissionService;
+    private final CommentsService commentService;
+    private final CoursesService courseService;
+    private final FreeBoardsService freeboardService;
+    private final LoginHistoryService loginHistoryService;
+    private final PaymentsService paymentService;
+    private final QuestionsService questionService;
+    private final SectionsService sectionService;
+    private final VacationHistoryService vacationHistoryService;
+
 
     //나의 정보 페이지
     @GetMapping("/myPage/info")
@@ -78,6 +87,49 @@ public class MyPageController {
         return "mypage/attendance";
     }
 
+    //연차 사용하기 화면
+    @GetMapping("/myPage/usePTO")
+    public String usePTO(Model model, Principal principal){
+        String loginId = principal.getName();
+
+        // 1. 화면에 뿌릴 유저 정보(DTO)
+        UsersDTO userDTO = userService.findByEmail(loginId);
+
+        // 2. 서비스 호출 (로그인 ID 전달)
+        List<Attendance> list = attendanceService.attendanceList(loginId);
+
+        // 3. 통계 계산
+        Map<String, Long> stats = attendanceService.getAttendanceInfo(list);
+
+        model.addAttribute("user", userDTO);
+        model.addAttribute("attendanceList", list);
+        model.addAttribute("stats", stats);
+        model.addAttribute("today", new java.util.Date());
+
+        return "mypage/usepto";
+    }
+
+    //연차 사용
+    @PostMapping("myPage/PTOApply")
+    @ResponseBody
+    public ResponseEntity<String> ptoApply(@RequestBody Map<String, Object> data, Principal principal) {
+        // 1. 데이터가 비어있는지 체크 (안전장치)
+        if (data == null || data.isEmpty()) {
+            return ResponseEntity.badRequest().body("신청 정보가 없습니다.");
+        }
+
+        // 2. 서비스로 데이터 넘겨서 처리 (결과를 boolean 등으로 받기)
+        // 서비스 메서드에서 처리가 잘 되면 true, 아니면 false를 주게 짜면 좋습니다.
+        boolean isSuccess = attendanceService.registerVacation(principal.getName(), data);
+
+        // 3. 결과에 따른 처리
+        if (isSuccess) {
+            return ResponseEntity.ok("success");
+        } else {
+            return ResponseEntity.status(500).body("fail");
+        }
+    }
+
     //내가 푼 문제 조회 페이지
     @GetMapping("/myPage/quizhistory")
     public String quizHistory(Model model, Principal principal) {
@@ -108,10 +160,16 @@ public class MyPageController {
         return "mypage/endjourney";
     }
 
-    //회원 탈퇴 버튼 누르면 관련 정보 삭제(아직 미구현)
+    //회원 탈퇴 버튼 누르면 관련 정보 삭제
     @PostMapping("/myPage/deleteuser")
-    public String deleteUser() {
-        return "auth/login";
+    public String deleteUser(Principal principal) {
+        // 1. 누구인지 확인
+        String loginId = principal.getName();
+
+        // 2. 서비스야, 이 사람 데이터 싹 다 지워라 (순서대로 13개!)
+        userService.deleteUserAllData(loginId);
+
+        return "redirect:/login"; //또는 "/" 메인으로? & 추후 합친 후엔 auth/login으로.
     }
 
     //관리자용 출결 조회 페이지(정보 가져오기만)
@@ -146,5 +204,32 @@ public class MyPageController {
         model.addAttribute("today", new java.util.Date());
 
         return "mypage/adminattendance";
+    }
+
+    //관리자용 출결 수정하기
+    @PostMapping("/myPage/attendanceupdate")
+    @ResponseBody
+    public ResponseEntity<String> updateAttendance(@RequestBody List<Map<String, Object>> updateList) {
+        // 1. 데이터가 비어있는지 체크 (if-else)
+        if (updateList == null || updateList.isEmpty()) {
+            return ResponseEntity.badRequest().body("수정할 데이터가 없습니다.");
+        }
+
+        // 2. 서비스로 데이터 넘기기
+        boolean isSuccess = attendanceService.updateAttendanceStatus(updateList);
+
+        // 3. 결과에 따른 처리
+        if (isSuccess) {
+            return ResponseEntity.ok("success");
+        } else {
+            return ResponseEntity.status(500).body("fail");
+        }
+    }
+
+    @GetMapping("/")
+    public String index(Principal principal) {
+        // 시큐리티가 정상 작동하면, 로그인이 안 된 유저는 이미 /login 페이지에 갇혀 있습니다.
+        // 여기 도달했다는 건 무조건 Principal이 있다는 뜻입니다.
+        return "redirect:/myPage/info";
     }
 }

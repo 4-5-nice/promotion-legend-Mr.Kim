@@ -3,6 +3,7 @@ package com.wanted.legendkim.domain.mypage.DTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor

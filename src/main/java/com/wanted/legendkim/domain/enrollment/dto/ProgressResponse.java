@@ -1,10 +1,7 @@
 package com.wanted.legendkim.domain.enrollment.dto;
 
 import com.wanted.legendkim.domain.enrollment.Enrollment;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

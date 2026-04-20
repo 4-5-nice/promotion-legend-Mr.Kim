@@ -1,8 +1,8 @@
 package com.wanted.legendkim.domain.users.user.controller;
 
-import com.wanted.legendkim.domain.users.user.model.dao.LoginLogRepository;
 import com.wanted.legendkim.domain.users.user.model.entity.LoginHistory;
 import com.wanted.legendkim.domain.users.user.model.entity.User;
+import com.wanted.legendkim.domain.users.user.model.dao.LoginLogRepository;
 import com.wanted.legendkim.domain.users.user.model.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
