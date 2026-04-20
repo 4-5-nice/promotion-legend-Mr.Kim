@@ -33,4 +33,8 @@ public class MPQuestionSubmissions {
 
     @Column(name = "submitted_at")
     private Date submittedAt;
+
+
+//    @Column(name = "selected_answer")
+//    private int selectedAnswer;
 }

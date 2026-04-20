@@ -3,175 +3,279 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>진급전설 김부장 - 내가 푼 문제</title>
+    <title>Executive Learning Archive - 내가 푼 문제</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-    <style data-purpose="typography">
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
-        body { font-family: 'Noto Sans KR', sans-serif; letter-spacing: -0.025em; }
-    </style>
-    <style data-purpose="custom-layout">
-        .watermark-container { position: absolute; bottom: 0; right: 0; pointer-events: none; z-index: 0; opacity: 0.03; user-select: none; }
-        .watermark-text { font-size: 200px; font-weight: 900; line-height: 1; text-align: right; }
-        .sidebar-active { background-color: #FFFFFF; color: #000666; font-weight: 700; border-right: 4px solid #000666; }
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Alata&display=swap" rel="stylesheet"/>
+    <style>
+        /* 통합 디자인 시스템 적용 */
+        :root {
+            --navy-primary: #000666;
+            --gold-accent: #735C00;
+            --bg-gray: #F3F3F5;
+            --border-color: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Manrope', 'Noto Sans KR', sans-serif;
+            margin: 0;
+            background-color: #F8F9FB;
+            letter-spacing: -0.025em;
+        }
+
+        .layout-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .global-header {
+            height: 64px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-shrink: 0;
+        }
+
+        .content-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .global-sidebar {
+            width: 256px;
+            background: var(--bg-gray);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-profile {
+            padding: 32px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-img-container {
+            width: 64px;
+            height: 80px;
+            margin: 0 auto 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: #D1D5DB;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6B7280;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            color: var(--navy-primary);
+        }
+
+        .sidebar-active {
+            background-color: #FFFFFF !important;
+            color: var(--navy-primary) !important;
+            font-weight: 700 !important;
+            border-right: 4px solid var(--navy-primary);
+        }
+
+        .global-main {
+            flex: 1;
+            background: #F8F9FB;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
+
+        .promotion-bg-text {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 100px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            opacity: 0.05;
+            pointer-events: none;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            z-index: 0;
+        }
+
+        .font-alata { font-family: 'Alata', sans-serif; }
     </style>
 </head>
-<body class="bg-[#f8f9fb] text-[#333] min-h-screen flex flex-col">
+<body>
 
-<header class="h-[60px] bg-white border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-50">
-    <div class="flex items-center cursor-pointer" onclick="location.href='/'">
-        <h1 class="text-[#0e165a] text-xl font-black tracking-tight">진급전설 김부장</h1>
+<div class="layout-wrapper">
+    <header class="global-header">
+        <a href="/" class="hover:opacity-80 transition-opacity">
+            <h1 class="text-[#000666] font-extrabold text-xl tracking-tight">진급전설 김부장</h1>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="bg-[#303866] text-white text-xs px-4 py-2 rounded-sm font-medium hover:bg-[#1a2044] transition-colors">
+                로그아웃
+            </button>
+        </form>
+    </header>
+
+    <div class="content-container">
+        <aside class="global-sidebar">
+            <div class="sidebar-profile">
+                <div class="profile-img-container">
+                    <img alt="User Avatar" class="w-full h-full object-cover" src="/images/profile.png"/>
+                </div>
+                <h3 class="text-lg font-bold text-[#000666]" th:text="${#strings.substring(user.name, 0, 1) + user.rank}">김부장</h3>
+                <p class="text-[10px] text-gray-400 font-medium mt-1 uppercase" th:text="${user.name} + ', 믿겠네'">NAME, 믿겠네</p>
+            </div>
+
+            <nav class="flex-1 mt-4 overflow-y-auto custom-scrollbar">
+                <ul class="space-y-1">
+                    <li><button onclick="location.href='/myPage/info'" class="menu-item"><span class="material-symbols-outlined text-xl mr-3">person</span>나의 정보</button></li>
+                    <li><a class="menu-item" href="/myPage/courses"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>신청한 강의 조회</a></li>
+                    <li><button onclick="location.href='/myPage/attendance'" class="menu-item"><span class="material-symbols-outlined text-xl mr-3">calendar_today</span>출결 조회</button></li>
+                    <li><button onclick="location.href='/myPage/quizhistory'" class="menu-item sidebar-active"><span class="material-symbols-outlined text-xl mr-3">task_alt</span>내가 푼 문제</button></li>
+                    <li><button onclick="location.href='/auth/reset-password'" class="menu-item"><span class="material-symbols-outlined text-xl mr-3">lock</span>비밀번호 변경</button></li>
+                    <li><a class="menu-item" href="/myPage/endjourney"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 12h3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>회원 탈퇴</a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer p-6 border-t border-gray-200 mt-auto">
+                <button title="support@legeno.com" class="flex items-center text-sm text-gray-500 hover:text-gray-800 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>지원
+                </button>
+            </div>
+        </aside>
+
+        <main class="global-main custom-scrollbar p-10"
+              th:with="itemsPerPage=5,
+                       currentPage=${param.page != null ? T(java.lang.Integer).parseInt(param.page) : 0},
+                       totalItems=${count.totalSolved},
+                       totalPages=${totalItems > 0 ? T(java.lang.Math).ceil(totalItems.doubleValue() / itemsPerPage).intValue() : 0}">
+
+            <div class="max-w-[1000px] mx-auto relative z-10">
+                <div class="mb-12">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-6 h-[2px] bg-[#735C00]"></div>
+                        <span class="text-[11px] font-bold text-[#735C00] tracking-[0.2em] uppercase">Achievement Logs</span>
+                    </div>
+                    <h2 class="text-5xl font-normal font-alata text-[#000666] mb-6 leading-none">내가 푼 문제</h2>
+                    <p class="text-lg text-gray-400 font-medium">진급을 위한 여정, 해결한 문제들을 복기하며 실력을 다지십시오.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 mb-12">
+                    <div class="bg-white border border-gray-100 shadow-sm p-8 rounded-lg relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-[5px] bg-[#000666]"></div>
+                        <p class="text-[11px] font-bold text-gray-400 tracking-wider mb-2 uppercase">Total Solved</p>
+                        <p class="text-[42px] font-bold text-[#000666] leading-none" th:text="${count.totalSolved}">0</p>
+                    </div>
+                    <div class="bg-white border border-gray-100 shadow-sm p-8 rounded-lg relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-[5px] bg-[#735C00]"></div>
+                        <p class="text-[11px] font-bold text-gray-400 tracking-wider mb-2 uppercase">획득 포인트</p>
+                        <p class="text-[42px] font-bold text-[#000666] leading-none">
+                            <span th:text="${count.totalPoints}">0</span> <span class="text-[24px] ml-1 text-gray-400">LP</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <div class="bg-gray-100 px-4 py-2 rounded text-[11px] font-bold text-[#000666] uppercase tracking-widest" th:if="${totalPages > 0}">
+                        Page <span th:text="${#numbers.formatInteger(currentPage + 1, 2)}">01</span> / <span th:text="${#numbers.formatInteger(totalPages, 2)}">01</span>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 px-8 py-4 rounded-t-lg border-b border-gray-100 flex items-center text-[11px] font-bold text-gray-400 tracking-widest uppercase">
+                    <div class="w-1/6 text-center">Status</div>
+                    <div class="w-3/6">Problem Identity</div>
+                    <div class="w-1/6 text-center">Date Solved</div>
+                    <div class="w-1/6 text-center">Action</div>
+                </div>
+
+                <div class="space-y-3 mt-3">
+                    <div th:each="item, iterStat : ${quizHistory}"
+                         th:if="${iterStat.index >= (currentPage * itemsPerPage) and iterStat.index < ((currentPage + 1) * itemsPerPage)}"
+                         class="bg-white shadow-sm border border-gray-50 rounded-lg px-8 py-6 flex items-center hover:bg-gray-50 transition-colors">
+
+                        <div class="w-1/6 flex justify-center items-center gap-2">
+                            <th:block th:if="${item.isCorrect}">
+                                <span class="w-5 h-5 bg-[#735C00] rounded-full flex items-center justify-center text-[10px] text-white"><i class="fa-solid fa-check"></i></span>
+                                <span class="text-xs font-bold text-gray-800">정답</span>
+                            </th:block>
+                            <th:block th:unless="${item.isCorrect}">
+                                <span class="w-5 h-5 bg-red-700 rounded-full flex items-center justify-center text-[10px] text-white"><i class="fa-solid fa-xmark"></i></span>
+                                <span class="text-xs font-bold text-red-700">오답</span>
+                            </th:block>
+                        </div>
+
+                        <div class="w-3/6">
+                            <h3 class="text-lg font-bold text-[#000666]" th:text="${item.questionId.title}">문제 제목</h3>
+                            <p class="text-[10px] text-[#735C00] font-bold tracking-wider mt-1 uppercase">EXECUTIVE QUIZ</p>
+                        </div>
+
+                        <div class="w-1/6 text-center text-sm text-gray-500 font-medium"
+                             th:text="${#dates.format(item.submittedAt, 'yyyy.MM.dd')}">2026.04.16</div>
+
+                        <div class="w-1/6 text-center">
+                            <a class="text-xs font-bold text-[#735C00] flex items-center justify-center gap-1 hover:underline"
+                               th:href="@{/questionboard/user/questionboard/{id}/solve(id=${item.questionId.questionId})}">
+                                상세 보기 <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(quizHistory)}" class="py-20 text-center text-gray-400 text-sm bg-white rounded-lg border border-gray-50 shadow-sm">
+                        기록된 데이터가 없습니다.
+                    </div>
+                </div>
+
+                <div class="mt-12 mb-10 flex items-center justify-center" th:if="${totalPages > 1}">
+                    <div class="flex items-center gap-2">
+                        <a th:if="${currentPage > 0}" th:href="@{/myPage/quizhistory(page=${currentPage - 1})}" class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#000666]">
+                            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                        </a>
+
+                        <th:block th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                            <a th:href="@{/myPage/quizhistory(page=${pageNum})}"
+                               th:text="${pageNum + 1}"
+                               th:classappend="${pageNum == currentPage} ? 'bg-[#000666] text-white shadow-md' : 'text-gray-400 hover:text-[#000666]'"
+                               class="w-10 h-10 flex items-center justify-center rounded text-sm font-bold transition-all">
+                            </a>
+                        </th:block>
+
+                        <a th:if="${currentPage < totalPages - 1}" th:href="@{/myPage/quizhistory(page=${currentPage + 1})}" class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#000666]">
+                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="promotion-bg-text font-alata">PROMOTION</div>
+        </main>
     </div>
-    <form th:action="@{/logout}" method="post">
-        <button type="submit" class="bg-[#0e165a] text-white px-6 py-2 text-sm font-bold rounded-sm hover:bg-[#1a2044] transition-colors">로그아웃</button>
-    </form>
-</header>
-
-<div class="flex flex-1 overflow-hidden">
-    <aside class="w-[260px] bg-[#f8f9fb] border-r border-gray-100 flex flex-col py-10 px-0 shrink-0">
-        <div class="flex flex-col items-center mb-12 px-6">
-            <div class="w-24 h-24 rounded-lg overflow-hidden mb-4 shadow-md bg-gray-300">
-                <img alt="Profile" class="w-full h-full object-cover object-top" src="https://lh3.googleusercontent.com/aida/ADBb0ugjOFOphR29Wbo27R2INAD4WRtTZR4OjYxdPg-Gf5677apFfJSDTyavRJ1JMFc4rT7bAQGb5n3Btrmt2Qzdnl6KAVOysDTVrsJ52TJCLqovpmM_NZTFp2FxD-A98zvX35ZkSZrNHlVL198ev0kwGIT22YVWRzX2sq1qniHR1JKeRn0aser4TSLKyxcmCeJ8VvOT1xVmBISYmzcqUflPnH1lNv8EpjjvG0WYui145h7l12pZcDP7oZjg68RN2iDbqFhU8jWwpDnRTg"/>
-            </div>
-            <div class="text-center">
-                <p class="text-xl font-bold text-[#111] mb-1" th:text="${#strings.substring(user.name, 0, 1) + user.rank}">김부장</p>
-                <p class="text-[11px] text-gray-400 font-medium uppercase" th:text="${user.name} + ', 믿겠네'">NAME, 믿겠네</p>
-            </div>
-        </div>
-        <nav class="flex-1 space-y-1">
-            <a class="flex items-center px-6 py-3 text-sm text-gray-500 hover:bg-white hover:text-[#000666] transition-colors" href="/myPage/info">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>나의 정보
-            </a>
-            <a class="flex items-center px-6 py-3 text-sm text-gray-500 hover:bg-white hover:text-[#000666] transition-colors" href="/myPage/courses">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>신청한 강의 조회
-            </a>
-            <a class="flex items-center px-6 py-3 text-sm text-gray-500 hover:bg-white hover:text-[#000666] transition-colors" href="/myPage/attendance">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>출결 조회
-            </a>
-            <a class="flex items-center px-6 py-3 text-sm sidebar-active" href="/myPage/quizhistory">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>내가 푼 문제
-            </a>
-            <a class="flex items-center px-6 py-3 text-sm text-gray-500 hover:bg-white hover:text-[#000666] transition-colors" href="/auth/reset-password"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>비밀번호 변경</a>
-            <a class="flex items-center px-6 py-3 text-sm text-gray-500 hover:bg-white hover:text-[#000666] transition-colors" href="/myPage/endjourney">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M18 12h3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                </svg>
-                회원 탈퇴
-            </a>
-        </nav>
-        <div class="p-6 border-t border-gray-200 mt-auto">
-            <a class="flex items-center text-sm text-gray-500 hover:text-[#0e165a] transition-colors cursor-help" href="mailto:support@legeno.com" title="support@legeno.com">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>지원
-            </a>
-        </div>
-    </aside>
-
-    <main class="flex-1 relative flex flex-col bg-white overflow-y-auto"
-          th:with="itemsPerPage=5,
-                   currentPage=${param.page != null ? T(java.lang.Integer).parseInt(param.page) : 0},
-                   totalItems=${count.totalSolved},
-                   totalPages=${totalItems > 0 ? T(java.lang.Math).ceil(totalItems.doubleValue() / itemsPerPage).intValue() : 0}">
-
-        <div class="watermark-container">
-            <div class="watermark-text" style="margin-right: 50px;">PROMOTION</div>
-            <div class="watermark-text">김부장</div>
-        </div>
-
-        <div class="max-w-[1000px] w-full mx-auto py-16 px-12 relative z-10">
-            <div class="mb-14">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-6 h-[2px] bg-[#d4af37]"></div>
-                    <span class="text-[11px] font-bold text-[#b0976d] tracking-[0.2em] uppercase">Achievement Logs</span>
-                </div>
-                <h2 class="text-[44px] font-black text-[#0e165a] mb-6 leading-none">내가 푼 문제</h2>
-                <p class="text-lg text-gray-500 font-medium">진급을 위한 여정, 해결한 문제들을 복기하며 실력을 다지십시오.</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-6 mb-16">
-                <div class="bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-8 relative overflow-hidden group">
-                    <div class="absolute left-0 top-0 bottom-0 w-[5px] bg-[#b0976d]"></div>
-                    <p class="text-[11px] font-bold text-gray-400 tracking-wider mb-2 uppercase">Total Solved</p>
-                    <p class="text-[42px] font-medium text-[#0e165a] leading-none" th:text="${count.totalSolved}">0</p>
-                </div>
-                <div class="bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-8 group">
-                    <p class="text-[11px] font-bold text-gray-400 tracking-wider mb-2 uppercase">획득 포인트</p>
-                    <p class="text-[42px] font-medium text-[#0e165a] leading-none">
-                        <span th:text="${count.totalPoints}">0</span> <span class="text-[28px] ml-1">LP</span>
-                    </p>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-between mb-4 px-2">
-                <div class="bg-[#f4f6f8] px-4 py-2 rounded text-[11px] font-bold text-[#0e165a] uppercase tracking-widest" th:if="${totalPages > 0}">
-                    Page <span th:text="${#numbers.formatInteger(currentPage + 1, 2)}">01</span> / <span th:text="${#numbers.formatInteger(totalPages, 2)}">01</span>
-                </div>
-            </div>
-
-            <div class="bg-[#f4f6f8] px-8 py-4 rounded-t-sm border-b border-gray-100 flex items-center text-[11px] font-bold text-gray-400 tracking-widest uppercase">
-                <div class="w-1/6 text-center">Status</div>
-                <div class="w-3/6">Problem Identity</div>
-                <div class="w-1/6 text-center">Date Solved</div>
-                <div class="w-1/6 text-center">Action</div>
-            </div>
-
-            <div class="space-y-3 mt-3">
-                <div th:each="item, iterStat : ${quizHistory}"
-                     th:if="${iterStat.index >= (currentPage * itemsPerPage) and iterStat.index < ((currentPage + 1) * itemsPerPage)}"
-                     class="bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-50 rounded-sm px-8 py-6 flex items-center">
-
-                    <div class="w-1/6 flex justify-center items-center gap-2">
-                        <th:block th:if="${item.isCorrect}">
-                            <span class="w-4 h-4 bg-[#b0976d] rounded-full flex items-center justify-center text-[8px] text-white"><i class="fa-solid fa-check"></i></span>
-                            <span class="text-[11px] font-bold text-gray-800">정답</span>
-                        </th:block>
-                        <th:block th:unless="${item.isCorrect}">
-                            <span class="w-4 h-4 bg-red-800 rounded-full flex items-center justify-center text-[8px] text-white"><i class="fa-solid fa-xmark"></i></span>
-                            <span class="text-[11px] font-bold text-red-800">오답</span>
-                        </th:block>
-                    </div>
-
-                    <div class="w-3/6">
-                        <h3 class="text-lg font-bold text-[#0e165a]" th:text="${item.questionId.title}">문제 제목</h3>
-                    </div>
-
-                    <div class="w-1/6 text-center text-[13px] text-gray-500 font-medium"
-                         th:text="${#dates.format(item.submittedAt, 'yyyy.MM.dd')}">2026.04.16</div>
-
-                    <div class="w-1/6 text-center">
-                        <a class="text-[12px] font-bold text-[#b0976d] flex items-center justify-center gap-1 hover:underline"
-                           th:href="@{/questionboard/user/questionboard/{id}/solve(id=${item.questionId.questionId})}">
-                            상세 보기 <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div th:if="${#lists.isEmpty(quizHistory)}" class="py-20 text-center text-gray-400 text-sm">
-                    기록된 데이터가 없습니다.
-                </div>
-            </div>
-
-            <div class="mt-12 flex items-center justify-center" th:if="${totalPages > 1}">
-                <div class="flex items-center gap-2">
-                    <a th:if="${currentPage > 0}" th:href="@{/myPage/quizhistory(page=${currentPage - 1})}" class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#0e165a]">
-                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                    </a>
-
-                    <th:block th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
-                        <a th:href="@{/myPage/quizhistory(page=${pageNum})}"
-                           th:text="${pageNum + 1}"
-                           th:classappend="${pageNum == currentPage} ? 'bg-[#0e165a] text-white' : 'text-gray-400 hover:text-[#0e165a]'"
-                           class="w-10 h-10 flex items-center justify-center rounded-sm text-sm font-bold transition-colors">
-                        </a>
-                    </th:block>
-
-                    <a th:if="${currentPage < totalPages - 1}" th:href="@{/myPage/quizhistory(page=${currentPage + 1})}" class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#0e165a]">
-                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </main>
 </div>
+
 </body>
 </html>

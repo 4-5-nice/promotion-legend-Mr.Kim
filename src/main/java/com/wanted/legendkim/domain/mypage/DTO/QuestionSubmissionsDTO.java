@@ -13,6 +13,8 @@ public class QuestionSubmissionsDTO {
     private int submissionId;
     private int questionId;
     private int userId;
-    private boolean isCorrect;
     private Date submittedAt;
+    private boolean isCorrect;
+
+//    private int selectedAnswer;
 }

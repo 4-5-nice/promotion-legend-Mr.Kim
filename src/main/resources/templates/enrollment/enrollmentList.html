@@ -60,7 +60,7 @@
 
 <script th:inline="javascript">
     // 현재 로그인 userId — 실제 구현 시 세션에서 가져와야 함
-    const USER_ID = 1;
+    const USER_ID = /*[[${#authentication.principal.userId}]]*/ null;
 
     let allCourses = [];
 
@@ -83,21 +83,20 @@
             return;
         }
 
-        list.innerHTML = courses.map(course => `
-            <div class="course-card" data-id="${course.id}">
-                <div class="course-card__body">
-                    <div class="course-card__meta">
-                        ${course.dueDate > 0 ? `<div class="course-card__badge">${course.dueDate}일 과정</div>` : ''}
-                    </div>
-                    <div class="course-card__title">${course.title}</div>
-                    <div class="course-card__desc">${course.description || '김부장님이 엄선한 강의입니다.'}</div>
-                    <div class="course-card__btns">
-                        <button class="course-card__btn--detail" onclick="location.href='/user/lectures/${course.id}/detail'">상세 보기</button>
-                        <button class="course-card__btn" onclick="enroll(${course.id})">수강신청</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+        list.innerHTML = courses.map(function(course) {
+            var badgeHtml = course.dueDate > 0 ? '<div class="course-card__badge">' + course.dueDate + '일 과정</div>' : '';
+            return '<div class="course-card" data-id="' + course.id + '">' +
+                '<div class="course-card__body">' +
+                '<div class="course-card__meta">' + badgeHtml + '</div>' +
+                '<div class="course-card__title">' + course.title + '</div>' +
+                '<div class="course-card__desc">' + (course.description || '김부장님이 엄선한 강의입니다.') + '</div>' +
+                '<div class="course-card__btns">' +
+                '<button class="course-card__btn--detail" onclick="location.href=\'/user/lectures/' + course.id + '\'">상세 보기</button>' +
+                '<button class="course-card__btn" onclick="enroll(' + course.id + ')">수강신청</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        }).join('');
     }
 
     // 트랙 필터 제거됨

@@ -5,35 +5,93 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>회원 탈퇴 - 진급전설 김부장</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style data-purpose="typography">
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #F8FAFC;
+    <style>
+        /* 1. 폰트 및 기본 설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --navy-primary: #0e165a;
+            --gold-accent: #b0976d;
+            --bg-gray: #f8f9fb;
+            --border-color: #f1f1f1;
         }
-    </style>
-    <style data-purpose="custom-layout">
+
+        * {
+            font-family: 'Pretendard', sans-serif !important;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #F8FAFC;
+            color: #1e293b;
+        }
+
+        /* 2. 레이아웃 디자인 가이드 적용 */
+        header.w-full {
+            height: 64px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        aside.w-64 {
+            background: var(--bg-gray);
+            border-right: 1px solid var(--border-color);
+            min-height: calc(100vh - 64px);
+        }
+
+        /* 3. 사이드바 내부 요소 디자인 */
         .sidebar-active-indicator {
             width: 4px;
             height: 32px;
-            background-color: #3F51B5;
+            background-color: var(--navy-primary) !important;
             position: absolute;
             left: 0;
             border-radius: 0 4px 4px 0;
         }
+
+        /* 현재 활성화된 메뉴 강조 (회원 탈퇴) */
+        aside nav ul li a.bg-[#EEF2FF] {
+            background-color: #FFFFFF !important;
+            color: var(--navy-primary) !important;
+            font-weight: 700 !important;
+            border-right: 4px solid var(--navy-primary);
+            margin-right: 0 !important;
+            border-radius: 0 !important;
+        }
+
+        aside nav ul li a:hover {
+            background-color: #FFFFFF;
+            color: var(--navy-primary);
+        }
+
+        /* 4. 본문 카드 및 디자인 포인트 */
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
         .watermark-bg {
             position: fixed;
             bottom: -40px;
             right: 15%;
             font-size: 180px;
             font-weight: 900;
-            color: rgba(0, 0, 0, 0.03);
+            color: rgba(14, 22, 90, 0.03); /* 네이비 톤 워터마크 */
             z-index: -1;
             letter-spacing: -2px;
             pointer-events: none;
         }
-        .card-shadow {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+        h1.text-[#1A237E] { color: var(--navy-primary) !important; }
+        .bg-[#A68940] { background-color: var(--gold-accent) !important; }
+        .text-[#A68940] { color: var(--gold-accent) !important; }
+        .text-[#FFD700] { color: var(--gold-accent) !important; }
+        .bg-[#1A237E] { background-color: var(--navy-primary) !important; }
+
+        /* 버튼 및 입력창 커스텀 */
+        #withdraw-agree:checked {
+            color: #BA1A1A;
+            border-color: #BA1A1A;
         }
     </style>
 </head>
@@ -54,7 +112,7 @@
     <aside class="w-64 min-h-[calc(100vh-64px)] bg-white border-r border-slate-100 flex flex-col pt-8">
         <div class="px-8 mb-10 text-center">
             <div class="w-20 h-20 mx-auto rounded-xl overflow-hidden border-2 border-slate-200 mb-3 bg-slate-50">
-                <img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ugjOFOphR29Wbo27R2INAD4WRtTZR4OjYxdPg-Gf5677apFfJSDTyavRJ1JMFc4rT7bAQGb5n3Btrmt2Qzdnl6KAVOysDTVrsJ52TJCLqovpmM_NZTFp2FxD-A98zvX35ZkSZrNHlVL198ev0kwGIT22YVWRzX2sq1qniHR1JKeRn0aser4TSLKyxcmCeJ8VvOT1xVmBISYmzcqUflPnH1lNv8EpjjvG0WYui145h7l12pZcDP7oZjg68RN2iDbqFhU8jWwpDnRTg"/>
+                <img alt="User Avatar" class="w-full h-full object-cover" src="/images/profile.png"/>
             </div>
             <h3 class="text-lg font-bold text-slate-900 mb-1" th:text="${#strings.substring(user.name, 0, 1) + user.rank}">김부장</h3>
             <p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase" th:text="${user.name} + ', 믿겠네'">NAME, 믿겠네</p>
