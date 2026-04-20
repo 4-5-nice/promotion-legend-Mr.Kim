@@ -8,8 +8,10 @@ import java.util.Optional;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
+    // 특정 사용자의 모든 수강신청 조회
     List<Enrollment> findAllByUserId(Long userId);
 
+    // 특정 코스에 대한 모든 수강신청 조회
     List<Enrollment> findByCourseId(Long courseId);
 
     // 중복 수강신청 체크 — userId + courseId 조합
