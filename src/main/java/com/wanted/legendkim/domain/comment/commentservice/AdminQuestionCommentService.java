@@ -23,9 +23,10 @@ public class AdminQuestionCommentService {
             DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
     public List<QuestionCommentDTO> getComments(Long questionId) {
-        questionBoardRepository.findById(questionId)
+        questionBoardRepository.findById(questionId) // 문제 아이디로 문제 정보 찾기
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
 
+        // 문제 아이디로 불러온 해당 문제의 댓글을 날짜순으로 조회
         return questionCommentRepository.findByQuestion_IdOrderByCreatedAtAsc(questionId)
                 .stream()
                 .map(comment -> new QuestionCommentDTO(
@@ -35,18 +36,14 @@ public class AdminQuestionCommentService {
                         comment.getCreatedAt().format(COMMENT_DATE_FORMATTER),
                         true
                 ))
-                .toList();
+                .toList(); // 하나씩 뽑아서 DTO로 만들어서 반환
     }
 
     @Transactional
-    public void deleteComment(Long questionId, Long commentId) {
-        QuestionComment comment = questionCommentRepository.findById(commentId)
+    public void deleteComment(Long commentId) {
+        QuestionComment comment = questionCommentRepository.findById(commentId) // 댓글 아이디로 댓글 정보 찾기
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        if (comment.getQuestion() == null || !comment.getQuestion().getId().equals(questionId)) {
-            throw new IllegalArgumentException("해당 문제의 댓글이 아닙니다.");
-        }
-
-        questionCommentRepository.delete(comment);
+        questionCommentRepository.delete(comment); // 댓글 삭제
     }
 }

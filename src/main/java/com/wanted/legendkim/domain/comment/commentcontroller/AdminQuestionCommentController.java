@@ -1,14 +1,10 @@
 package com.wanted.legendkim.domain.comment.commentcontroller;
 
 import com.wanted.legendkim.domain.comment.commentservice.AdminQuestionCommentService;
-import com.wanted.legendkim.domain.comment.dto.QuestionCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -17,20 +13,11 @@ public class AdminQuestionCommentController {
 
     private final AdminQuestionCommentService adminQuestionCommentService;
 
-    @GetMapping
-    @ResponseBody
-    public ResponseEntity<List<QuestionCommentDTO>> getComments(@PathVariable Long questionId) {
-        List<QuestionCommentDTO> comments = adminQuestionCommentService.getComments(questionId);
-        return ResponseEntity.ok(comments);
-    }
-
+    // 댓글 삭제하기
     @DeleteMapping("/{commentId}")
     @ResponseBody
-    public ResponseEntity<String> deleteComment(
-            @PathVariable Long questionId,
-            @PathVariable Long commentId
-    ) {
-        adminQuestionCommentService.deleteComment(questionId, commentId);
+    public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
+        adminQuestionCommentService.deleteComment(commentId); // 댓글 삭제하기
         return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 }
