@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Table(name = "QUESTIONS")
-public class Questions {
+public class BoardQuestions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,11 @@ public class Questions {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    private QuestionCourse course;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id", nullable = false)
-    private Section section;
+    private QuestionSection section;
 
     @Column(nullable = false, length = 255)
     private String title;
@@ -56,10 +56,10 @@ public class Questions {
     @Column(name = "view_count")
     private Long viewCount;
 
-    public Questions(
+    public BoardQuestions(
             QuestionBoardUser user,
-            Course course,
-            Section section,
+            QuestionCourse course,
+            QuestionSection section,
             String title,
             String option1,
             String option2,

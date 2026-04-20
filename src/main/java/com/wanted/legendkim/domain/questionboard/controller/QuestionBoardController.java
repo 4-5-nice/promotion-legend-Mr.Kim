@@ -4,7 +4,7 @@ import com.wanted.legendkim.domain.comment.commentservice.QuestionCommentService
 import com.wanted.legendkim.domain.questionboard.dto.QuestionBoardDTO;
 import com.wanted.legendkim.domain.questionboard.dto.QuestionDetailDTO;
 import com.wanted.legendkim.domain.questionboard.dto.QuestionSolveResponseDTO;
-import com.wanted.legendkim.domain.questionboard.dto.SectionDTO;
+import com.wanted.legendkim.domain.questionboard.dto.QuestionSectionDTO;
 import com.wanted.legendkim.domain.questionboard.service.QuestionBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -69,8 +69,8 @@ public class QuestionBoardController {
     // course 선택시 section 목록 JSON 전달
     @GetMapping("/sections")
     @ResponseBody
-    public ResponseEntity<List<SectionDTO>> getSectionsByCourse(@RequestParam Long courseId) {
-        List<SectionDTO> sections = questionBoardService.getSectionsByCourse(courseId);
+    public ResponseEntity<List<QuestionSectionDTO>> getSectionsByCourse(@RequestParam Long courseId) {
+        List<QuestionSectionDTO> sections = questionBoardService.getSectionsByCourse(courseId);
         // course 아이디를 이용해서 section 조회하기
         return ResponseEntity.ok(sections); // section들 반환
     }

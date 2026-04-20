@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SectionDTO {
+public class QuestionSectionDTO {
     private Long id;
     private String title;
 }

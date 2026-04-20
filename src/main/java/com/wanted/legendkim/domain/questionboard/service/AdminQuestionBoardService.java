@@ -5,7 +5,7 @@ import com.wanted.legendkim.domain.questionboard.dao.QuestionBoardRepository;
 import com.wanted.legendkim.domain.questionboard.dao.QuestionSubmissionRepository;
 import com.wanted.legendkim.domain.questionboard.dto.QuestionBoardDTO;
 import com.wanted.legendkim.domain.questionboard.dto.QuestionDetailDTO;
-import com.wanted.legendkim.domain.questionboard.entity.Questions;
+import com.wanted.legendkim.domain.questionboard.entity.BoardQuestions;
 import com.wanted.legendkim.domain.questionboard.entity.Rank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class AdminQuestionBoardService {
     public List<QuestionBoardDTO> getQuestionList(String rank) {
         Rank requestedRank = Rank.valueOf(rank); //문자열 rank를 enum 값으로 바꾸는 코드
 
-        List<Questions> questions = questionBoardRepository.findAllByOrderByCreatedAtDesc();
+        List<BoardQuestions> questions = questionBoardRepository.findAllByOrderByCreatedAtDesc();
         // 모든 문제를 날짜순으로 조회
 
         return questions.stream() // stream으로 하나씩 변환할 준비
@@ -50,7 +50,7 @@ public class AdminQuestionBoardService {
 
     @Transactional
     public QuestionDetailDTO getQuestionDetail(Long questionId) {
-        Questions question = questionBoardRepository.findById(questionId) // 문제 아이디로 문제 정보 찾기
+        BoardQuestions question = questionBoardRepository.findById(questionId) // 문제 아이디로 문제 정보 찾기
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
 
         return new QuestionDetailDTO(
@@ -76,7 +76,7 @@ public class AdminQuestionBoardService {
 
     @Transactional
     public void deleteQuestion(Long questionId) {
-        Questions question = questionBoardRepository.findById(questionId) // 문제 아이디로 문제 정보 조회
+        BoardQuestions question = questionBoardRepository.findById(questionId) // 문제 아이디로 문제 정보 조회
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
 
         questionCommentRepository.deleteByQuestion_Id(questionId); // 문제 아이디로 찾은 문제의 댓글을 삭제

@@ -7,7 +7,7 @@ import com.wanted.legendkim.domain.questionboard.dao.QuestionSubmissionRepositor
 import com.wanted.legendkim.domain.comment.dto.QuestionCommentDTO;
 import com.wanted.legendkim.domain.questionboard.entity.QuestionBoardUser;
 import com.wanted.legendkim.domain.comment.entity.QuestionComment;
-import com.wanted.legendkim.domain.questionboard.entity.Questions;
+import com.wanted.legendkim.domain.questionboard.entity.BoardQuestions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +70,7 @@ public class QuestionCommentService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
                                  // 문제 아이디를 이용해서 문제 정보 찾기
-        Questions question = questionBoardRepository.findById(questionId)
+        BoardQuestions question = questionBoardRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
 
         QuestionComment comment = new QuestionComment(

@@ -11,23 +11,28 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-@Table(name = "sections")
-public class Sections {
+@Table(name = "courses")
+public class MPCourses {
+
     @Id
-    @Column(name = "section_id")
+    @Column(name = "course_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sectionId;
+    private int courseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
-    private Courses courseId;
+    @JoinColumn(name = "user_id")
+    private MPUsers userId;
 
     @Column(name = "title")
     private String title;
 
-    @Column(name = "video_url")
-    private String videoUrl;
+    @Column(name = "instructor_name")
+    private String instructorName;
 
-    @Column(name = "upload_success")
-    private boolean uploadSuccess;
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "duedate")
+    private int duedate;
+
 }

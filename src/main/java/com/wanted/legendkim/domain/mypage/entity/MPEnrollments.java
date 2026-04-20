@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "enrollments")
-public class Enrollments {
+public class MPEnrollments {
 
     @Id
     @Column(name = "enrollment_id")
@@ -23,11 +23,11 @@ public class Enrollments {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private MPUsers userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    private Courses courseId;
+    private MPCourses courseId;
 
     @Column(name = "status")
     private String status;

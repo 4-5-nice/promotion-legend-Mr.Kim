@@ -1,6 +1,5 @@
 package com.wanted.legendkim.domain.questionboard.service;
 
-import com.wanted.legendkim.domain.comment.dao.QuestionCommentRepository;
 import com.wanted.legendkim.domain.questionboard.dao.*;
 import com.wanted.legendkim.domain.questionboard.dto.*;
 import com.wanted.legendkim.domain.questionboard.entity.*;
@@ -20,8 +19,8 @@ public class QuestionBoardService {
 
     private final QuestionBoardUserRepository questionBoardUserRepository;
     private final QuestionBoardRepository questionBoardRepository;
-    private final CourseRepository courseRepository;
-    private final SectionRepository sectionRepository;
+    private final QuestionCourseRepository courseRepository;
+    private final QuestionSectionRepository sectionRepository;
     private final QuestionSubmissionRepository questionSubmissionRepository;
 
     // DB의 날짜 정보를 문자열로 변환
@@ -49,7 +48,7 @@ public class QuestionBoardService {
         validateRankAccess(myRank, requestedRank);// 비교를 위해 전송
 
         // 문제 목록을 날짜순으로 조회
-        List<Questions> questions = questionBoardRepository.findAllByOrderByCreatedAtDesc();
+        List<BoardQuestions> questions = questionBoardRepository.findAllByOrderByCreatedAtDesc();
 
         return questions.stream()
                 .filter(question -> question.getUser().getRank().isHigherThan(requestedRank))
@@ -90,10 +89,10 @@ public class QuestionBoardService {
     }
 
     // course 가져오는 기능
-    public List<CourseDTO> getCourses() {
+    public List<QuestionCourseDTO> getCourses() {
         return courseRepository.findAllByOrderByIdAsc() // 모든 강좌 조회
                 .stream()
-                .map(course -> new CourseDTO(
+                .map(course -> new QuestionCourseDTO(
                         course.getId(),
                         course.getTitle()
                 ))
@@ -101,10 +100,10 @@ public class QuestionBoardService {
     } // DB에서 꺼낸 course 들을 List 로 만들어서 반환
 
     // section 가져오는 기능
-    public List<SectionDTO> getSectionsByCourse(Long courseId) {
+    public List<QuestionSectionDTO> getSectionsByCourse(Long courseId) {
         return sectionRepository.findByCourse_IdOrderByIdAsc(courseId) // course 아이디에 따라 section 조회
                 .stream()
-                .map(section -> new SectionDTO(
+                .map(section -> new QuestionSectionDTO(
                         section.getId(),
                         section.getTitle()
                 ))
@@ -155,15 +154,15 @@ public class QuestionBoardService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // 관련 course 정보 저장
-        Course course = courseRepository.findById(courseId)
+        QuestionCourse course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("코스를 찾을 수 없습니다."));
 
         // 관련 section 정보 저장
-        Section section = sectionRepository.findByIdAndCourse_Id(sectionId, courseId)
+        QuestionSection section = sectionRepository.findByIdAndCourse_Id(sectionId, courseId)
                 .orElseThrow(() -> new IllegalArgumentException("선택한 섹션이 해당 코스에 속하지 않습니다."));
 
         // 정보들을 모아 question으로 저장
-        Questions question = new Questions(user, course, section, title, option1, option2, option3,
+        BoardQuestions question = new BoardQuestions(user, course, section, title, option1, option2, option3,
                 option4, option5, answer
         );
 
@@ -182,7 +181,7 @@ public class QuestionBoardService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // 문제 아이디로 문제 정보 찾기
-        Questions question = questionBoardRepository.findById(questionId)
+        BoardQuestions question = questionBoardRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
 
         // 문제 상세 조회 권한 증명하기
@@ -220,7 +219,7 @@ public class QuestionBoardService {
         ); // entity 값들과 앞에서 만든 값들을 DTO로 만들어서 반환
     }
 
-    private void validateQuestionAccess(Rank myRank, Questions question) {
+    private void validateQuestionAccess(Rank myRank, BoardQuestions question) {
         Rank authorRank = question.getUser().getRank(); // 문제 출제자의 직급을 가져오기
 
         // 사용자보다 상위의 직급이 낸 문제가 아니면 볼 수 없게 했다.
@@ -245,7 +244,7 @@ public class QuestionBoardService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // 문제 아이디로 문제 정보 찾기
-        Questions question = questionBoardRepository.findById(questionId)
+        BoardQuestions question = questionBoardRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
 
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay(); // 오늘 날짜의 시작 시간 체크

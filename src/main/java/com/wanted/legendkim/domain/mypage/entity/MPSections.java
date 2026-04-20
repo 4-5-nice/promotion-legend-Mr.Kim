@@ -6,31 +6,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Date;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @ToString
 @Entity
-@Table(name = "payments")
-public class Payments {
-
+@Table(name = "sections")
+public class MPSections {
     @Id
-    @Column(name = "payment_id")
+    @Column(name = "section_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int paymentId;
+    private int sectionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Users userId;
+    @JoinColumn(name = "course_id")
+    private MPCourses courseId;
 
-    @Column(name = "amount")
-    private int amount;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "status")
-    private boolean status;
+    @Column(name = "video_url")
+    private String videoUrl;
 
-    @Column(name = "created_at")
-    private Date createdAt;
+    @Column(name = "upload_success")
+    private boolean uploadSuccess;
 }

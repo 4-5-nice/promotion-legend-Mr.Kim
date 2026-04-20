@@ -1,18 +1,17 @@
 package com.wanted.legendkim.domain.mypage.repository;
 
-import com.wanted.legendkim.domain.mypage.entity.Payments;
-import com.wanted.legendkim.domain.mypage.entity.Users;
+import com.wanted.legendkim.domain.mypage.entity.MPPayments;
+import com.wanted.legendkim.domain.mypage.entity.MPUsers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface PaymentsRepository extends JpaRepository<Payments, Integer> {
-    List<Payments> findByUserId(Users userId);
+public interface PaymentsRepository extends JpaRepository<MPPayments, Integer> {
+    List<MPPayments> findByUserId(MPUsers userId);
 
-    Payments findByPaymentId(int paymentId);
+    MPPayments findByPaymentId(int paymentId);
 
-    void deleteByUserId(Users user);
+    void deleteByUserId(MPUsers user);
 }
