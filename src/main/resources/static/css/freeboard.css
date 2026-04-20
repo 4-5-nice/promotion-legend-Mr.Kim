@@ -1,0 +1,210 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Noto Sans KR", Arial, sans-serif;
+    background: #f7f7fa;
+    color: #222;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #f4f4f7;
+    padding: 36px 28px;
+}
+
+.profile-box {
+    text-align: center;
+    margin-bottom: 44px;
+}
+
+.profile-img {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 14px;
+    border-radius: 10px;
+    background: #1b174f;
+}
+
+.profile-box h3 {
+    color: #16125a;
+    font-size: 16px;
+}
+
+.profile-box p {
+    color: #9aa0ae;
+    font-size: 10px;
+    margin-top: 6px;
+}
+
+.sidebar button {
+    width: 100%;
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: #9aa0ae;
+    text-align: left;
+    padding-left: 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+    color: #17105f;
+    border-left: 3px solid #b6a042;
+}
+
+.content {
+    flex: 1;
+    padding: 28px 42px 60px;
+    background: #fafafa;
+}
+
+.top-header {
+    height: 42px;
+    border-bottom: 1px solid #eee;
+}
+
+.top-header h2 {
+    color: #17105f;
+    font-size: 23px;
+}
+
+.board-title {
+    position: relative;
+    padding: 56px 0 40px;
+}
+
+.board-title::after {
+    content: "LEGEND";
+    position: absolute;
+    right: 0;
+    top: 32px;
+    font-size: 125px;
+    font-weight: 900;
+    color: #f0f0f6;
+    z-index: 0;
+}
+
+.board-title p,
+.board-title h1,
+.board-title span,
+.write-btn {
+    position: relative;
+    z-index: 1;
+}
+
+.board-title p {
+    color: #8c802e;
+    font-size: 10px;
+    letter-spacing: 5px;
+    margin-bottom: 8px;
+}
+
+.board-title h1 {
+    font-size: 44px;
+    color: #17105f;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.board-title span {
+    color: #555;
+    line-height: 1.8;
+}
+
+.write-btn {
+    position: absolute;
+    right: 0;
+    top: 82px;
+    width: 116px;
+    height: 46px;
+    border: none;
+    background: #17105f;
+    color: white;
+    cursor: pointer;
+}
+
+.filter-area {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    background: #f3f3f5;
+    margin-bottom: 28px;
+    padding-left: 8px;
+}
+
+.filter-btn {
+    width: 84px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #555;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: white;
+    color: #17105f;
+    font-weight: 700;
+}
+
+.board-list {
+    background: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f4f4f6;
+}
+
+th {
+    height: 48px;
+    color: #8d9099;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+td {
+    height: 82px;
+    border-bottom: 1px solid #f0f0f3;
+    font-size: 13px;
+    color: #333;
+    text-align: center;
+}
+
+td.title {
+    text-align: left;
+    color: #17105f;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.post-row {
+    cursor: pointer;
+}
+
+.post-row:hover {
+    background: #f8f8ff;
+}
+
+.empty {
+    height: 160px;
+    color: #999;
+    text-align: center;
+}
