@@ -35,4 +35,8 @@ public class MPCourses {
     @Column(name = "duedate")
     private int duedate;
 
+
+//    @Column(name = "track")
+//    private String track;
+
 }

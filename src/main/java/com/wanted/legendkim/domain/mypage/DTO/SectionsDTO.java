@@ -13,4 +13,6 @@ public class SectionsDTO {
     private String title;
     private String videoUrl;
     private boolean uploadSuccess;
+
+//    private String note;
 }

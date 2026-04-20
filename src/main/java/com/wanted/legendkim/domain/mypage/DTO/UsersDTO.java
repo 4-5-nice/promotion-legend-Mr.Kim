@@ -27,20 +27,15 @@ public class UsersDTO {
     private int vacationCoupon;
     private String identifyQuestion;
 
+//    private String identifyAnswer;
+//    private boolean isPaid;
+
     // ⬇️ 결제 내역 리스트를 담을 변수 추가!
     private List<MPPayments> payments;
     // 출결 정보 담을 변수
     private List<MPAttendance> attendance;
 
-    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<MPPayments> payments) {
-        this.name = name;
-        this.email = email;
-        this.point = point;
-        this.rank = rank;
-        this.vacationCoupon = vacationCoupon;
-        this.payments = payments;
-    }
-
+   
     public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<MPPayments> payments, List<MPAttendance> attendance) {
         this.name = name;
         this.email = email;

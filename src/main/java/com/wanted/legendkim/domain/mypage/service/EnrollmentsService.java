@@ -59,17 +59,17 @@ public class EnrollmentsService {
     }
 
     @Transactional(readOnly = true)
-    public List<MPEnrollments> appliedCourse(String loginId) {
+    public List<MPEnrollments> appliedCourse(String loginId) { //신청한 강의 조회
+        //사용자 정보 가져와서 리스트에 담기
         List<MPUsers> usersList = userRepository.findByEmail(loginId);
-        if (!usersList.isEmpty()) {
-            MPUsers user = usersList.get(0);
-            List<MPEnrollments> list = enrollmentRepository.findByUserId(user);
+        if (!usersList.isEmpty()) { //리스트에 정보가 있다면
+            MPUsers user = usersList.get(0); //리스트의 첫 번째 값 아이디를 user에 넣기
+            List<MPEnrollments> list = enrollmentRepository.findByUserId(user); //아이디로 수강 정보 찾아서 리스트에 담기
 
             // 중요: 이 코드를 추가해서 Lazy 로딩을 강제로 실행시킵니다.
-            // 혹은 Repository에서 fetch join을 써야 하지만 이게 제일 간단합니다.
-            for (MPEnrollments e : list) {
-                if (e.getCourseId() != null) {
-                    e.getCourseId().getTitle(); // 강제 호출
+            for (MPEnrollments e : list) { //수강 정보 list를 반복하여 정보 찾기
+                if (e.getCourseId() != null) { //코스 아이디가 null이 아니라면
+                    e.getCourseId().getTitle(); // 강제 호출 //수강 테이블의 코스아이디와 일치하는 강의명을 강의 테이블에서 꺼내기
                 }
             }
             return list;
