@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 .requestMatchers("/freeboard/user/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers("/questionboard/user/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers("/myPage/**").hasAnyAuthority("USER", "ADMIN")
+                                .anyRequest().authenticated()
                         //다른 모든 요청은 최소한 로그인이 되어 있어야 접근할 수 있도록 차단
                 )
                 .exceptionHandling(conf -> conf
