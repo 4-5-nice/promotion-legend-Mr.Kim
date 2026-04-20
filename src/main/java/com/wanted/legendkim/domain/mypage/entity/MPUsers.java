@@ -11,7 +11,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "users")
-public class Users {
+public class MPUsers {
 
     @Id
     @Column(name = "user_id")
@@ -53,6 +53,14 @@ public class Users {
 
     @Column(name = "identify_question")
     private String identifyQuestion;
+
+
+//    @Column(name = "identify_answer")
+//    private String identifyAnswer;
+//
+//    @Column(name = "is_paid")
+//    private boolean isPaid;
+
 
     // Users.java
     public void useVacation(int count) {

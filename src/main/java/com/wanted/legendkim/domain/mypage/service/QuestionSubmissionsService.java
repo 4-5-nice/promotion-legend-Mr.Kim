@@ -1,7 +1,7 @@
 package com.wanted.legendkim.domain.mypage.service;
 
-import com.wanted.legendkim.domain.mypage.entity.QuestionSubmissions;
-import com.wanted.legendkim.domain.mypage.entity.Users;
+import com.wanted.legendkim.domain.mypage.entity.MPQuestionSubmissions;
+import com.wanted.legendkim.domain.mypage.entity.MPUsers;
 import com.wanted.legendkim.domain.mypage.repository.QuestionSubmissionsRepository;
 import com.wanted.legendkim.domain.mypage.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,17 @@ public class QuestionSubmissionsService {
     private final QuestionSubmissionsRepository submissionRepository;
     private final UsersRepository userRepository; // 유저 엔티티 가져오기용
 
+    //내가 푼 문제
     public Map<String, Object> getQuizInfo(String email) {
         // 유저 객체 확보
-        Users user = userRepository.findByEmail(email).get(0);
+        MPUsers user = userRepository.findByEmail(email).get(0);
 
         // 데이터 가져오기
-        List<QuestionSubmissions> history = submissionRepository.findByUserIdOrderBySubmittedAtDesc(user);
+        //최신 날짜 기준으로 정렬
+        List<MPQuestionSubmissions> history = submissionRepository.findByUserIdOrderBySubmittedAtDesc(user);
+        //정답 개수
         int correctCount = submissionRepository.countByUserIdAndIsCorrectTrue(user);
+        //오답 개수
         int incorrectCount = submissionRepository.countByUserIdAndIsCorrectFalse(user);
 
         // 맞으면 +1, 틀리면 -1

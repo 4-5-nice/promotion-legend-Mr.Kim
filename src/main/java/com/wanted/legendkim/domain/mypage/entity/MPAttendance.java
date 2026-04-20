@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +14,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "attendance")
-public class Attendance {
+public class MPAttendance {
 
     @Id
     @Column(name = "attendance_id")
@@ -24,7 +23,7 @@ public class Attendance {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private MPUsers userId;
 
     @Column(name = "target_date")
     private LocalDateTime targetDate;
@@ -33,13 +32,13 @@ public class Attendance {
     private String status;
 
     // Attendance.java 엔티티
-    public Attendance changeStatus(String status) {
+    public MPAttendance changeStatus(String status) {
         this.status = status;
         return this; // 빌더처럼 체이닝하기 위해 자기 자신 반환
     }
 
     // Attendance.java 에 추가
-    public Attendance fillDetails(Users user, LocalDateTime date, String status) {
+    public MPAttendance fillDetails(MPUsers user, LocalDateTime date, String status) {
         this.userId = user;
         this.targetDate = date;
         this.status = status;

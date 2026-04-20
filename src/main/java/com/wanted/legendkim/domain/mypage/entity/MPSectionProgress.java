@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "section_progress")
-public class SectionProgress {
+public class MPSectionProgress {
     @Id
     @Column(name = "progress_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +20,11 @@ public class SectionProgress {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "enrollment_id")
-    private Enrollments enrollmentId;
+    private MPEnrollments enrollmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
-    private Sections sectionId;
+    private MPSections sectionId;
 
     @Column(name = "is_completed")
     private boolean isCompleted;

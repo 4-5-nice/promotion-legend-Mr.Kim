@@ -1,8 +1,8 @@
 package com.wanted.legendkim.domain.mypage.service;
 
-import com.wanted.legendkim.domain.mypage.entity.Attendance;
-import com.wanted.legendkim.domain.mypage.entity.Users;
-import com.wanted.legendkim.domain.mypage.entity.VacationHistory;
+import com.wanted.legendkim.domain.mypage.entity.MPAttendance;
+import com.wanted.legendkim.domain.mypage.entity.MPUsers;
+import com.wanted.legendkim.domain.mypage.entity.MPVacationHistory;
 import com.wanted.legendkim.domain.mypage.repository.AttendanceRepository;
 import com.wanted.legendkim.domain.mypage.repository.UsersRepository;
 import com.wanted.legendkim.domain.mypage.repository.VacationHistoryRepository;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -22,45 +21,51 @@ public class AttendanceService {
     private final UsersRepository userRepository;
     private final VacationHistoryRepository vacationHistoryRepository;
 
-    public List<Attendance> attendanceList(String email) {
+    //출결 조회
+    public List<MPAttendance> attendanceList(String email) {
         // 1. 기존 Repository 메서드 그대로 사용 (List 반환)
-        List<Users> userList = userRepository.findByEmail(email);
+        List<MPUsers> userList = userRepository.findByEmail(email);
 
         // 2. 리스트가 비어있지 않은지 확인하고 첫 번째 유저 추출
         if (userList != null && !userList.isEmpty()) {
-            Users user = userList.get(0); // 첫 번째 유저를 가져옵니다.
-            return attendanceRepository.findByUserId(user);
+            MPUsers user = userList.get(0); // 첫 번째 유저를 가져옵니다.
+            return attendanceRepository.findByUserId(user); //출결 정보 반환
         }
 
         // 3. 유저를 못 찾았다면 빈 리스트 반환
         return new ArrayList<>();
     }
 
-    public Map<String, Long> getAttendanceInfo(List<Attendance> list) {
+    //출결 조회에서 계산을 위한 정보
+    public Map<String, Long> getAttendanceInfo(List<MPAttendance> list) {
         Map<String, Long> stats = new HashMap<>();
 
-        // 출석(PRESENT), 지각(LATE), 결근(ABSENT), 공결(OFFICIAL) 등의 상태가 Enum에 있다고 가정합니다.
+        // 출석(PRESENT), 지각(LATE), 결근(ABSENT), 공결(OFFICIAL) 등의 상태가 Enum에 있다.
+        //status가 PRESENT인 개수
         long presentCount = list.stream().filter(a -> "PRESENT".equals(a.getStatus())).count();
+        //status가 LATE인 개수
         long lateCount = list.stream().filter(a -> "LATE".equals(a.getStatus())).count();
+        //status가 ABSENT인 개수
         long absentCount = list.stream().filter(a -> "ABSENT".equals(a.getStatus())).count();
+        //status가 EXCUSED인 개수
         long excusedCount = list.stream().filter(a -> "EXCUSED".equals(a.getStatus())).count();
 
-        // 부장님 요청: 총 출근일 = 출석 + 공결
-        stats.put("totalAttendance", presentCount + lateCount + excusedCount);
-        stats.put("lateCount", lateCount);
-        stats.put("absentCount", absentCount);
+        // 총 출근일 = 출석 + 지각 + 공결
+        stats.put("totalAttendance", presentCount + lateCount + excusedCount); //총 출근일
+        stats.put("lateCount", lateCount); //지각일
+        stats.put("absentCount", absentCount); //결근일
 
         return stats;
     }
 
     // 관리자용: userId(Long)로 출결 리스트 조회
-    public List<Attendance> attendanceListById(Long userId) {
+    public List<MPAttendance> attendanceListById(Long userId) {
         // 1. Repository에서 리스트로 유저를 찾습니다.
-        List<Users> users = userRepository.findByUserId(userId);
+        List<MPUsers> users = userRepository.findByUserId(userId);
 
         // 2. 리스트가 비어있지 않다면 첫 번째 유저의 출결 정보를 가져옵니다.
         if (users != null && !users.isEmpty()) {
-            Users user = users.get(0); // 리스트에서 유저 한 명 추출
+            MPUsers user = users.get(0); // 리스트에서 유저 한 명 추출
             return attendanceRepository.findByUserId(user);
         }
 
@@ -68,14 +73,16 @@ public class AttendanceService {
         return new ArrayList<>();
     }
 
+    //관리자용 출결 수정
     @Transactional
     public boolean updateAttendanceStatus(List<Map<String, Object>> updateList) {
+        //화면 수정 내역 리스트가 없다면
         if (updateList == null || updateList.isEmpty()) return false;
 
         // [중요] 0번째 데이터의 userId가 0이면, 다른 데이터에서라도 찾아야 합니다.
         int requestUserId = 0;
         for(Map<String, Object> data : updateList) {
-            int id = Integer.parseInt(String.valueOf(data.get("userId")));
+            int id = Integer.parseInt(String.valueOf(data.get("userId"))); //사용자 아이디를 int형으로 변환
             if(id != 0) {
                 requestUserId = id;
                 break;
@@ -90,23 +97,29 @@ public class AttendanceService {
         // 첫 번째 데이터에서 userId 추출
 //        requestUserId = Integer.parseInt(String.valueOf(updateList.get(0).get("userId")));
 
-        // 해당 유저의 기록을 긁어옴
-        List<Attendance> dbRecords = attendanceRepository.findByUserId_UserId(requestUserId);
+        // 해당 유저의 기록을 긁어옴 //출결 정보
+        List<MPAttendance> dbRecords = attendanceRepository.findByUserId_UserId(requestUserId);
 
         for (Map<String, Object> reqData : updateList) {
             // [수정] 데이터 변환 시 발생할 수 있는 소수점/타입 오류 방지
+            //출결 아이디
             int reqId = (int) Double.parseDouble(String.valueOf(reqData.get("attendanceId")));
+            //변경할 날짜
             String reqDate = (String) reqData.get("targetDate");
+            //변경할 상태
             String reqStatus = (String) reqData.get("status");
 
-            for (Attendance dbRecord : dbRecords) {
+            for (MPAttendance dbRecord : dbRecords) {
                 // 1. PK 비교 (int vs int)
+                //attendanceId가 같고
                 boolean isSameId = (dbRecord.getAttendanceId() == reqId);
 
                 // 2. 유저 ID 비교 (Lazy 로딩 방지 위해 ID 직접 비교)
+                //userId도 같으면서
                 boolean isSameUser = (dbRecord.getUserId().getUserId() == requestUserId);
 
                 // 3. 날짜 비교 (LocalDateTime -> LocalDate -> String)
+                //변경할 날짜와 db의 날짜가 같다면
                 String dbDateOnly = dbRecord.getTargetDate().toLocalDate().toString();
                 boolean isSameDate = dbDateOnly.equals(reqDate);
 
@@ -122,7 +135,7 @@ public class AttendanceService {
 
                 // 삼중 필터가 하나라도 안 맞으면 JPA는 수정을 안 합니다.
                 if (isSameId && isSameUser && isSameDate) {
-                    dbRecord.changeStatus(reqStatus);
+                    dbRecord.changeStatus(reqStatus); //상태 변경하기
                     // dirty checking으로 여기서 끝내야 합니다.
                     break;
                 }
@@ -131,47 +144,47 @@ public class AttendanceService {
         return true;
     }
 
+    //연차 사용
     @Transactional
-    public boolean registerVacation(String loginId, Map<String, Object> data) {
+    public boolean registerVacation(String loginId, Map<String, Object> data) { //로그인한 사용자와 html에서 받은 정보
         try {
+            //사유(enum) 설정
             String purpose = (String) data.get("purpose");
             // 1. 상세 사유 추가 (HTML textarea에서 보낸 값)
             String detailPurpose = (String) data.get("detailPurpose");
-            List<String> dateList = (List<String>) data.get("dateList"); // ["2026-04-20", ...]
+            List<String> dateList = (List<String>) data.get("dateList"); // ["2026-04-20", ...] //화면에서 선택한 날짜
 
             // 유저 정보 가져오기
-            List<Users> userList = userRepository.findByEmail(loginId);
-            if (userList.isEmpty()) return false;
-            Users user = userList.get(0);
+            List<MPUsers> userList = userRepository.findByEmail(loginId);
+            if (userList.isEmpty()) return false; //정보가 없다면
+            MPUsers user = userList.get(0); //정보가 있다면 이메일 가져오기
 
-            int useCount = dateList.size();
-            LocalDate today = LocalDate.now();
+            int useCount = dateList.size(); //사용한 연차수(화면에서 선택한 날짜의 수(크기))
+            LocalDate today = LocalDate.now(); //현재 날짜보다 이전은 신청 못하게할 날짜
 
-            for (String dateStr : dateList) {
-                LocalDate targetDate = LocalDate.parse(dateStr);
-                if (targetDate.isBefore(today)) return false;
+            for (String dateStr : dateList) { //화면에서 선택한 날짜 리스트 반복
+                LocalDate targetDate = LocalDate.parse(dateStr); //화면에서 선택한 String타입의 날짜를 날짜형식으로 변환
+                if (targetDate.isBefore(today)) return false; //화면 선택 날짜가 오늘보다 전이라면 false
 
                 // 2. 연차 이력 저장 (VacationHistory)
-                // TODO: VacationHistory 엔티티에 detailPurpose 컬럼을 만드셨다면
-                // 아래 fillDetails 메서드나 setter에 추가해주셔야 저장됩니다!
-                java.sql.Date sqlDate = java.sql.Date.valueOf(dateStr);
-                VacationHistory history = new VacationHistory()
+                java.sql.Date sqlDate = java.sql.Date.valueOf(dateStr); //db에 저장하기 위해 db 형식과 통일(Date)
+                MPVacationHistory history = new MPVacationHistory() //history에 VacationHistory 엔티티에 있는 메서드 fillDetails에 정보 채우기
                         .fillDetails(user, sqlDate, 1, purpose, detailPurpose);
-                vacationHistoryRepository.save(history);
+                vacationHistoryRepository.save(history); //vacationhistory에 저장(인서트)
 
                 // 3. [핵심] 출결(Attendance) 테이블에도 데이터 추가!
                 // 시간을 00:00:00으로 맞추기 위해 .atStartOfDay() 사용
-                Attendance attendance = new Attendance();
+                MPAttendance attendance = new MPAttendance();
                 attendance.fillDetails(
                         user,
-                        targetDate.atStartOfDay(), // 부장님 말씀대로 00:00:00 세팅
+                        targetDate.atStartOfDay(), // 00:00:00 세팅
                         "EXCUSED"                  // 연차니까 '공결' 상태로 고정
                 );
                 attendanceRepository.save(attendance);
             }
 
             // 4. 원래 연차에서 개수 차감
-            user.useVacation(useCount);
+            user.useVacation(useCount); //사용할 연차수를 기존 연차수에서 차감
             userRepository.save(user);
 
             return true;

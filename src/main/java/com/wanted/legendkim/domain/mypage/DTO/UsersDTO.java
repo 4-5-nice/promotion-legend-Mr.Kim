@@ -1,7 +1,7 @@
 package com.wanted.legendkim.domain.mypage.DTO;
 
-import com.wanted.legendkim.domain.mypage.entity.Attendance;
-import com.wanted.legendkim.domain.mypage.entity.Payments;
+import com.wanted.legendkim.domain.mypage.entity.MPAttendance;
+import com.wanted.legendkim.domain.mypage.entity.MPPayments;
 import lombok.*;
 
 import java.util.Date;
@@ -27,12 +27,15 @@ public class UsersDTO {
     private int vacationCoupon;
     private String identifyQuestion;
 
-    // ⬇️ 결제 내역 리스트를 담을 변수 추가!
-    private List<Payments> payments;
-    // 출결 정보 담을 변수
-    private List<Attendance> attendance;
+//    private String identifyAnswer;
+//    private boolean isPaid;
 
-    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<Payments> payments) {
+    // ⬇️ 결제 내역 리스트를 담을 변수 추가!
+    private List<MPPayments> payments;
+    // 출결 정보 담을 변수
+    private List<MPAttendance> attendance;
+
+    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<MPPayments> payments) {
         this.name = name;
         this.email = email;
         this.point = point;
@@ -41,7 +44,7 @@ public class UsersDTO {
         this.payments = payments;
     }
 
-    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<Payments> payments, List<Attendance> attendance) {
+    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<MPPayments> payments, List<MPAttendance> attendance) {
         this.name = name;
         this.email = email;
         this.point = point;

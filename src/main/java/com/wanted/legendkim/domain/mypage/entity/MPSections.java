@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "sections")
-public class Sections {
+public class MPSections {
     @Id
     @Column(name = "section_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class Sections {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    private Courses courseId;
+    private MPCourses courseId;
 
     @Column(name = "title")
     private String title;
@@ -30,4 +30,8 @@ public class Sections {
 
     @Column(name = "upload_success")
     private boolean uploadSuccess;
+
+
+//    @Column(name = "note")
+//    private String note;
 }

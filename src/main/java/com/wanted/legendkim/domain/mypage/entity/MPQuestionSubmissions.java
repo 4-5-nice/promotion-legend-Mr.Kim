@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "question_submissions")
-public class QuestionSubmissions {
+public class MPQuestionSubmissions {
     @Id
     @Column(name = "submission_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +22,19 @@ public class QuestionSubmissions {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
-    private Questions questionId;
+    private MPQuestions questionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private MPUsers userId;
 
     @Column(name = "is_correct")
     private boolean isCorrect;
 
     @Column(name = "submitted_at")
     private Date submittedAt;
+
+
+//    @Column(name = "selected_answer")
+//    private int selectedAnswer;
 }

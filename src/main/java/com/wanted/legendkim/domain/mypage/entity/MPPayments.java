@@ -6,30 +6,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @ToString
 @Entity
-@Table(name = "login_history")
-public class LoginHistory {
+@Table(name = "payments")
+public class MPPayments {
+
     @Id
-    @Column(name = "history_id")
+    @Column(name = "payment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int historyId;
+    private int paymentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private MPUsers userId;
 
-    @Column(name = "is_success")
-    private boolean isSuccess;
+    @Column(name = "amount")
+    private int amount;
 
-    @Column(name = "fail_reason")
-    private String failReason;
+    @Column(name = "status")
+    private boolean status;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Date createdAt;
 }
