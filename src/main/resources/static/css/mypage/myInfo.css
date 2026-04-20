@@ -1,0 +1,54 @@
+/* src/main/resources/static/css/myInfo.css */
+
+body {
+    margin: 0;
+    display: flex; /* 사이드바와 메인을 가로로 배치 */
+    background-color: #F9F9FB; /* 이미지의 연한 배경색 */
+    font-family: 'Pretendard', sans-serif;
+    min-height: 100vh;
+}
+
+/* 왼쪽 사이드바 (스크롤 해도 고정됨) */
+.sidebar {
+    width: 256px;
+    height: 100vh;
+    background-color: #F3F3F5; /* 이미지 속 회색 */
+    border-right: 1px solid #E2E8F0;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+}
+
+/* 오른쪽 메인 콘텐츠 영역 (스크롤 가능) */
+.main-content {
+    margin-left: 256px; /* 사이드바 공간만큼 띄움 */
+    flex: 1;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* 이미지 속 하얀색 카드 박스들 */
+.info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 진급 포인트 바 디자인 */
+.gauge-container {
+    display: flex;
+    gap: 8px;
+    height: 10px;
+    margin: 20px 0;
+}
+.gauge-step {
+    flex: 1;
+    border-radius: 2px;
+}
+.filled { background: linear-gradient(90deg, #735C00, #CBA72F); }
+.empty { background: #E2E4ED; }

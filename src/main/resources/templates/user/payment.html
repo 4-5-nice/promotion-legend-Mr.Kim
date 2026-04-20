@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 - 진급전설 김부장</title>
+    <link rel="stylesheet" th:href="@{/css/usercss/payment.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Manrope:wght@400;700;800;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 상단 네비게이션 -->
+<header class="pay-header">
+    <div class="pay-header-inner">
+        <span class="pay-brand">진급전설 김부장</span>
+        <a th:href="@{/}" class="pay-cancel-btn">회원가입 취소</a>
+    </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<main class="pay-main">
+    <div class="pay-container">
+
+        <!-- 타이틀 영역 -->
+        <div class="pay-title-area">
+            <p class="pay-label">ORDER CONFIRMATION</p>
+            <h1 class="pay-title">주문서 작성</h1>
+        </div>
+
+        <!-- 상품 카드 -->
+        <div class="pay-product-card">
+            <div class="pay-product-left-bar"></div>
+            <div class="pay-product-info">
+                <div class="pay-product-badge">PREMIUM COURSE</div>
+                <h2 class="pay-product-name">초고속 승진의 정석: 김부장의 비밀노트</h2>
+                <div class="pay-product-sub">
+                    <span class="pay-product-sub-bar"></span>
+                    <span>전설적인 디렉터의 인사이트 패키지</span>
+                </div>
+            </div>
+            <div class="pay-product-price">₩12,000,000</div>
+        </div>
+
+        <!-- 결제 패널 -->
+        <div class="pay-panel">
+            <div class="pay-panel-bg-text">LEGEND</div>
+
+            <div class="pay-panel-inner">
+                <!-- EXECUTIVE SUMMARY 라벨 -->
+                <p class="pay-exec-label">EXECUTIVE SUMMARY</p>
+
+                <!-- 최종 결제 금액 -->
+                <div class="pay-summary-row">
+                    <span class="pay-summary-name">최종 결제 금액</span>
+                    <span class="pay-summary-amount">₩12,000,000</span>
+                </div>
+
+                <!-- 약관 동의 + 결제 버튼 -->
+                <div class="pay-actions">
+                    <label class="pay-agree">
+                        <span class="pay-checkbox">
+                            <input type="checkbox" id="agreeCheck">
+                            <span class="pay-checkmark"></span>
+                        </span>
+                        <span class="pay-agree-text">모든 결제 정보 및 서비스 이용약관에 동의하며 결제를 진행합니다.</span>
+                    </label>
+
+                    <form th:action="@{/payment/process}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="pay-btn" id="payBtn" disabled>
+                            결제하기
+                            <span class="pay-btn-arrow">→</span>
+                        </button>
+                    </form>
+                </div>
+
+                <p class="pay-security">SECURITY ENCRYPTED BY KIM-BU-JANG SYSTEMS. © 2024</p>
+            </div>
+        </div>
+
+        <!-- 인용구 카드 -->
+        <div class="pay-quote-card">
+            <div class="pay-quote-accent"></div>
+            <blockquote class="pay-quote-text">
+                "진급은 속도가 아니라 방향입니다. 하지만 방향을 안다면 가장 빠르게 올라가야<br>합니다. 오늘 당신의 결단이 전설의 시작입니다."
+            </blockquote>
+            <cite class="pay-quote-author">— 김부장, <em>Legendary Director</em></cite>
+        </div>
+
+    </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="pay-footer">
+    <div class="pay-footer-inner">
+        <p class="pay-footer-brand">진급전설 김부장</p>
+        <p class="pay-footer-sub">Master your career with the legendary mentor.</p>
+    </div>
+</footer>
+
+<script>
+    // 체크박스 상태에 따라 결제 버튼 활성화
+    const checkbox = document.getElementById('agreeCheck');
+    const payBtn = document.getElementById('payBtn');
+
+    checkbox.addEventListener('change', function () {
+        payBtn.disabled = !this.checked;
+    });
+</script>
+</body>
+</html>
