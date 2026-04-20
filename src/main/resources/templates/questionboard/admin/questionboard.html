@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 문제 게시판</title>
+    <link rel="stylesheet" href="/css/board/admin-questionboard.css">
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-top-title">임원 포털</div>
+
+        <div class="profile-box">
+            <div class="profile-img"></div>
+            <h3>김부장</h3>
+            <p>김부장, 수석 이사</p>
+        </div>
+
+        <button type="button" onclick="location.href='/admin/users'">수강생 계정 관리</button>
+        <button type="button" onclick="location.href='/admin/attendance'">수강생 출결 관리</button>
+        <button type="button" onclick="location.href='/admin/course/register'">강의 등록</button>
+        <button type="button" onclick="location.href='/freeboard/admin/freeboard'">자유게시판</button>
+        <button type="button" class="active" onclick="location.href='/questionboard/admin/questionboard'">문제게시판</button>
+    </aside>
+
+    <main class="content">
+        <header class="top-header">
+            <button type="button" class="home-title-btn" onclick="location.href='/'">
+                진급전설 김부장
+            </button>
+        </header>
+
+        <section class="page-title-area">
+            <h1>퀴즈 게시판</h1>
+            <p>영상 학습 내용을 바탕으로 한 직급별 맞춤형 퀴즈입니다.</p>
+        </section>
+
+        <section class="rank-tab-section">
+            <button type="button" class="rank-btn" data-rank="INTERN">인턴</button>
+            <button type="button" class="rank-btn" data-rank="CONTRACT">계약직</button>
+            <button type="button" class="rank-btn" data-rank="STAFF">정규직</button>
+            <button type="button" class="rank-btn" data-rank="ASSISTANT_MANAGER">대리</button>
+            <button type="button" class="rank-btn" data-rank="MANAGER">과장</button>
+            <button type="button" class="rank-btn" data-rank="DIRECTOR">부장</button>
+            <button type="button" class="rank-btn" data-rank="EXECUTIVE">임원</button>
+            <button type="button" class="rank-btn" data-rank="RETIRED">정년퇴직</button>
+        </section>
+
+        <section id="quizList" class="quiz-list"></section>
+    </main>
+</div>
+
+<script>
+    const defaultRank = "MANAGER";
+    const rankButtons = document.querySelectorAll(".rank-btn");
+
+    document.addEventListener("DOMContentLoaded", function () {
+        rankButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                rankButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+                loadQuizList(this.dataset.rank);
+            });
+        });
+
+        const defaultButton = document.querySelector(`.rank-btn[data-rank="${defaultRank}"]`);
+        if (defaultButton) {
+            defaultButton.classList.add("active");
+        }
+
+        loadQuizList(defaultRank);
+    });
+
+    function loadQuizList(rank) {
+        fetch(`/questionboard/admin/questionboard/list?rank=${rank}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("문제 목록을 불러오지 못했습니다.");
+                }
+                return response.json();
+            })
+            .then(quizzes => {
+                renderQuizList(quizzes);
+            })
+            .catch(error => {
+                console.error(error);
+                const quizList = document.getElementById("quizList");
+                quizList.innerHTML = `
+                    <div class="empty-message">${error.message}</div>
+                `;
+            });
+    }
+
+    function renderQuizList(quizzes) {
+        const quizList = document.getElementById("quizList");
+        quizList.innerHTML = "";
+
+        if (!quizzes || quizzes.length === 0) {
+            quizList.innerHTML = `<div class="empty-message">해당 직급의 문제가 없습니다.</div>`;
+            return;
+        }
+
+        quizzes.forEach(quiz => {
+            const item = `
+                <div class="quiz-item" onclick="location.href='/questionboard/admin/questionboard/${quiz.id}'">
+                    <div class="quiz-info">
+                        <h3>${quiz.title}</h3>
+                        <p>
+                            ${quiz.courseTitle} / ${quiz.sectionTitle}
+                            &nbsp;&nbsp;•&nbsp;&nbsp;
+                            ${quiz.authorName} (${quiz.authorRank})
+                            &nbsp;&nbsp;•&nbsp;&nbsp;
+                            ${quiz.createdAt}
+                        </p>
+                    </div>
+
+                    <div class="quiz-arrow">›</div>
+                </div>
+            `;
+
+            quizList.insertAdjacentHTML("beforeend", item);
+        });
+    }
+</script>
+</body>
+</html>

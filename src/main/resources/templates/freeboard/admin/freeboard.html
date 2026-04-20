@@ -2,24 +2,27 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>자유게시판</title>
-    <link rel="stylesheet" href="/css/board/freeboard.css">
+    <title>관리자 자유게시판</title>
+    <link rel="stylesheet" href="/css/board/admin-freeboard.css">
 </head>
 <body>
 
 <div class="layout">
 
     <aside class="sidebar">
+        <div class="portal-title">임원 포털</div>
+
         <div class="profile-box">
             <div class="profile-img"></div>
             <h3>김부장</h3>
-            <p>SENIOR DIRECTOR</p>
+            <p>김부장, 수석 이사</p>
         </div>
 
-        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
-        <button type="button" onclick="location.href='/user/lectures'">전체 강의</button>
-        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
-        <button type="button" class="active" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+        <button type="button" onclick="location.href='/admin/accounts'">수강생 계정 관리</button>
+        <button type="button" onclick="location.href='/admin/attendance'">수강생 출결 관리</button>
+        <button type="button" onclick="location.href='/admin/lectures'">강의 등록</button>
+        <button type="button" class="active" onclick="location.href='/freeboard/admin/freeboard'">자유게시판</button>
+        <button type="button" onclick="location.href='/questionboard/admin/questionboard'">문제게시판</button>
     </aside>
 
     <main class="content">
@@ -30,24 +33,13 @@
             </button>
         </header>
 
-        <section class="board-title">
-            <p>COMMUNICATION HUB</p>
+        <section class="board-header">
+            <p class="category">COMMUNICATION HUB</p>
             <h1>자유게시판</h1>
-            <span>부장님의 인사이트와 동료들의 성공 노하우가 공유되는 공간입니다.</span>
-
-            <button type="button" class="write-btn" onclick="location.href='/freeboard/user/freeboard/freeboard-write'">
-                글쓰기
-            </button>
-        </section>
-
-        <section class="filter-area">
-            <button type="button" id="allBtn" class="filter-btn active">
-                전체글
-            </button>
-
-            <button type="button" id="mineBtn" class="filter-btn">
-                내가 쓴 글
-            </button>
+            <p class="description">
+                부장님의 인사이트와 동료들의 성공 노하우가 공유되는 공간입니다.<br>
+                품격 있는 비즈니스 매너를 준수해 주세요.
+            </p>
         </section>
 
         <section class="board-list">
@@ -71,27 +63,15 @@
         </section>
 
     </main>
-
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const allBtn = document.getElementById("allBtn");
-        const mineBtn = document.getElementById("mineBtn");
-
-        allBtn.addEventListener("click", function () {
-            loadPosts("all");
-        });
-
-        mineBtn.addEventListener("click", function () {
-            loadPosts("mine");
-        });
-
-        loadPosts("all");
+        loadPosts();
     });
 
-    function loadPosts(filter) {
-        fetch(`/freeboard/user/freeboard/posts?filter=${filter}`)
+    function loadPosts() {
+        fetch('/freeboard/admin/freeboard/posts')
             .then(response => {
                 if (!response.ok) {
                     throw new Error("게시글 목록을 불러오지 못했습니다.");
@@ -99,7 +79,6 @@
                 return response.json();
             })
             .then(posts => {
-                changeActiveButton(filter);
                 renderPosts(posts);
             })
             .catch(error => {
@@ -140,14 +119,9 @@
         document.querySelectorAll(".post-row").forEach(row => {
             row.addEventListener("click", function () {
                 const postId = this.dataset.postId;
-                location.href = `/freeboard/user/freeboard/${postId}`;
+                location.href = '/freeboard/admin/freeboard/' + postId;
             });
         });
-    }
-
-    function changeActiveButton(filter) {
-        document.getElementById("allBtn").classList.toggle("active", filter === "all");
-        document.getElementById("mineBtn").classList.toggle("active", filter === "mine");
     }
 </script>
 

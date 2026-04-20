@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세조회</title>
-    <link rel="stylesheet" href="/css/freeboard-detail.css">
+    <link rel="stylesheet" href="/css/board/freeboard-detail.css">
 </head>
 <body>
 
@@ -25,7 +25,9 @@
     <main class="content">
 
         <header class="top-header">
-            <h2>진급전설 김부장</h2>
+            <button type="button" class="home-title-btn" onclick="location.href='/'">
+                진급전설 김부장
+            </button>
         </header>
 
         <section class="detail-wrap">
@@ -38,104 +40,102 @@
                 <p class="category">INSIGHTS & DEBATE</p>
 
                 <div class="title-row">
-                    <h1 id="postTitle" th:text="${post.title}">
-                        보고서 작성할 때 '그' 폰트 쓰는게 진짜 중요할까요?
-                    </h1>
+                    <h1 th:text="${post.title}">게시글 제목</h1>
 
                     <div class="action-area" th:if="${post.mine}">
                         <button type="button"
-                                th:onclick="|location.href='/freeboard/user/freeboard/${post.id}/edit'|">
+                                th:onclick="|location.href='/freeboard/user/freeboard/${post.id}/freeboard-write'|">
                             수정
                         </button>
 
-                        <button type="button" class="delete-btn">
-                            삭제
-                        </button>
+                        <form th:action="@{/freeboard/user/freeboard/{postId}/freeboard-delete(postId=${post.id})}"
+                              method="post"
+                              style="display:inline;">
+                            <button type="submit" class="delete-btn">삭제</button>
+                        </form>
                     </div>
                 </div>
 
                 <div class="meta-box">
                     <div class="author-icon">♙</div>
                     <div>
-                        <strong id="authorName" th:text="${post.authorName}">박사원 (영업3팀)</strong>
-                        <p id="createdAt" th:text="${post.createdAt}">2024.05.20 11:05</p>
+                        <strong th:text="${post.authorName}">작성자</strong>
+                        <p th:text="${post.createdAt}">2026.04.19 13:00</p>
                     </div>
 
                     <div class="post-stats">
-                        <span>👁 <span id="viewCount" th:text="${post.viewCount}">1,245</span></span>
-                        <span>💬 <span id="commentCount">18</span></span>
+                        <span>👁 <span th:text="${post.viewCount}">0</span></span>
+                        <span>💬 <span th:text="${#lists.size(comments)}">0</span></span>
                     </div>
                 </div>
             </div>
 
-            <article class="post-content" id="postContent">
-                <p th:text="${post.content}">
-                    안녕하십니까, 영업3팀 박사원입니다.
-                </p>
+            <article class="post-content">
+                <p th:text="${post.content}">게시글 내용</p>
             </article>
 
-            <div class="tag-area">
-                <span>#비즈니스스킬</span>
-                <span>#보고서작성</span>
-                <span>#타이포그래피</span>
-            </div>
-
             <section class="comment-section">
-                <h3>의견 공유 <span id="commentTitleCount">18</span></h3>
+                <h3>의견 공유 <span th:text="${#lists.size(comments)}">0</span></h3>
 
-                <div class="comment-write">
-                    <textarea placeholder="동료의 의견에 존중을 담아 댓글을 작성해주세요."></textarea>
+                <form th:action="@{/freeboard/user/freeboard/{postId}/comments(postId=${post.id})}"
+                      method="post"
+                      class="comment-write">
+
+                    <textarea name="content"
+                              placeholder="동료의 의견에 존중을 담아 댓글을 작성해주세요."
+                              maxlength="200"
+                              required></textarea>
+
                     <div class="comment-bottom">
-                        <span>0 / 500자</span>
-                        <button type="button">등록하기</button>
+                        <button type="submit">등록하기</button>
                     </div>
-                </div>
+                </form>
 
                 <div class="comment-list">
-
-                    <div class="comment-item">
+                    <div class="comment-item" th:each="comment : ${comments}">
                         <div class="comment-avatar"></div>
+
                         <div class="comment-body">
-                            <strong>강차장 (기획팀)</strong>
-                            <span class="badge">EXECUTIVE</span>
-                            <span class="time">12:30</span>
-                            <p>
-                                박사원님 고민이 깊으시네요. 저는 개인적으로 본문은 KoPubWorld 바탕체를 선호합니다.
-                            </p>
-                            <button type="button">도움돼요 4</button>
-                            <button type="button">답글달기</button>
+                            <strong th:text="${comment.authorName}">작성자</strong>
+                            <span class="time" th:text="${comment.createdAt}">2026.04.19 13:00</span>
+                            <p th:text="${comment.content}">댓글 내용</p>
+
+                            <div class="comment-action" th:if="${comment.mine}">
+                                <button type="button"
+                                        th:onclick="|toggleEditForm(${comment.id})|">
+                                    수정
+                                </button>
+
+                                <form th:action="@{/freeboard/user/freeboard/comments/{commentId}/delete(commentId=${comment.id})}"
+                                      method="post"
+                                      style="display:inline;">
+                                    <button type="submit">삭제</button>
+                                </form>
+                            </div>
+
+                            <div th:if="${comment.mine}"
+                                 th:id="'edit-form-' + ${comment.id}"
+                                 style="display:none; margin-top:10px;">
+
+                                <form th:action="@{/freeboard/user/freeboard/comments/{commentId}/edit(commentId=${comment.id})}"
+                                      method="post">
+
+                                    <textarea name="content"
+                                              maxlength="200"
+                                              required
+                                              th:text="${comment.content}"></textarea>
+
+                                    <button type="submit">수정완료</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="comment-item reply">
-                        <div class="comment-avatar small"></div>
-                        <div class="comment-body">
-                            <strong>박사원 (영업3팀)</strong>
-                            <span class="time">13:15</span>
-                            <p>
-                                강차장님, 귀한 의견 감사합니다. 다음 보고 때 한번 적용해보겠습니다.
-                            </p>
-                            <button type="button">도움돼요</button>
-                            <button type="button">답글달기</button>
-                        </div>
+                    <div th:if="${#lists.isEmpty(comments)}" class="comment-empty">
+                        아직 등록된 댓글이 없습니다.
                     </div>
-
-                    <div class="comment-item">
-                        <div class="comment-avatar"></div>
-                        <div class="comment-body">
-                            <strong>이대리 (인사팀)</strong>
-                            <span class="time">14:02</span>
-                            <p>
-                                서체도 중요하지만 행간 160%와 문단 간 간격을 조절하는 것이 핵심적으로 보입니다.
-                            </p>
-                            <button type="button">도움돼요 12</button>
-                            <button type="button">답글달기</button>
-                        </div>
-                    </div>
-
                 </div>
 
-                <button type="button" class="more-btn">의견 더보기⌄</button>
             </section>
 
         </section>
@@ -143,6 +143,18 @@
     </main>
 
 </div>
+
+<script>
+    function toggleEditForm(commentId) {
+        const form = document.getElementById('edit-form-' + commentId);
+
+        if (form.style.display === 'none' || form.style.display === '') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    }
+</script>
 
 </body>
 </html>

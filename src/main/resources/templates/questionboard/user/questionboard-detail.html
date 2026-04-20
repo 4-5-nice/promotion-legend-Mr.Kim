@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 상세조회</title>
+    <link rel="stylesheet" href="/css/board/questionboard-detail.css">
+</head>
+<body>
+<div class="layout">
+
+    <!-- 왼쪽 사이드바 -->
+    <aside class="sidebar">
+        <div class="profile-box">
+            <div class="profile-img"></div>
+            <h3>김부장</h3>
+            <p>SENIOR DIRECTOR</p>
+        </div>
+
+        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
+        <button type="button" onclick="location.href='/user/lectures'">전체 강의</button>
+        <button type="button" class="active" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
+        <button type="button" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+        <header class="top-header">
+            <button type="button" class="home-title-btn" onclick="location.href='/'">
+                진급전설 김부장
+            </button>
+        </header>
+
+        <div class="breadcrumb">
+            <span>퀴즈 게시판</span>
+            <span> &gt; </span>
+            <span th:text="${question.authorRank}"></span>
+            <span> &gt; </span>
+            <span th:text="${question.courseTitle}"></span>
+            <span> / </span>
+            <span th:text="${question.sectionTitle}"></span>
+        </div>
+
+        <div id="resultBanner" class="result-banner hidden"></div>
+
+        <div class="back-link" onclick="location.href='/questionboard/user/questionboard'">← 목록으로</div>
+
+        <section class="question-section">
+            <h1 class="question-title" th:text="${question.title}"></h1>
+
+            <div class="question-meta">
+                <span th:text="${question.courseTitle}"></span>
+                <span>•</span>
+                <span th:text="${question.sectionTitle}"></span>
+                <span>•</span>
+                <span th:text="${question.authorName + ' (' + question.authorRank + ')'}"></span>
+                <span>•</span>
+                <span th:text="${question.createdAt}"></span>
+            </div>
+
+            <div class="option-list" id="optionList">
+                <label class="option-item" data-number="1">
+                    <input type="radio" name="answerOption" value="1">
+                    <span class="option-number">1</span>
+                    <span class="option-text" th:text="${question.option1}"></span>
+                </label>
+
+                <label class="option-item" data-number="2">
+                    <input type="radio" name="answerOption" value="2">
+                    <span class="option-number">2</span>
+                    <span class="option-text" th:text="${question.option2}"></span>
+                </label>
+
+                <label class="option-item" data-number="3">
+                    <input type="radio" name="answerOption" value="3">
+                    <span class="option-number">3</span>
+                    <span class="option-text" th:text="${question.option3}"></span>
+                </label>
+
+                <label class="option-item" data-number="4">
+                    <input type="radio" name="answerOption" value="4">
+                    <span class="option-number">4</span>
+                    <span class="option-text" th:text="${question.option4}"></span>
+                </label>
+
+                <label class="option-item" data-number="5">
+                    <input type="radio" name="answerOption" value="5">
+                    <span class="option-number">5</span>
+                    <span class="option-text" th:text="${question.option5}"></span>
+                </label>
+            </div>
+
+            <div class="submit-area">
+                <button id="submitAnswerBtn" class="submit-btn">정답 제출하기</button>
+            </div>
+        </section>
+
+        <section class="comment-section">
+            <div class="comment-header">
+                <h2>부장님들의 한마디 (댓글)</h2>
+                <span id="commentCount" class="comment-count hidden"
+                      th:text="'피드백 (' + ${#lists.size(comments)} + ')'"></span>
+            </div>
+
+            <!-- 잠금 오버레이 -->
+            <div id="commentLock" class="comment-lock">
+                <div class="lock-card">
+                    <div class="lock-icon">🔒</div>
+                    <p class="lock-title">문제를 풀면 부장님들의 한마디(댓글)를 볼 수 있습니다.</p>
+                    <p class="lock-desc">현직 부장님들의 실전 노하우와 답기 피드백이 숨겨져 있습니다.</p>
+                </div>
+            </div>
+
+            <!-- 댓글 영역 -->
+            <div id="commentContent" class="comment-content locked">
+                <div class="comment-item" th:each="comment : ${comments}">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-top">
+                            <strong th:text="${comment.authorName}"></strong>
+                            <span th:text="${comment.createdAt}"></span>
+                        </div>
+
+                        <p th:id="'comment-text-' + ${comment.id}"
+                           th:text="${comment.content}"></p>
+
+                        <div class="comment-action" th:if="${comment.mine}">
+                            <button type="button"
+                                    th:onclick="|toggleEditForm(${comment.id})|">
+                                수정
+                            </button>
+                            <button type="button"
+                                    th:onclick="|deleteComment(${comment.id})|">
+                                삭제
+                            </button>
+                        </div>
+
+                        <div class="comment-edit-form"
+                             th:id="'edit-form-' + ${comment.id}"
+                             style="display:none; margin-top:10px;"
+                             th:if="${comment.mine}">
+                            <textarea th:id="'edit-input-' + ${comment.id}"
+                                      maxlength="500"
+                                      th:text="${comment.content}"></textarea>
+                            <div class="comment-edit-actions">
+                                <button type="button"
+                                        th:onclick="|submitEditComment(${comment.id})|">
+                                    수정완료
+                                </button>
+                                <button type="button"
+                                        th:onclick="|toggleEditForm(${comment.id})|">
+                                    취소
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-write-box">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-write-area">
+                        <textarea id="commentInput"
+                                  placeholder="의견을 남겨주세요. 실전 경험을 공유하면 추가 포인트를 획득할 수 있습니다."></textarea>
+                        <div class="comment-write-bottom">
+                            <span id="commentLength">0 / 500</span>
+                            <button type="button" id="commentSubmitBtn">댓글 등록</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    const questionId = /*[[${question.id}]]*/ 0;
+    const correctAnswer = /*[[${question.answer}]]*/ 0;
+    const solvedFromServer = /*[[${question.solved}]]*/ false;
+    const myAnswer = /*[[${question.myAnswer}]]*/ null;
+
+    let solvedState = solvedFromServer;
+
+    const submitAnswerBtn = document.getElementById("submitAnswerBtn");
+    const resultBanner = document.getElementById("resultBanner");
+    const optionItems = document.querySelectorAll(".option-item");
+    const commentLock = document.getElementById("commentLock");
+    const commentContent = document.getElementById("commentContent");
+    const commentCount = document.getElementById("commentCount");
+
+    const commentInput = document.getElementById("commentInput");
+    const commentSubmitBtn = document.getElementById("commentSubmitBtn");
+    const commentLength = document.getElementById("commentLength");
+
+    function unlockComments() {
+        commentLock.classList.add("hidden");
+        commentContent.classList.remove("locked");
+        commentCount.classList.remove("hidden");
+    }
+
+    function disableOptions() {
+        optionItems.forEach(item => {
+            const input = item.querySelector("input");
+            input.disabled = true;
+            item.classList.add("disabled");
+        });
+    }
+
+    function paintResult(selectedAnswer, actualCorrectAnswer) {
+        optionItems.forEach(item => {
+            const value = Number(item.dataset.number);
+            const input = item.querySelector("input");
+
+            if (value === selectedAnswer) {
+                input.checked = true;
+            }
+
+            if (value === actualCorrectAnswer) {
+                item.classList.add("correct");
+            }
+
+            if (value === selectedAnswer && selectedAnswer !== actualCorrectAnswer) {
+                item.classList.add("wrong");
+            }
+        });
+
+        resultBanner.classList.remove("hidden");
+        resultBanner.classList.remove("success", "fail");
+
+        if (selectedAnswer === actualCorrectAnswer) {
+            resultBanner.classList.add("success");
+            resultBanner.textContent = "정답입니다!";
+        } else {
+            resultBanner.classList.add("fail");
+            resultBanner.textContent = "틀렸습니다. 정답을 확인해보세요.";
+        }
+
+        submitAnswerBtn.disabled = true;
+        submitAnswerBtn.textContent = "제출 완료";
+    }
+
+    function applySolvedState(selectedAnswer, actualCorrectAnswer) {
+        solvedState = true;
+        disableOptions();
+        paintResult(selectedAnswer, actualCorrectAnswer);
+        unlockComments();
+    }
+
+    function toggleEditForm(commentId) {
+        const form = document.getElementById(`edit-form-${commentId}`);
+        if (!form) return;
+
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+
+    function submitEditComment(commentId) {
+        if (!solvedState) {
+            alert("문제를 풀어야 댓글을 수정할 수 있습니다.");
+            return;
+        }
+
+        const input = document.getElementById(`edit-input-${commentId}`);
+        const content = input.value.trim();
+
+        if (!content) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        fetch(`/questionboard/user/questionboard/comments/${commentId}/edit`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `content=${encodeURIComponent(content)}`
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(message => {
+                        throw new Error(message || "댓글 수정에 실패했습니다.");
+                    });
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert("댓글이 수정되었습니다.");
+                location.reload();
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message || "댓글 수정 중 오류가 발생했습니다.");
+            });
+    }
+
+    function deleteComment(commentId) {
+        if (!solvedState) {
+            alert("문제를 풀어야 댓글을 삭제할 수 있습니다.");
+            return;
+        }
+
+        if (!confirm("댓글을 삭제하시겠습니까?")) {
+            return;
+        }
+
+        fetch(`/questionboard/user/questionboard/comments/${commentId}/delete`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(message => {
+                        throw new Error(message || "댓글 삭제에 실패했습니다.");
+                    });
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert("댓글이 삭제되었습니다.");
+                location.reload();
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message || "댓글 삭제 중 오류가 발생했습니다.");
+            });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        if (solvedFromServer && myAnswer !== null) {
+            applySolvedState(Number(myAnswer), Number(correctAnswer));
+        }
+    });
+
+    submitAnswerBtn.addEventListener("click", function () {
+        if (solvedFromServer || submitAnswerBtn.disabled) {
+            return;
+        }
+
+        const checked = document.querySelector('input[name="answerOption"]:checked');
+
+        if (!checked) {
+            alert("정답을 선택해주세요.");
+            return;
+        }
+
+        const selected = Number(checked.value);
+
+        fetch(`/questionboard/user/questionboard/${questionId}/solve`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `selectedAnswer=${encodeURIComponent(selected)}`
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(message => {
+                        throw new Error(message || "정답 제출에 실패했습니다.");
+                    });
+                }
+                return response.json();
+            })
+            .then(result => {
+                applySolvedState(Number(result.myAnswer), Number(result.correctAnswer));
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message || "정답 제출 중 오류가 발생했습니다.");
+            });
+    });
+
+    if (commentInput) {
+        commentInput.addEventListener("input", function () {
+            const length = this.value.length;
+
+            if (length > 500) {
+                this.value = this.value.substring(0, 500);
+            }
+
+            commentLength.textContent = `${this.value.length} / 500`;
+        });
+    }
+
+    if (commentSubmitBtn) {
+        commentSubmitBtn.addEventListener("click", function () {
+            if (!solvedState) {
+                alert("문제를 풀어야 댓글을 작성할 수 있습니다.");
+                return;
+            }
+
+            const content = commentInput.value.trim();
+
+            if (!content) {
+                alert("댓글 내용을 입력해주세요.");
+                return;
+            }
+
+            fetch(`/questionboard/user/questionboard/${questionId}/comments`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `content=${encodeURIComponent(content)}`
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(message => {
+                            throw new Error(message || "댓글 등록에 실패했습니다.");
+                        });
+                    }
+                    return response.text();
+                })
+                .then(() => {
+                    alert("댓글이 등록되었습니다.");
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert(error.message || "댓글 등록 중 오류가 발생했습니다.");
+                });
+        });
+    }
+</script>
+</body>
+</html>

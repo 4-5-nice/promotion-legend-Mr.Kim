@@ -2,8 +2,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>자유게시판 글쓰기</title>
-    <link rel="stylesheet" href="/css/freeboard-write.css">
+    <title th:text="${isEdit} ? '자유게시판 글 수정' : '자유게시판 글쓰기'">자유게시판 글쓰기</title>
+    <link rel="stylesheet" href="/css/board/freeboard-write.css">
 </head>
 <body>
 
@@ -25,21 +25,25 @@
     <main class="content">
 
         <header class="top-header">
-            <h2>진급전설 김부장</h2>
+            <button type="button" class="home-title-btn" onclick="location.href='/'">
+                진급전설 김부장
+            </button>
         </header>
 
         <section class="write-wrap">
 
             <div class="write-header">
                 <p class="category">COMMUNITY SPACE</p>
-                <h1>자유게시판 글쓰기</h1>
+                <h1 th:text="${isEdit} ? '자유게시판 글 수정' : '자유게시판 글쓰기'">자유게시판 글쓰기</h1>
                 <div class="description-line">
                     <span></span>
-                    <p>부장님의 소중한 경험과 노하우를 공유해 주세요.</p>
+                    <p th:text="${isEdit} ? '기존 게시글 내용을 수정해 주세요.' : '부장님의 소중한 경험과 노하우를 공유해 주세요.'">
+                        부장님의 소중한 경험과 노하우를 공유해 주세요.
+                    </p>
                 </div>
             </div>
 
-            <form action="/freeboard/user/freeboard/freeboard-write"
+            <form th:action="${isEdit} ? @{/freeboard/user/freeboard/{postId}/freeboard-edit(postId=${post.id})} : @{/freeboard/user/freeboard/freeboard-write}"
                   method="post"
                   class="write-form">
 
@@ -50,6 +54,7 @@
                         <input type="text"
                                id="title"
                                name="title"
+                               th:value="${isEdit} ? ${post.title} : ''"
                                placeholder="제목을 입력해 주세요"
                                maxlength="255"
                                required>
@@ -60,7 +65,8 @@
                         <textarea id="content"
                                   name="content"
                                   placeholder="내용을 입력해 주세요"
-                                  required></textarea>
+                                  required
+                                  th:text="${isEdit} ? ${post.content} : ''"></textarea>
                     </div>
 
                     <div class="form-bottom">
@@ -69,11 +75,13 @@
                         <div class="button-area">
                             <button type="button"
                                     class="cancel-btn"
-                                    onclick="location.href='/freeboard/user/freeboard'">
+                                    th:onclick="${isEdit} ? |location.href='/freeboard/user/freeboard/${post.id}'| : |location.href='/freeboard/user/freeboard'|">
                                 취소
                             </button>
 
-                            <button type="submit" class="submit-btn">
+                            <button type="submit"
+                                    class="submit-btn"
+                                    th:text="${isEdit} ? '수정완료 ▷' : '등록하기 ▷'">
                                 등록하기 ▷
                             </button>
                         </div>
