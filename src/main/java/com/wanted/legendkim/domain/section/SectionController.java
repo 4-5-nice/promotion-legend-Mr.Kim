@@ -71,6 +71,7 @@ public class SectionController {
         2. 저장이 완료되면 지정한 텍스트 메세지 응답
      */
 
+    // 영상 파일을 받아서 서비스에 넘기고, 서버 로컬에 저장시킨 뒤 성공 메시지 반영
     @PostMapping("/admin/lectures/{lectureId}/video")
     public ResponseEntity<String> uploadVideo(
             // 현재 로직에서는 사용되지 않았지만, 우리는 API 명세서에 작성한
@@ -93,19 +94,26 @@ public class SectionController {
      */
     // Spring 에서는 기본적으로 URL 마지막 부분에 '.mp4' 같은 확장자를 무시하는 경향이 있다.
     // 이를 위해 우리는 정규식을 작성해 확장자까지 온전하게 fileName에 담아준다.
+    // 서버에 저장된 영상 파일을 브라우저가 다운로드 없이 바로 재생될 수 있게 스트리밍 응답으로 내보낸다.
     @GetMapping("/video/{fileName:.+}")
+    // URL 에서 파일명을 추출
     public ResponseEntity<Resource> serveVideo(@PathVariable String fileName) throws MalformedURLException {
         // URL 인코딩된 파일명 디코딩 처리 (공백 등 특수문자 포함 파일명 대응)
         String decodedFileName;
         try {
             decodedFileName = java.net.URLDecoder.decode(fileName, java.nio.charset.StandardCharsets.UTF_8);
+            // 디코딩 실패 시 원본 파일명을 그대로 사용
         } catch (Exception e) {
             decodedFileName = fileName;
         }
+        // 위에서 주입받은 uploadDir + 파일명으로 실제 서버 내 파일 위치를 계산
         Path filePath = Paths.get(uploadDir).resolve(decodedFileName);
+        // 파일 경로를 Spring 의 Resource 타입으로 감쌈. HTTP 응답 본문에 파일을 실어 보내기위한 방식
         Resource resource = new UrlResource(filePath.toUri());
         return ResponseEntity.ok()
+                // 브라우저한테 이 응답이 Mp4 타입임을 알려줌.
                 .contentType(MediaType.parseMediaType("video/mp4"))
+                // inline 설정으로 다운로드 대신 브라우저 내에서 바로 재생되도록 지시
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + decodedFileName + "\"")
                 .body(resource);
     }

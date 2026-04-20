@@ -1,6 +1,5 @@
 package com.wanted.legendkim.domain.enrollment.dto;
-
-
+// 수강 신청 결과를 JSON 으로 내려주는 응답 전용 DTO
 import com.wanted.legendkim.domain.enrollment.Enrollment;
 import com.wanted.legendkim.domain.enrollment.EnrollmentStatus;
 import lombok.*;
@@ -30,17 +29,30 @@ public class EnrollmentResponse {
     private EnrollmentStatus status;
     private boolean alreadyEnrolled; // 중복 수강신청 여부
 
+    /* comment.
+        아래의 두 메서드는 alreadyEnrolled 플래그 값만 다르다.
+        처음 신청한 경우는 of() false로 구성했다. 이미 신청한 코스를
+        또 신청한 경우에는 ofDuplicate() 로 true를 채운다.
+        생성자에 true, false 를 직접 넘기는 것보다 메서드 이름에
+        의도를 담는 것이 가독성이 좋아 2개로 분리.
+     */
+
+    // userId : 요청한 본인이라 굳이 필요없음
+    // finishDate : 수강 신청 시점에는 아직 없기 때문에 필요없음.
+
+    // 처음 신청 성공했을 때
     public static EnrollmentResponse of(Enrollment enrollment) {
         return new EnrollmentResponse(
-                enrollment.getId(),
-                enrollment.getCourse().getTitle(),
-                enrollment.getStartAt(),
-                enrollment.getDeadLineDate(),
-                enrollment.getStatus(),
+                enrollment.getId(), //enrollmentId
+                enrollment.getCourse().getTitle(), // courseTitle (Course 를 거쳐서 꺼내기)
+                enrollment.getStartAt(), // startAt
+                enrollment.getDeadLineDate(), // deadLineDate
+                enrollment.getStatus(), // alreadyEnrolled
                 false
         );
     }
 
+    // 이미 신청한 코스를 다시 신청했을 경우
     public static EnrollmentResponse ofDuplicate(Enrollment enrollment) {
         return new EnrollmentResponse(
                 enrollment.getId(),
