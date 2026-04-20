@@ -25,21 +25,17 @@ public class PaymentController {
         this.userRepository = userRepository;
     }
 
-    /**
-     * 💡 1. 결제 페이지 보여주기
-     * 기존 "payment/payment"에서 "user/payment"로 경로 수정
-     */
     @GetMapping("/info")
     public String showPaymentPage() {
         return "user/payment";
     }
 
     /**
-     * 💡 2. 결제 처리 및 DB 업데이트
-     * @AuthenticationPrincipal을 통해 세션에서 로그인한 유저의 정보를 직접 가져옵니다.
+     * 2. 결제 처리 및 DB 업데이트
+     * @AuthenticationPrincipal을 통해 세션에서 로그인한 유저의 정보를 직접 가져옴
      */
     @PostMapping("/process")
-    @Transactional // 💡 데이터 변경을 위해 필수!
+    @Transactional
     public String processPayment(@AuthenticationPrincipal AuthDetails authDetails, Model model) {
 
         if (authDetails == null) {
@@ -53,7 +49,8 @@ public class PaymentController {
 
         user.isPaid(true);
 
-        // 영수증 화면에 보여줄 가상 데이터 생성
+        // 영수증 화면에 보여줄 가상 데이터 생성 1가지 강의 = 1가지 플랫폼이기 때문
+        //UUID를 고유번호로 사용해서 그럴싸하게 결제 번호 생성ㅎㅎ..
         String receiptNo = "KBJ-" + LocalDateTime.now().getYear() + "-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         String paymentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss"));
 

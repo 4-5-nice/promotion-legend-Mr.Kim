@@ -26,7 +26,9 @@ public class AuthService implements UserDetailsService {
         if(Objects.isNull(login)){
             throw new UsernameNotFoundException("회원정보가 존재하지 않습니다.");
         }
-
+        //해당 린턴구문이 동작을 하게 되면
+        //Security Context에 LoginDTO 정보를 담은 Session 인증 객체가 만들어지며
+        //우리는 해당 값을 Session이 유지되는 동안 계속 사용할 수 있게 된다.
         return new AuthDetails(login);
     }
 

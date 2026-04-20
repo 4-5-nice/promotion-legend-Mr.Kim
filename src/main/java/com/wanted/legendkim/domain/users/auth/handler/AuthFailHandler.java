@@ -34,7 +34,6 @@ public class AuthFailHandler extends SimpleUrlAuthenticationFailureHandler {
         String errorMessage;
         String email = request.getParameter("email");
 
-        // 💡 1. 여기서 강현 님이 작성하신 분기별 에러 메시지가 세팅됩니다.
         if (exception instanceof BadCredentialsException || exception instanceof UsernameNotFoundException) {
             errorMessage = "이메일이 존재하지 않거나 비밀번호가 일치하지 않습니다.";
             if (email != null && !email.isEmpty()) {
@@ -50,22 +49,21 @@ public class AuthFailHandler extends SimpleUrlAuthenticationFailureHandler {
         }
 
         LoginUserDTO loginUser = memberService.findByEmail(email);
-        int failCount = 0; // 화면에 넘겨줄 실패 횟수
+        int failCount = 0;
 
         if (loginUser != null) {
-            failCount = loginUser.getLoginFailCount(); // 최신 실패 횟수 가져오기
+            failCount = loginUser.getLoginFailCount();
 
             loginLogRepository.save(
                     new LoginHistory(
                             loginUser.getUserId(),
                             false,
-                            errorMessage, // DB에도 이 분기별 에러 메시지가 그대로 저장됩니다!
+                            errorMessage,
                             LocalDateTime.now()
                     )
             );
         }
 
-        // 💡 2. 세팅된 분기별 에러 메시지와 실패 횟수를 /auth/login 화면으로 전달합니다.
         errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
         String redirectUrl = "/auth/login?message=" + errorMessage + "&failCount=" + failCount;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);

@@ -46,10 +46,10 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         if (isAdmin) {
             // 관리자일 경우 관리자 전용 대시보드로 이동
-            getRedirectStrategy().sendRedirect(request, response, "/admin/main"); // 👈 관리자 URL
+            getRedirectStrategy().sendRedirect(request, response, "/admin/main");
         } else {
             // 일반 유저일 경우 메인 페이지로 이동
-            getRedirectStrategy().sendRedirect(request, response, "/"); // 👈 일반 유저 URL
+            getRedirectStrategy().sendRedirect(request, response, "/");
         }
     }
 }
