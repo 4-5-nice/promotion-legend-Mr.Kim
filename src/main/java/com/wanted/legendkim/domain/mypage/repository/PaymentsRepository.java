@@ -11,7 +11,7 @@ import java.util.List;
 public interface PaymentsRepository extends JpaRepository<MPPayments, Integer> {
     List<MPPayments> findByUserId(MPUsers userId);
 
-    MPPayments findByPaymentId(int paymentId);
+//    Payments findByPaymentId(int paymentId);
 
     void deleteByUserId(MPUsers user);
 }

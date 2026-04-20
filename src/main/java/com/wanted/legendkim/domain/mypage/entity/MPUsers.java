@@ -54,6 +54,14 @@ public class MPUsers {
     @Column(name = "identify_question")
     private String identifyQuestion;
 
+
+//    @Column(name = "identify_answer")
+//    private String identifyAnswer;
+//
+//    @Column(name = "is_paid")
+//    private boolean isPaid;
+
+
     // Users.java
     public void useVacation(int count) {
         // 여기서 직접 계산해서 업데이트!

@@ -30,4 +30,8 @@ public class MPSections {
 
     @Column(name = "upload_success")
     private boolean uploadSuccess;
+
+
+//    @Column(name = "note")
+//    private String note;
 }

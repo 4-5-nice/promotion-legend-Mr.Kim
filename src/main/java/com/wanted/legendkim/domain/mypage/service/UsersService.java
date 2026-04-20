@@ -39,7 +39,7 @@ public class UsersService {
         if (!usersList.isEmpty()) {
             MPUsers user = usersList.get(0); // 리스트의 첫 번째 항목 추출
 
-            //payments 테이블에서 결제 금액, 결제 날짜 가져오기.
+            //로그인 사용자를 기준으로 payments 테이블에서 결제 금액, 결제 날짜 가져오기.
             List<MPPayments> paymentsList = paymentRepository.findByUserId(user);
 
             // 엔티티를 DTO로 옮겨 담기
@@ -49,7 +49,7 @@ public class UsersService {
                     user.getPoint(),
                     user.getRank(),
                     user.getVacationCoupon(),
-                    paymentsList
+                    paymentsList //결제 관련 정보
             );
         }
         return new UsersDTO("미확인사용자", loginId, 0, "직급없음", 0, new ArrayList<MPPayments>());
@@ -87,8 +87,10 @@ public class UsersService {
         return new UsersDTO("미확인사용자", "unknown@email.com", 0, "직급없음", 0, new ArrayList<MPPayments>(), new ArrayList<MPAttendance>());
     }
 
+    //회원 탈퇴
     @Transactional
     public void deleteUserAllData(String loginId) {
+        //로그인한 사용자 정보
         MPUsers user = userRepository.findByEmail(loginId).get(0);
 
         // 🚩 1. 남들이 내 콘텐츠에 남긴 흔적부터 소탕 (안 그러면 내 글이 안 지워짐)
@@ -112,7 +114,7 @@ public class UsersService {
         vacationHistoryRepository.deleteByUserId(user);
         loginHistoryRepository.deleteByUserId(user);
 
-        // 🚩 4. 강의실 및 섹션 (부장님이 다 지우기로 결정하셨다면)
+        // 🚩 4. 강의실 및 섹션
         sectionRepository.deleteByCourseId_UserId(user);
         courseRepository.deleteByUserId(user);
 
