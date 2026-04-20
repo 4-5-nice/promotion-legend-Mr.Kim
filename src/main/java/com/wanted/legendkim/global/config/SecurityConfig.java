@@ -31,14 +31,20 @@ public class SecurityConfig {
                                            AuthSuccessHandler authSuccessHandler,
                                            AuthFailHandler authFailHandler) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/user/enrollments/**", "/user/lectures/**", "/admin/**")
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/error").permitAll()
                         .requestMatchers("/auth/**", "/user/signup").permitAll()
                         //인증 없이 인가 permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAuthority("USER")
-                        .anyRequest().authenticated()
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                                .requestMatchers("/freeboard/admin/**").hasAuthority("ADMIN")
+                                .requestMatchers("/questionboard/admin/**").hasAuthority("ADMIN")
+                                .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/freeboard/user/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/questionboard/user/**").hasAnyAuthority("USER", "ADMIN")
                         //다른 모든 요청은 최소한 로그인이 되어 있어야 접근할 수 있도록 차단
                 )
                 .exceptionHandling(conf -> conf
