@@ -45,4 +45,15 @@ public class UsersDTO {
         this.payments = payments;
         this.attendance = attendance;
     }
+
+    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<MPPayments> paymentsList) {
+
+        this.name = name;
+        this.email = email;
+        this.point = point;
+        this.rank = rank;
+        this.vacationCoupon = vacationCoupon;
+        this.payments = payments;
+
+    }
 }
