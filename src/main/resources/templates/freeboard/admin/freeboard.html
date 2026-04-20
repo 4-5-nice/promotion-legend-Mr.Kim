@@ -18,17 +18,22 @@
             <p>김부장, 수석 이사</p>
         </div>
 
-        <button type="button" onclick="location.href='/admin/accounts'">수강생 계정 관리</button>
+        <button type="button" onclick="location.href='/myPage/info'">마이페이지</button>
+        <button type="button" onclick="location.href='/user/enrollments'">수강신청</button>
+        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제게시판</button>
+        <button type="button" onclick="location.href='/freeboard/user/freeboard'">자유게시판</button>
+
+        <button type="button" onclick="location.href='/admin/locked-users'">수강생 계정 관리</button>
         <button type="button" onclick="location.href='/admin/attendance'">수강생 출결 관리</button>
-        <button type="button" onclick="location.href='/admin/course/section'">강의 등록</button>
-        <button type="button" class="active" onclick="location.href='/freeboard/admin/freeboard'">자유게시판</button>
-        <button type="button" onclick="location.href='/questionboard/admin/questionboard'">문제게시판</button>
+        <button type="button" onclick="location.href='/admin/courses/register'">강의 및 코스 등록</button>
+        <button type="button" class="active" onclick="location.href='/freeboard/admin/freeboard'">자유게시판 관리</button>
+        <button type="button" onclick="location.href='/questionboard/admin/questionboard'">문제게시판 관리</button>
     </aside>
 
     <main class="content">
 
         <header class="top-header">
-            <button type="button" class="home-title-btn" onclick="location.href='/'">
+            <button type="button" class="home-title-btn" onclick="location.href='/admin/main'">
                 진급전설 김부장
             </button>
         </header>
