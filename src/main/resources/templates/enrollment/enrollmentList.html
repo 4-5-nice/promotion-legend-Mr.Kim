@@ -24,19 +24,8 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="sidebar__label">승진 트랙</div>
+        <div class="sidebar__label">전체 강의</div>
         <div class="sidebar__sub">전설의 경로</div>
-        <nav class="sidebar__nav">
-            <div class="sidebar__item sidebar__item--active" onclick="filterByTrack('전체', this)">전체</div>
-            <div class="sidebar__item" onclick="filterByTrack('인턴', this)">인턴</div>
-            <div class="sidebar__item" onclick="filterByTrack('계약직', this)">계약직</div>
-            <div class="sidebar__item" onclick="filterByTrack('정규직', this)">정규직</div>
-            <div class="sidebar__item" onclick="filterByTrack('대리', this)">대리</div>
-            <div class="sidebar__item" onclick="filterByTrack('과장', this)">과장</div>
-            <div class="sidebar__item" onclick="filterByTrack('부장', this)">부장</div>
-            <div class="sidebar__item" onclick="filterByTrack('이사', this)">이사</div>
-            <div class="sidebar__item" onclick="filterByTrack('명예퇴직', this)">명예퇴직</div>
-        </nav>
     </aside>
 
     <!-- MAIN -->
@@ -72,8 +61,6 @@
 <script th:inline="javascript">
     // 현재 로그인 userId — 실제 구현 시 세션에서 가져와야 함
     const USER_ID = 1;
-    // 현재 로그인 유저 직급 — 실제 구현 시 세션에서 가져와야 함 (user01 = 이사)
-    const USER_TRACK = '이사';
 
     let allCourses = [];
 
@@ -100,7 +87,6 @@
             <div class="course-card" data-id="${course.id}">
                 <div class="course-card__body">
                     <div class="course-card__meta">
-                        <span class="course-card__category">${course.track || ''}</span>
                         ${course.dueDate > 0 ? `<div class="course-card__badge">${course.dueDate}일 과정</div>` : ''}
                     </div>
                     <div class="course-card__title">${course.title}</div>
@@ -114,17 +100,7 @@
         `).join('');
     }
 
-    // 트랙 필터
-    function filterByTrack(track, el) {
-        document.querySelectorAll('.sidebar__item').forEach(item => item.classList.remove('sidebar__item--active'));
-        el.classList.add('sidebar__item--active');
-
-        if (track === '전체') {
-            renderCourses(allCourses);
-        } else {
-            renderCourses(allCourses.filter(c => c.track === track));
-        }
-    }
+    // 트랙 필터 제거됨
 
     // 수강신청
     async function enroll(courseId) {
@@ -132,7 +108,7 @@
             const res = await fetch('/user/enrollments/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: USER_ID, courseId: courseId, userTrack: USER_TRACK })
+                body: JSON.stringify({ userId: USER_ID, courseId: courseId })
             });
 
             if (!res.ok) {

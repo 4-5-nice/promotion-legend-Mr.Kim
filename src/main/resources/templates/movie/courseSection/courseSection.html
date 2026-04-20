@@ -137,25 +137,6 @@
             </div>
           </div>
 
-          <!-- Track Select -->
-          <div class="form-field">
-            <label class="form-label form-label--gold">TRACK</label>
-            <div class="form-select-wrapper">
-              <select id="course-track" class="form-select">
-                <option value="" disabled selected>승진 트랙을 선택하세요</option>
-                <option value="인턴">인턴</option>
-                <option value="계약직">계약직</option>
-                <option value="정규직">정규직</option>
-                <option value="대리">대리</option>
-                <option value="과장">과장</option>
-                <option value="부장">부장</option>
-                <option value="이사">이사</option>
-                <option value="명예퇴직">명예퇴직</option>
-              </select>
-              <div class="form-select-chevron"></div>
-            </div>
-          </div>
-
           <!-- Submit Button -->
           <button class="btn btn--course" onclick="registerCourse()">
             <span class="btn__label">코스 등록하기</span>
@@ -258,18 +239,15 @@
     const title = document.getElementById('course-title').value.trim();
     const description = document.getElementById('course-description').value.trim();
     const dueDate = document.getElementById('course-duedate').value;
-    const track = document.getElementById('course-track').value;
 
     if (!title) { alert('코스명을 입력해주세요.'); return; }
     if (!description) { alert('코스 설명을 입력해주세요.'); return; }
     if (!dueDate || dueDate <= 0) { alert('수강 기간을 입력해주세요.'); return; }
-    if (!track) { alert('승진 트랙을 선택해주세요.'); return; }
 
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
     formData.append('dueDate', dueDate);
-    formData.append('track', track);
 
     fetch('/admin/courses', {
       method: 'POST',
@@ -284,7 +262,6 @@
       document.getElementById('course-title').value = '';
       document.getElementById('course-description').value = '';
       document.getElementById('course-duedate').value = '';
-      document.getElementById('course-track').value = '';
       loadCourses();
     })
     .catch(() => alert('❌ 코스 등록에 실패했습니다.'));
