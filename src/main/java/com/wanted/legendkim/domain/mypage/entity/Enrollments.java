@@ -40,4 +40,7 @@ public class Enrollments {
 
     @Column(name = "finish_date")
     private Date finishDate;
+
+    @Column(name = "progress")
+    private int progress;
 }

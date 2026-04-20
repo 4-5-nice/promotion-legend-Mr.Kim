@@ -31,7 +31,19 @@ public class VacationHistory {
     private int deductedAmount;
 
     @Column(name = "purpose", columnDefinition = "ENUM('ETC', 'SICK', 'SELF_IMPROVEMENT'")
-    private String purpose;
+    private String purpose; //기타, 병결, 자기계발
 
+    @Column(name = "detail_purpose")
+    private String detailPurpose;
+
+    // VacationHistory.java 에 추가
+    public VacationHistory fillDetails(Users user, Date date, int amount, String purpose, String detailPurpose) {
+        this.userId = user;
+        this.usedDate = date;
+        this.deductedAmount = amount;
+        this.purpose = purpose;
+        this.detailPurpose = detailPurpose;
+        return this; // 👈 이게 핵심! 그래야 연달아 쓸 수 있습니다.
+    }
 
 }

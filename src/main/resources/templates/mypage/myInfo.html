@@ -47,7 +47,7 @@
 <aside class="w-64 bg-[#F3F3F5] flex flex-col border-r border-gray-200 h-full flex-shrink-0">
     <div class="p-8 flex flex-col items-center border-b border-gray-200">
         <div class="w-16 h-20 bg-gray-300 rounded-lg overflow-hidden mb-3 shadow-md">
-            <img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ujnO6aKM0kf_oogd6KYCV4ijUfIwv4MfFiKYCfQd2nho4LCaJ4YRttyk3rCd2WVu2InDBuYp1DnC0pBs1yqjr53eG0h0UPg2egJfWLEHSnQIFRy2g4aYvISFKtFI7MKwHdeS4f2ugEsPnkpl2CJOW326VStw2-xVfbd1lxVyAfCBHEWJCwmhqlXybPSFIcWx_yu_bbPXZDFm-fVB24ImPYjGEiQizCY3-pdAQviBMTuo6yr1zNIGyt0X6KrfQ6niDXGnBtVU1Qf"/>
+            <img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ugjOFOphR29Wbo27R2INAD4WRtTZR4OjYxdPg-Gf5677apFfJSDTyavRJ1JMFc4rT7bAQGb5n3Btrmt2Qzdnl6KAVOysDTVrsJ52TJCLqovpmM_NZTFp2FxD-A98zvX35ZkSZrNHlVL198ev0kwGIT22YVWRzX2sq1qniHR1JKeRn0aser4TSLKyxcmCeJ8VvOT1xVmBISYmzcqUflPnH1lNv8EpjjvG0WYui145h7l12pZcDP7oZjg68RN2iDbqFhU8jWwpDnRTg"/>
         </div>
         <h3 class="text-lg font-bold text-[#000666]" th:text="${#strings.substring(user.name, 0, 1) + user.rank}">김부장</h3>
         <p class="text-[10px] text-gray-400 font-medium mt-1 uppercase" th:text="${user.name} + ', 믿겠네'">NAME, 믿겠네</p>
@@ -148,7 +148,11 @@
                         <span class="text-5xl font-extrabold text-[#000666]" th:text="${user.vacationCoupon}">12</span>
                         <span class="text-sm font-bold text-gray-500 ml-1">일</span>
                     </div>
-                    <button class="bg-[#735C00] text-white text-[11px] px-4 py-2 rounded font-semibold hover:bg-[#5a4800] transition-colors">연차 사용하기</button>
+                    <button
+                            onclick="location.href='/myPage/usePTO'"
+                            class="bg-[#735C00] text-white text-[11px] px-4 py-2 rounded font-semibold hover:bg-[#5a4800] transition-colors">
+                        연차 사용하기
+                    </button>
                 </div>
             </div>
         </section>

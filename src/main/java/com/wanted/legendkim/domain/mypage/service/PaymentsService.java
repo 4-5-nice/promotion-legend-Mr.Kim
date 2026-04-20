@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class paymentsService {
+public class PaymentsService {
     private final PaymentsRepository paymentRepository;
 }

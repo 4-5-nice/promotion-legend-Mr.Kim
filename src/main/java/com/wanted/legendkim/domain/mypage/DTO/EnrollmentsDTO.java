@@ -17,4 +17,5 @@ public class EnrollmentsDTO {
     private Date dealineDate;
     private Date startAt;
     private Date finishDate;
+    private int progress;
 }
