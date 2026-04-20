@@ -11,22 +11,86 @@
 
     <!-- 왼쪽 사이드바 -->
     <aside class="sidebar">
+        <div class="portal-title" th:text="${isAdmin} ? '관리자 포털' : '임원 포털'">임원 포털</div>
+
         <div class="profile-box">
             <div class="profile-img"></div>
             <h3>김부장</h3>
-            <p>SENIOR DIRECTOR</p>
+            <p>김부장, 수석 이사</p>
         </div>
 
-        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
-        <button type="button" onclick="location.href='/user/enrollments/list'">전체 강의</button>
-        <button type="button" class="active" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
-        <button type="button" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+        <nav class="side-nav">
+
+            <th:block th:if="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}"
+                   th:class="${pageType == 'user'} ? 'nav-item active' : 'nav-item'">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">
+                    자유게시판
+                </a>
+
+                <a th:href="@{/admin/locked-users}" class="nav-item">
+                    수강생 계정 관리
+                    <span class="nav-alert-badge"
+                          th:if="${lockedCount != null and lockedCount > 0}"
+                          th:text="${lockedCount}"></span>
+                </a>
+
+                <a th:href="@{/admin/attendance}" class="nav-item">
+                    수강생 출결 관리
+                </a>
+
+                <a th:href="@{/admin/courses/register}" class="nav-item">
+                    강의 및 코스 등록
+                </a>
+
+                <a th:href="@{/freeboard/admin/freeboard}" class="nav-item">
+                    자유게시판 관리
+                </a>
+
+                <a th:href="@{/questionboard/admin/questionboard}"
+                   th:class="${pageType == 'admin'} ? 'nav-item active' : 'nav-item'">
+                    문제게시판 관리
+                </a>
+            </th:block>
+
+            <th:block th:unless="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item active">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">
+                    자유게시판
+                </a>
+            </th:block>
+
+        </nav>
     </aside>
 
     <!-- 메인 -->
     <main class="content">
         <header class="top-header">
-            <button type="button" class="home-title-btn" onclick="location.href='/'">
+            <button type="button"
+                    class="home-title-btn"
+                    th:onclick="|location.href='${homePath}'|">
                 진급전설 김부장
             </button>
         </header>
@@ -36,7 +100,10 @@
             <h1>문제 출제하기</h1>
         </section>
 
-        <form id="questionForm" action="/questionboard/user/questionboard/submit" method="post">
+        <form id="questionForm" method="post" class="question-form"
+              th:action="${pageType == 'admin'}
+                            ? @{/questionboard/admin/questionboard/submit}
+                            : @{/questionboard/user/questionboard/submit}">
             <div class="write-layout">
 
                 <!-- 왼쪽 입력 영역 -->
@@ -129,8 +196,7 @@
                         <p class="action-title">FINALIZE &amp; PUBLISH</p>
 
                         <button type="submit" class="submit-btn">출제하기 ▷</button>
-                        <button type="button" class="cancel-btn"
-                                onclick="location.href='/questionboard/user/questionboard'">취소</button>
+                        <button type="button" class="cancel-btn" id="cancelBtn">취소</button>
 
                         <p class="guide-text">
                             * 문제를 출제하려면 모든 내용을 입력하고 정답을 선택해야 합니다.
@@ -155,10 +221,22 @@
     </main>
 </div>
 
-<script>
+<script th:inline="javascript">
+    const pageType = /*[[${pageType}]]*/ "user";
+    const questionBasePath = pageType === "admin"
+        ? "/questionboard/admin/questionboard"
+        : "/questionboard/user/questionboard";
+
     const courseSelect = document.getElementById("courseId");
     const sectionSelect = document.getElementById("sectionId");
     const questionForm = document.getElementById("questionForm");
+    const cancelBtn = document.getElementById("cancelBtn");
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", function () {
+            location.href = questionBasePath;
+        });
+    }
 
     courseSelect.addEventListener("change", function () {
         const courseId = this.value;
@@ -170,7 +248,7 @@
             return;
         }
 
-        fetch(`/questionboard/user/questionboard/sections?courseId=${courseId}`)
+        fetch(`${questionBasePath}/sections?courseId=${courseId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("섹션 목록을 불러오지 못했습니다.");

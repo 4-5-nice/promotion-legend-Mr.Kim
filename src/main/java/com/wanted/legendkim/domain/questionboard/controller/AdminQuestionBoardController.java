@@ -22,7 +22,8 @@ public class AdminQuestionBoardController {
 
     // 관리자용 문제게시판 불러오기
     @GetMapping
-    public String adminQuestionBoardPage() {
+    public String adminQuestionBoardPage(Model model) {
+        model.addAttribute("pageType", "admin");
         return "questionboard/admin/questionboard";
     }
 
@@ -41,6 +42,7 @@ public class AdminQuestionBoardController {
         QuestionDetailDTO question = adminQuestionBoardService.getQuestionDetail(questionId);
         // 문제 아이디를 이용하여 문제 상세 정보 찾기
 
+        model.addAttribute("pageType", "admin");
         model.addAttribute("question", question); // 문제 상세 정보를 model에 담기
         model.addAttribute("comments", adminQuestionCommentService.getComments(questionId));
         // model 에 담을 댓글을 문제 아이디를 이용하여 조회

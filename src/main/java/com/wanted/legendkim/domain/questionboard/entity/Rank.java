@@ -49,15 +49,15 @@ public enum Rank {
         throw new IllegalArgumentException("지원하지 않는 직급입니다: " + dbData);
     }
 
+    // 현재 점수를 바탕으로 직급 계산
     public static Rank fromPoint(int point) {
-        Rank result = INTERN;
+        Rank result = INTERN; // 처음엔 기본적으로 intern
 
-        for (Rank rank : values()) {
-            if (point >= rank.requiredPoint) {
-                result = rank;
+        for (Rank rank : values()) { // 모든 직급을 순서대로 돌면서
+            if (point >= rank.requiredPoint) { // 현재 점수가 그 직급의 필요 점수 이상이면
+                result = rank; // 직급 변경
             }
         }
-
-        return result;
+        return result; // 그 직급 반환
     }
 }

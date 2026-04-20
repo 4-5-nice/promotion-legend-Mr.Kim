@@ -1,13 +1,17 @@
 * {
     box-sizing: border-box;
+}
+
+html, body {
     margin: 0;
     padding: 0;
+    font-family: "Pretendard", "Noto Sans KR", sans-serif;
+    background: #f7f7f9;
+    color: #222;
 }
 
 body {
-    font-family: "Noto Sans KR", Arial, sans-serif;
-    background: #f7f7fa;
-    color: #222;
+    min-height: 100vh;
 }
 
 .layout {
@@ -15,211 +19,318 @@ body {
     min-height: 100vh;
 }
 
+/* ===== 왼쪽 배너 ===== */
 .sidebar {
-    width: 260px;
-    background: #f4f4f7;
-    padding: 36px 28px;
+    width: 300px;
+    background: #f0f0f3;
+    padding: 28px 0 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.portal-title {
+    padding: 0 32px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1f1d6b;
+    margin-bottom: 44px;
 }
 
 .profile-box {
     text-align: center;
-    margin-bottom: 44px;
+    margin-bottom: 26px;
+    padding: 0 20px;
 }
 
 .profile-img {
-    width: 72px;
-    height: 72px;
-    margin: 0 auto 14px;
-    border-radius: 10px;
-    background: #1b174f;
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 16px;
+    border-radius: 16px;
+    background: #1f1d6b;
 }
 
 .profile-box h3 {
-    color: #16125a;
-    font-size: 16px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #1f1d6b;
 }
 
 .profile-box p {
-    color: #9aa0ae;
-    font-size: 10px;
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #9a9aac;
+    line-height: 1.5;
+}
+
+.side-nav {
+    display: flex;
+    flex-direction: column;
     margin-top: 6px;
 }
 
-.sidebar button {
-    width: 100%;
-    height: 44px;
-    border: none;
-    background: transparent;
-    color: #9aa0ae;
-    text-align: left;
-    padding-left: 18px;
-    margin-bottom: 10px;
-    cursor: pointer;
-}
-
-.sidebar button:hover,
-.sidebar button.active {
-    color: #17105f;
-    border-left: 3px solid #b6a042;
-}
-
-.content {
-    flex: 1;
-    padding: 28px 42px 60px;
-    background: #fafafa;
-}
-
-.top-header {
-    height: 42px;
-    border-bottom: 1px solid #eee;
-}
-
-.top-header h2 {
-    color: #17105f;
-    font-size: 23px;
-}
-
-.board-title {
+/* ===== 왼쪽 메뉴 버튼 ===== */
+.nav-item {
     position: relative;
-    padding: 56px 0 40px;
-}
-
-.board-title::after {
-    content: "LEGEND";
-    position: absolute;
-    right: 0;
-    top: 32px;
-    font-size: 125px;
-    font-weight: 900;
-    color: #f0f0f6;
-    z-index: 0;
-}
-
-.board-title p,
-.board-title h1,
-.board-title span,
-.write-btn {
-    position: relative;
-    z-index: 1;
-}
-
-.board-title p {
-    color: #8c802e;
-    font-size: 10px;
-    letter-spacing: 5px;
-    margin-bottom: 8px;
-}
-
-.board-title h1 {
-    font-size: 44px;
-    color: #17105f;
-    font-weight: 500;
-    margin-bottom: 12px;
-}
-
-.board-title span {
-    color: #555;
-    line-height: 1.8;
-}
-
-.write-btn {
-    position: absolute;
-    right: 0;
-    top: 82px;
-    width: 116px;
-    height: 46px;
-    border: none;
-    background: #17105f;
-    color: white;
-    cursor: pointer;
-}
-
-.filter-area {
     display: flex;
     align-items: center;
-    height: 44px;
-    background: #f3f3f5;
-    margin-bottom: 28px;
-    padding-left: 8px;
-}
-
-.filter-btn {
-    width: 84px;
-    height: 32px;
-    border: none;
+    min-height: 60px;
+    padding: 0 32px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #8f90a6;
     background: transparent;
-    color: #555;
-    cursor: pointer;
+    transition: all 0.18s ease;
 }
 
-.filter-btn.active {
-    background: white;
-    color: #17105f;
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.45);
+    color: #1f1d6b;
+}
+
+.nav-item.active {
+    background: #ffffff;
+    color: #1f1d6b;
     font-weight: 700;
 }
 
-.board-list {
-    background: white;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+.nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #d2aa46;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+.nav-alert-badge {
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #d9534f;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
 }
 
-thead {
-    background: #f4f4f6;
+/* ===== 본문 ===== */
+.content {
+    flex: 1;
+    padding: 18px 46px 34px;
+    background: #f7f7f9;
 }
 
-th {
-    height: 48px;
-    color: #8d9099;
-    font-size: 10px;
-    letter-spacing: 1px;
-    font-weight: 500;
-}
-
-td {
-    height: 82px;
-    border-bottom: 1px solid #f0f0f3;
-    font-size: 13px;
-    color: #333;
-    text-align: center;
-}
-
-td.title {
-    text-align: left;
-    color: #17105f;
-    font-weight: 600;
-    font-size: 15px;
-}
-
-.post-row {
-    cursor: pointer;
-}
-
-.post-row:hover {
-    background: #f8f8ff;
-}
-
-.empty {
-    height: 160px;
-    color: #999;
-    text-align: center;
+/* ===== 상단 헤더 ===== */
+.top-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e3e3e8;
+    margin-bottom: 42px;
 }
 
 .home-title-btn {
     border: none;
     background: none;
     padding: 0;
-    margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: #2d347e;
+    font-size: 24px;
+    font-weight: 800;
+    color: #1f1d6b;
     cursor: pointer;
+    letter-spacing: -0.3px;
 }
 
-.home-title-btn:hover {
-    opacity: 0.85;
+/* ===== 히어로 영역 ===== */
+.board-hero {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 190px;
+    margin-bottom: 28px;
+}
+
+.board-hero-left {
+    position: relative;
+    z-index: 2;
+    max-width: 560px;
+}
+
+.board-subtitle {
+    margin: 0 0 20px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 5px;
+    color: #9c8540;
+}
+
+.board-hero h1 {
+    margin: 0;
+    font-size: 56px;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    font-weight: 800;
+    color: #1f1d6b;
+}
+
+.board-hero span {
+    display: block;
+    margin-top: 26px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #53546a;
+}
+
+.board-hero-watermark {
+    position: absolute;
+    right: 6px;
+    top: 28px;
+    font-size: 150px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    color: #ececf1;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ===== 게시판 리스트 ===== */
+.board-list {
+    margin-top: 6px;
+}
+
+.board-list table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: transparent;
+}
+
+.board-list thead th {
+    height: 54px;
+    background: #f2f2f5;
+    color: #8d8e9b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-align: center;
+}
+
+.board-list th:nth-child(1),
+.board-list td:nth-child(1) {
+    width: 70px;
+}
+
+.board-list th:nth-child(2),
+.board-list td:nth-child(2) {
+    width: auto;
+}
+
+.board-list th:nth-child(3),
+.board-list td:nth-child(3) {
+    width: 120px;
+}
+
+.board-list th:nth-child(4),
+.board-list td:nth-child(4) {
+    width: 90px;
+}
+
+.board-list th:nth-child(5),
+.board-list td:nth-child(5) {
+    width: 180px;
+}
+
+.board-list tbody tr {
+    background: #ffffff;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.board-list tbody tr:hover {
+    background: #fafafe;
+}
+
+.board-list tbody td {
+    height: 86px;
+    border-top: 1px solid #f0f0f4;
+    color: #2f3040;
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.board-list tbody td.title {
+    text-align: left;
+    padding: 0 18px;
+    color: #1f1d6b;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.empty {
+    text-align: center !important;
+    color: #9b9cab !important;
+    font-weight: 500;
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 260px;
+    }
+
+    .content {
+        padding: 18px 28px 30px;
+    }
+
+    .board-hero h1 {
+        font-size: 48px;
+    }
+
+    .board-hero-watermark {
+        font-size: 110px;
+    }
+}
+
+@media (max-width: 900px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .board-hero {
+        min-height: auto;
+    }
+
+    .board-hero h1 {
+        font-size: 40px;
+    }
+
+    .board-hero-watermark {
+        display: none;
+    }
+
+    .board-list {
+        overflow-x: auto;
+    }
+
+    .board-list table {
+        min-width: 760px;
+    }
 }

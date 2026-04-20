@@ -23,7 +23,8 @@ public class FreeBoardController {
 
     // 자유게시판 페이지 불러오기
     @GetMapping
-    public String freeBoardPage() {
+    public String freeBoardPage(Model model) {
+        model.addAttribute("pageType", "user");
         return "/freeboard/user/freeboard";
     }
 
@@ -53,6 +54,7 @@ public class FreeBoardController {
         // 댓글들 불러오기
         List<FreeCommentDTO> comments = freeCommentService.getComments(postId, email);
 
+        model.addAttribute("pageType", "user");
         model.addAttribute("post", post); // model에 게시글 정보 담아주기
         model.addAttribute("comments", comments); // model에 댓글 정보 담아주기
 
@@ -62,6 +64,8 @@ public class FreeBoardController {
     // 글 작성 페이지 불러오기
     @GetMapping("/freeboard-write")
     public String writePage(Model model) {
+
+        model.addAttribute("pageType", "user");
         model.addAttribute("isEdit", false);
         // 현재 등록모드(false)인지 수정모드(true)인지 체크
         return "freeboard/user/freeboard-write";
@@ -85,6 +89,7 @@ public class FreeBoardController {
 
         FreeBoardDetailDTO post = freeBoardService.getEditPost(postId, email); // 게시글 수정하기
 
+        model.addAttribute("pageType", "user");
         model.addAttribute("post", post); // 수정한 게시글 정보 담기
         model.addAttribute("isEdit", true);
         // 현재 등록모드(false)인지 수정모드(true)인지 체크

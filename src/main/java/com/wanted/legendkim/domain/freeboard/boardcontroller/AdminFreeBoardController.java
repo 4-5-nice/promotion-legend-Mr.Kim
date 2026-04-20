@@ -22,7 +22,8 @@ public class AdminFreeBoardController {
 
     // 관리자용 자유게시판 페이지 불러오기
     @GetMapping
-    public String adminFreeBoardPage() {
+    public String adminFreeBoardPage(Model model) {
+        model.addAttribute("pageType", "admin");
         return "freeboard/admin/freeboard";
     }
 
@@ -43,6 +44,7 @@ public class AdminFreeBoardController {
         List<FreeCommentDTO> comments = adminFreeCommentService.getComments(postId);
         // 댓글 정보 찾기
 
+        model.addAttribute("pageType", "admin"); // 페이지 url에 admin 담기
         model.addAttribute("post", post); // 게시글 정보를 model에 담기
         model.addAttribute("comments", comments); // 댓글정보를 model에 담기
 

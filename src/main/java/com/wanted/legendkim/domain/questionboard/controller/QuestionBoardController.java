@@ -31,6 +31,7 @@ public class QuestionBoardController {
         // 사용자 email 가져오기
 
         String myRank = questionBoardService.getMyRank(email); // email로 사용자의 직급 조회
+        model.addAttribute("pageType", "user");
         model.addAttribute("myRank", myRank); // model에 직급 저장
 
         return "questionboard/user/questionboard"; // model 객체 반환
@@ -60,6 +61,7 @@ public class QuestionBoardController {
         String email = principal.getName(); // 사용자 email 가져오기
 
         questionBoardService.validateWriteAccess(email); // 문제를 낼 수 있는지 검증
+        model.addAttribute("pageType", "user");
         model.addAttribute("courses", questionBoardService.getCourses());
         // 강좌의 정보를 model에 넘겨주기
 
@@ -104,6 +106,7 @@ public class QuestionBoardController {
             QuestionDetailDTO question = questionBoardService.getQuestionDetail(questionId, email);
                                                     // 문제 상세 정보를 가져오기
 
+            model.addAttribute("pageType", "user");
             model.addAttribute("question", question); // question에 담긴 값들을 model에 저장
 
             // 내가 풀었는지 안 풀었는지 확인

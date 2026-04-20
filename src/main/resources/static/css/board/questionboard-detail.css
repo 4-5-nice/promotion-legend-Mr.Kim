@@ -5,6 +5,10 @@
     font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }
 
+html, body {
+    min-height: 100%;
+}
+
 body {
     background-color: #f6f6f8;
     color: #1f2b7b;
@@ -15,65 +19,114 @@ body {
     min-height: 100vh;
 }
 
-/* 사이드바 */
+/* ===== 사이드바 ===== */
 .sidebar {
-    width: 220px;
-    background-color: #f2f2f4;
-    border-right: 1px solid #e3e3e8;
-    padding: 36px 20px;
+    width: 300px;
+    background-color: #f0f0f3;
+    padding: 28px 0 20px;
+    display: flex;
+    flex-direction: column;
     flex-shrink: 0;
+}
+
+.portal-title {
+    padding: 0 32px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1f1d6b;
+    margin-bottom: 44px;
 }
 
 .profile-box {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 26px;
+    padding: 0 20px;
 }
 
 .profile-img {
-    width: 72px;
-    height: 72px;
-    margin: 0 auto 14px;
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 16px;
     border-radius: 16px;
-    background: linear-gradient(135deg, #222, #2d347e);
+    background: #1f1d6b;
 }
 
 .profile-box h3 {
-    font-size: 30px;
-    color: #1f2b7b;
-    margin-bottom: 6px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #1f1d6b;
 }
 
 .profile-box p {
-    font-size: 12px;
-    color: #9b9da8;
-    letter-spacing: 1px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #9a9aac;
+    line-height: 1.5;
 }
 
-.sidebar button {
-    display: block;
-    width: 100%;
-    border: none;
-    background: none;
-    text-align: left;
-    padding: 14px 10px;
-    margin-bottom: 8px;
+.side-nav {
+    display: flex;
+    flex-direction: column;
+    margin-top: 6px;
+}
+
+.nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    padding: 0 32px;
+    text-decoration: none;
     font-size: 15px;
-    color: #9aa3b2;
-    cursor: pointer;
-    border-left: 3px solid transparent;
+    font-weight: 500;
+    color: #8f90a6;
+    background: transparent;
+    transition: all 0.18s ease;
 }
 
-.sidebar button.active {
-    color: #1f2b7b;
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.45);
+    color: #1f1d6b;
+}
+
+.nav-item.active {
+    background: #ffffff;
+    color: #1f1d6b;
     font-weight: 700;
-    border-left: 3px solid #a8872d;
 }
 
-/* 메인 */
+.nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #d2aa46;
+}
+
+.nav-alert-badge {
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #d9534f;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ===== 메인 ===== */
 .content {
     flex: 1;
-    padding: 18px 34px 50px;
-    max-width: 980px;
+    padding: 18px 46px 50px;
+    max-width: 1100px;
+    background: #f7f7f9;
 }
 
 .top-header {
@@ -82,19 +135,31 @@ body {
     margin-bottom: 30px;
 }
 
-.top-header h2 {
-    font-size: 20px;
-    color: #2d347e;
+.home-title-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: #1f1d6b;
+    cursor: pointer;
+    letter-spacing: -0.3px;
 }
 
-/* 브레드크럼 */
+.home-title-btn:hover {
+    opacity: 0.85;
+}
+
+/* ===== 브레드크럼 ===== */
 .breadcrumb {
     font-size: 12px;
     color: #8b90a2;
     margin-bottom: 18px;
+    line-height: 1.6;
 }
 
-/* 결과 배너 */
+/* ===== 결과 배너 ===== */
 .result-banner {
     width: 100%;
     border-radius: 14px;
@@ -121,9 +186,9 @@ body {
     border-bottom-color: #d18d8d;
 }
 
-/* 목록으로 */
+/* ===== 목록으로 ===== */
 .back-link {
-    font-size: 18px;
+    font-size: 15px;
     color: #8b90a2;
     margin-bottom: 18px;
     cursor: pointer;
@@ -134,7 +199,7 @@ body {
     color: #1f2b7b;
 }
 
-/* 문제 영역 */
+/* ===== 문제 영역 ===== */
 .question-section {
     margin-bottom: 56px;
 }
@@ -146,6 +211,7 @@ body {
     color: #23306f;
     margin-bottom: 22px;
     word-break: keep-all;
+    letter-spacing: -0.6px;
 }
 
 .question-meta {
@@ -155,9 +221,10 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 28px;
+    line-height: 1.6;
 }
 
-/* 보기 리스트 */
+/* ===== 보기 리스트 ===== */
 .option-list {
     display: flex;
     flex-direction: column;
@@ -203,21 +270,19 @@ body {
 }
 
 .option-text {
-    font-size: 17px;
+    font-size: 16px;
     color: #30354a;
     line-height: 1.5;
     flex: 1;
     word-break: keep-all;
 }
 
-/* 선택 전 체크 느낌 */
 .option-item input[type="radio"]:checked + .option-number {
     background-color: #23306f;
     color: #fff;
     border-color: #23306f;
 }
 
-/* 제출 후 상태 */
 .option-item.disabled {
     cursor: default;
     opacity: 0.94;
@@ -256,7 +321,7 @@ body {
     font-weight: 600;
 }
 
-/* 제출 버튼 */
+/* ===== 제출 버튼 ===== */
 .submit-area {
     display: flex;
     justify-content: center;
@@ -265,12 +330,12 @@ body {
 
 .submit-btn {
     min-width: 170px;
-    height: 56px;
+    height: 52px;
     border: none;
     border-radius: 8px;
     background-color: #8a7320;
     color: #fff;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     padding: 0 28px;
@@ -286,7 +351,7 @@ body {
     cursor: default;
 }
 
-/* 댓글 섹션 */
+/* ===== 댓글 섹션 ===== */
 .comment-section {
     margin-top: 36px;
     padding-top: 34px;
@@ -299,6 +364,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 26px;
+    gap: 16px;
 }
 
 .comment-header h2 {
@@ -317,7 +383,7 @@ body {
     display: none;
 }
 
-/* 댓글 콘텐츠 */
+/* ===== 댓글 콘텐츠 ===== */
 .comment-content {
     position: relative;
     transition: all 0.2s ease;
@@ -330,7 +396,7 @@ body {
     opacity: 0.6;
 }
 
-/* 잠금 오버레이 */
+/* ===== 잠금 오버레이 ===== */
 .comment-lock {
     position: absolute;
     top: 120px;
@@ -380,7 +446,7 @@ body {
     word-break: keep-all;
 }
 
-/* 댓글 아이템 */
+/* ===== 댓글 아이템 ===== */
 .comment-item {
     display: flex;
     gap: 16px;
@@ -397,10 +463,6 @@ body {
     border-radius: 10px;
     background: linear-gradient(135deg, #1f2b7b, #5f6ebd);
     flex-shrink: 0;
-}
-
-.comment-avatar.default {
-    background: #dde1ea;
 }
 
 .comment-body {
@@ -431,16 +493,50 @@ body {
     line-height: 1.7;
     margin-bottom: 12px;
     word-break: keep-all;
+    white-space: pre-wrap;
 }
 
-.comment-actions {
+.comment-action {
     display: flex;
-    gap: 16px;
-    font-size: 12px;
-    color: #9097aa;
+    gap: 14px;
 }
 
-/* 댓글 입력 */
+.comment-action button,
+.comment-edit-actions button {
+    border: none;
+    background: transparent;
+    color: #9097aa;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.comment-action button:hover,
+.comment-edit-actions button:hover {
+    color: #1f2b7b;
+}
+
+/* ===== 댓글 수정 폼 ===== */
+.comment-edit-form textarea {
+    width: 100%;
+    min-height: 90px;
+    border: 1px solid #e2e5ee;
+    border-radius: 10px;
+    outline: none;
+    resize: vertical;
+    padding: 12px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+    background: #fff;
+}
+
+.comment-edit-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* ===== 댓글 입력 ===== */
 .comment-write-box {
     display: flex;
     gap: 16px;
@@ -464,6 +560,7 @@ body {
     font-size: 14px;
     color: #333;
     line-height: 1.6;
+    background: transparent;
 }
 
 .comment-write-area textarea::placeholder {
@@ -475,6 +572,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: 14px;
+    gap: 16px;
 }
 
 .comment-write-bottom span {
@@ -494,10 +592,19 @@ body {
     cursor: pointer;
 }
 
-/* 반응형 */
+.comment-write-bottom button:hover {
+    background: #293891;
+}
+
+/* ===== 반응형 ===== */
 @media (max-width: 1200px) {
+    .sidebar {
+        width: 260px;
+    }
+
     .content {
         max-width: 100%;
+        padding: 18px 28px 30px;
     }
 
     .question-title {
@@ -512,8 +619,6 @@ body {
 
     .sidebar {
         width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e3e3e8;
     }
 
     .content {
@@ -535,19 +640,9 @@ body {
     .comment-lock {
         width: calc(100% - 40px);
     }
-}
 
-.home-title-btn {
-    border: none;
-    background: none;
-    padding: 0;
-    margin: 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: #2d347e;
-    cursor: pointer;
-}
-
-.home-title-btn:hover {
-    opacity: 0.85;
+    .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
