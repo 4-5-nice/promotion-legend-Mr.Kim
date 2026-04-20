@@ -30,15 +30,15 @@ public class MPVacationHistory {
     @Column(name = "deducted_amount")
     private int deductedAmount;
 
-    @Column(name = "purpose", columnDefinition = "ENUM('ETC', 'SICK', 'SELF_IMPROVEMENT'")
+    @Column(name = "purpose", columnDefinition = "ENUM('ETC', 'SICK', 'SELF_IMPROVEMENT')")
     private String purpose; //기타, 병결, 자기계발
 
     @Column(name = "detail_purpose")
     private String detailPurpose;
 
     // VacationHistory.java 에 추가
-    public MPVacationHistory fillDetails(MPUsers user, Date date, int amount, String purpose, String detailPurpose) {
-        this.userId = user;
+    public MPVacationHistory fillDetails(MPUsers userId, Date date, int amount, String purpose, String detailPurpose) {
+        this.userId = userId;
         this.usedDate = date;
         this.deductedAmount = amount;
         this.purpose = purpose;
