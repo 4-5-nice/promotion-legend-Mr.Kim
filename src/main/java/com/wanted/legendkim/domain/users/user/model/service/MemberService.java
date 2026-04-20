@@ -31,6 +31,7 @@ public class MemberService {
         }
         try {
             User user = modelMapper.map(signupDTO, User.class);
+            //비밀번호는 무조건 암호화
             user.password(encoder.encode(signupDTO.getPassword()));
 
             User savedUser = userRepository.save(user);
@@ -45,7 +46,7 @@ public class MemberService {
     public LoginUserDTO findByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        // 엔티티를 DTO로 변환 (ModelMapper 사용)
+        // Entity를 그대로 밖으로 내보내지 않고 안전한 LoginUserDTO로 변환하여 컨트롤러로 넘김
         return userOptional.map(user -> modelMapper.map(user, LoginUserDTO.class)).orElse(null);
     }
 
@@ -74,6 +75,7 @@ public class MemberService {
         }
     }
 
+    //조회용 메서드
     @Transactional(readOnly = true)
     public long getLockedUserCount() {
         return userRepository.countByIsLockedTrue();
@@ -106,11 +108,13 @@ public class MemberService {
     // 비밀번호 재설정 로직 추가
     @Transactional
     public boolean resetPassword(PasswordResetDTO dto) {
-        // 백엔드 단에서도 비밀번호 일치 여부 한 번 더 검증
+        // 비밀번호 불일치 시 즉각 차단
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
             return false;
         }
 
+        //optional 쓰는 이유는 가입한 사용자 없으면 그냥 빈 상자 넘기기 위함
+        //이 데이터는 DB에 없을 수도 있으니까, 값을 꺼내 쓰기 전에 무조건 한 번 확인해!
         Optional<User> userOptional = userRepository.findByEmail(dto.getEmail());
 
         if (userOptional.isPresent()) {
@@ -120,7 +124,7 @@ public class MemberService {
             if (dto.getIdentifyQuestion().equals(user.getIdentifyQuestion()) &&
                     dto.getIdentifyAnswer().equals(user.getIdentifyAnswer())) {
 
-                // 일치한다면 새로운 비밀번호를 암호화하여 플루언트 방식으로 업데이트 (Dirty Checking)
+                // 일치한다면 새로운 비밀번호를 암호화하여 업데이트
                 user.password(encoder.encode(dto.getNewPassword()));
                 return true;
             }

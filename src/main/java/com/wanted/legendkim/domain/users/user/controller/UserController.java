@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import static java.time.LocalDate.now;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -29,20 +31,20 @@ public class UserController {
     @PostMapping("/signup")
     public ModelAndView signup(@ModelAttribute SignupDTO signupDTO, ModelAndView mv){
 
-        // 반환 타입을 Long으로 수정
         Long result = memberService.regist(signupDTO);
         String message = null;
 
-        if (signupDTO.getBirthDate() != null && signupDTO.getBirthDate().isAfter(java.time.LocalDate.now())) {
+        //입력된 생년월일이 오늘 날짜보다 미래인지 확인
+        if (signupDTO.getBirthDate() != null && signupDTO.getBirthDate().isAfter(now())) {
             mv.addObject("message", "생년월일은 미래 날짜를 선택할 수 없습니다.");
-            mv.setViewName("user/signup"); // 다시 회원가입 창으로!
+            mv.setViewName("user/signup");
             return mv;
         }
 
         if(result == null ){
             message = "이미 가입된 이메일입니다.";
             mv.setViewName("user/signup");
-        }else if(result == 0L) { // 0L로 수정
+        }else if(result == 0L) {
             message = "서버에서 오류가 발생하였습니다.";
             mv.setViewName("user/signup");
         }else if(result >= 1L){

@@ -1,4 +1,4 @@
-package com.wanted.legendkim.domain.users.auth.config;
+package com.wanted.legendkim.global.config;
 
 import com.wanted.legendkim.domain.users.auth.handler.AuthFailHandler;
 import com.wanted.legendkim.domain.users.auth.handler.AuthSuccessHandler;
@@ -15,7 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // 💡 에러 원인 1: AuthService 직접 주입 제거 (Spring Security가 구현체를 자동 감지합니다)
 
     @Bean
     public AuthSuccessHandler authSuccessHandler(MemberService memberService, LoginLogRepository loginLogRepository) {
@@ -33,31 +32,38 @@ public class SecurityConfig {
                                            AuthFailHandler authFailHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // 💡 에러 원인 2 해결: WebSecurityCustomizer 대신 여기서 정적 리소스 접근 허용
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/error").permitAll()
                         .requestMatchers("/auth/**", "/user/signup").permitAll()
+                        //인증 없이 인가 permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAuthority("USER")
                         .anyRequest().authenticated()
+                        //다른 모든 요청은 최소한 로그인이 되어 있어야 접근할 수 있도록 차단
                 )
                 .exceptionHandling(conf -> conf
+                        //메인 페이지에서 "로그인이 필요합니다"라는 알림창을 띄우는 용도 등의 예외처리
                         .authenticationEntryPoint((request, response, authException) ->
                                 response.sendRedirect("/?error=login_required"))
                 )
+                //로그인 폼 확인
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/login")
+                        // -> 컨트롤러에서 가로채 로그인 로직 수행
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .successHandler(authSuccessHandler)
                         .failureHandler(authFailHandler)
                         .permitAll()
                 )
+                //로그아웃 설정
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
+                        //로그아웃 시 서버의 세션을 완전히 무효화
                         .invalidateHttpSession(true)
+                        //브라우저에 저장된 세션 쿠키를 삭제하여 보안을 강화
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
