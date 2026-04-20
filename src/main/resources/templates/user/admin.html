@@ -47,19 +47,19 @@
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         마이페이지
       </a>
-      <a href="javascript:void(0)" onclick="checkAccess('/user/lectures', true)" class="nav-item">
+      <a href="javascript:void(0)" onclick="checkAccess('/user/enrollments', true)" class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
         수강신청
       </a>
-      <a href="javascript:void(0)" onclick="checkAccess('/user/lectures', false)" class="nav-item">
+      <a href="javascript:void(0)" onclick="checkAccess('/user/enrollments/list', false)" class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19V6a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v13"/><path d="M4 17h14"/><path d="M6 17v2"/><path d="M18 17v2"/></svg>
         전체강의
       </a>
-      <a href="javascript:void(0)" onclick="checkAccess('/questionboard/user/questionboard/list', false)" class="nav-item">
+      <a href="javascript:void(0)" onclick="checkAccess('/questionboard/user/questionboard', false)" class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6M7 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="7" y="2" width="10" height="4" rx="1"/></svg>
         문제게시판
       </a>
-      <a href="javascript:void(0)" onclick="checkAccess('/freeboard/user/freeboard/posts', false)" class="nav-item">
+      <a href="javascript:void(0)" onclick="checkAccess('/freeboard/user/freeboard', false)" class="nav-item">
         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v12H4z"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
         자유게시판
       </a>
@@ -89,7 +89,7 @@
         </a>
 
         <!-- 강의 등록 -->
-        <a th:href="@{/admin/courses/register}" class="nav-item nav-item--admin">
+        <a th:href="@{/admin/courses}" class="nav-item nav-item--admin">
           <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M12 5v14M5 12h14"/>
           </svg>
@@ -209,13 +209,11 @@
         </div>
       </div>
 
-      <!-- 추천 커리큘럼 -->
+      <!-- 추천 커리큘럼 (썸네일 이미지 제거) -->
       <div class="curriculum-section">
         <div class="section-header">
           <h3 class="section-title">추천 커리큘럼</h3>
-          <a href="javascript:void(0)"
-             onclick="checkAccess('/user/lectures', false)"
-             class="section-more">전체보기</a>
+          <a href="javascript:void(0)" onclick="checkAccess('/user/lectures', false)" class="section-more">전체보기</a>
         </div>
         <div class="curriculum-list">
 
@@ -228,16 +226,11 @@
               </div>
             </div>
             <div class="curriculum-item-body">
-              <div class="curriculum-detail">
-                <img th:src="@{/images/course/data-strategy.jpg}"
-                     onerror="this.style.background='#CBD5E1';this.removeAttribute('src')"
-                     alt="강의 이미지" class="curriculum-thumbnail">
-                <div class="curriculum-desc">
-                  <p>방대한 데이터 속에서 핵심 인사이트를 추출하고, 이를 경영진의 언어로 변환하여 확신 있는 의사결정을 이끌어내는 고급 전략 프로세스를 학습합니다.</p>
-                  <div class="curriculum-instructor">
-                    <img th:src="@{/images/userImg/kim-icon.png}" onerror="this.style.display='none'" alt="강사">
-                    <span>강사: 김부장</span>
-                  </div>
+              <div class="curriculum-desc">
+                <p>방대한 데이터 속에서 핵심 인사이트를 추출하고, 이를 경영진의 언어로 변환하여 확신 있는 의사결정을 이끌어내는 고급 전략 프로세스를 학습합니다.</p>
+                <div class="curriculum-instructor">
+                  <img th:src="@{/images/userImg/kim-icon.png}" onerror="this.style.display='none'" alt="강사">
+                  <span>강사: 김부장</span>
                 </div>
               </div>
               <button class="btn-enroll" onclick="checkAccess('/user/lectures/1', true)">수강 신청</button>
@@ -253,16 +246,11 @@
               </div>
             </div>
             <div class="curriculum-item-body">
-              <div class="curriculum-detail">
-                <img th:src="@{/images/course/teamwork.jpg}"
-                     onerror="this.style.background='#CBD5E1';this.removeAttribute('src')"
-                     alt="강의 이미지" class="curriculum-thumbnail">
-                <div class="curriculum-desc">
-                  <p>팀원 개개인의 강점을 극대화하고 조직 전체의 성과로 연결하는 리더십 전략을 학습합니다.</p>
-                  <div class="curriculum-instructor">
-                    <img th:src="@{/images/userImg/kim-icon.png}" onerror="this.style.display='none'" alt="강사">
-                    <span>강사: 김부장</span>
-                  </div>
+              <div class="curriculum-desc">
+                <p>팀원 개개인의 강점을 극대화하고 조직 전체의 성과로 연결하는 리더십 전략을 학습합니다.</p>
+                <div class="curriculum-instructor">
+                  <img th:src="@{/images/userImg/kim-icon.png}" onerror="this.style.display='none'" alt="강사">
+                  <span>강사: 김부장</span>
                 </div>
               </div>
               <button class="btn-enroll" onclick="checkAccess('/user/lectures/2', true)">수강 신청</button>
@@ -278,16 +266,11 @@
               </div>
             </div>
             <div class="curriculum-item-body">
-              <div class="curriculum-detail">
-                <img th:src="@{/images/course/speech.jpg}"
-                     onerror="this.style.background='#CBD5E1';this.removeAttribute('src')"
-                     alt="강의 이미지" class="curriculum-thumbnail">
-                <div class="curriculum-desc">
-                  <p>임원진의 마음을 움직이는 언어 구조와 발표 기법을 체계적으로 익혀 설득력 있는 커뮤니케이터로 성장합니다.</p>
-                  <div class="curriculum-instructor">
-                    <img th:src="@{/images/userImg/kim-icon.png}" onerror="this.style.display='none'" alt="강사">
-                    <span>강사: 김부장</span>
-                  </div>
+              <div class="curriculum-desc">
+                <p>임원진의 마음을 움직이는 언어 구조와 발표 기법을 체계적으로 익혀 설득력 있는 커뮤니케이터로 성장합니다.</p>
+                <div class="curriculum-instructor">
+                  <img th:src="@{/images/userImg/kim-icon.png}" onerror="this.style.display='none'" alt="강사">
+                  <span>강사: 김부장</span>
                 </div>
               </div>
               <button class="btn-enroll" onclick="checkAccess('/user/lectures/3', true)">수강 신청</button>
