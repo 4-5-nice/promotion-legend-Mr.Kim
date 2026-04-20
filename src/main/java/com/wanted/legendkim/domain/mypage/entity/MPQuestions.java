@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "questions")
-public class Questions {
+public class MPQuestions {
     @Id
     @Column(name = "question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +22,15 @@ public class Questions {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private MPUsers userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    private Courses courseId;
+    private MPCourses courseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
-    private Sections sectionId;
+    private MPSections sectionId;
 
     @Column(name = "title")
     private String title;

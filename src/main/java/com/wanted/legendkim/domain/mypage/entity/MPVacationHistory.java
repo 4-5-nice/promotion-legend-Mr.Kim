@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "vacation_history")
-public class VacationHistory {
+public class MPVacationHistory {
     @Id
     @Column(name = "vacation_history_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class VacationHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private MPUsers userId;
 
     @Column(name = "used_date")
     private Date usedDate;
@@ -37,7 +37,7 @@ public class VacationHistory {
     private String detailPurpose;
 
     // VacationHistory.java 에 추가
-    public VacationHistory fillDetails(Users user, Date date, int amount, String purpose, String detailPurpose) {
+    public MPVacationHistory fillDetails(MPUsers user, Date date, int amount, String purpose, String detailPurpose) {
         this.userId = user;
         this.usedDate = date;
         this.deductedAmount = amount;

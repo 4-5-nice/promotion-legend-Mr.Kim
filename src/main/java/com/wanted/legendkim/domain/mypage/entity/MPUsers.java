@@ -11,7 +11,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "users")
-public class Users {
+public class MPUsers {
 
     @Id
     @Column(name = "user_id")

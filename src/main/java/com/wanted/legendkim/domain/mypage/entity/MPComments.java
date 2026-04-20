@@ -1,10 +1,7 @@
 package com.wanted.legendkim.domain.mypage.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,26 +10,28 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @Entity
-@Table(name = "free_boards")
-public class FreeBoards {
+@Table(name = "comments")
+public class MPComments {
     @Id
-    @Column(name = "post_id")
+    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int postId;
+    private int commentId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private MPFreeBoards postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private MPUsers userId;
 
-    @Column(name = "title")
-    private String title;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private MPQuestions questionId;
 
     @Column(name = "content")
     private String content;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "view_count")
-    private int viewCount;
 }

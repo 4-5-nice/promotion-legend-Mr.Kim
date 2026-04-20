@@ -19,7 +19,7 @@ public class QuestionSubmission {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private Questions question;
+    private BoardQuestions question;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -34,7 +34,7 @@ public class QuestionSubmission {
     @Column(name = "submitted_at")
     private LocalDateTime submittedAt;
 
-    public QuestionSubmission(Questions question, QuestionBoardUser user, Integer selectedAnswer, Boolean isCorrect) {
+    public QuestionSubmission(BoardQuestions question, QuestionBoardUser user, Integer selectedAnswer, Boolean isCorrect) {
         this.question = question;
         this.user = user;
         this.selectedAnswer = selectedAnswer;

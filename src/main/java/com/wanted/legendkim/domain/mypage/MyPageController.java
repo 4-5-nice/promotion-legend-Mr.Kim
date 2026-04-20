@@ -1,12 +1,8 @@
 package com.wanted.legendkim.domain.mypage;
 
-import com.wanted.legendkim.domain.mypage.entity.Attendance;
-import com.wanted.legendkim.domain.mypage.entity.Payments;
-import com.wanted.legendkim.domain.mypage.entity.Users;
-import com.wanted.legendkim.domain.mypage.repository.PaymentsRepository;
+import com.wanted.legendkim.domain.mypage.entity.MPAttendance;
 import com.wanted.legendkim.domain.mypage.service.*;
 import com.wanted.legendkim.domain.mypage.DTO.UsersDTO;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,7 +70,7 @@ public class MyPageController {
         UsersDTO userDTO = userService.findByEmail(loginId);
 
         // 2. 서비스 호출 (로그인 ID 전달)
-        List<Attendance> list = attendanceService.attendanceList(loginId);
+        List<MPAttendance> list = attendanceService.attendanceList(loginId);
 
         // 3. 통계 계산
         Map<String, Long> stats = attendanceService.getAttendanceInfo(list);
@@ -96,7 +92,7 @@ public class MyPageController {
         UsersDTO userDTO = userService.findByEmail(loginId);
 
         // 2. 서비스 호출 (로그인 ID 전달)
-        List<Attendance> list = attendanceService.attendanceList(loginId);
+        List<MPAttendance> list = attendanceService.attendanceList(loginId);
 
         // 3. 통계 계산
         Map<String, Long> stats = attendanceService.getAttendanceInfo(list);
@@ -188,7 +184,7 @@ public class MyPageController {
             model.addAttribute("targetUser", targetUser);
 
             // 수강생 출결 리스트 (달력용) - ID로 조회하는 메서드 새로 호출
-            List<Attendance> list = attendanceService.attendanceListById(targetUserId);
+            List<MPAttendance> list = attendanceService.attendanceListById(targetUserId);
             model.addAttribute("attendanceList", list);
 
             // 통계 계산
@@ -226,10 +222,4 @@ public class MyPageController {
         }
     }
 
-    @GetMapping("/")
-    public String index(Principal principal) {
-        // 시큐리티가 정상 작동하면, 로그인이 안 된 유저는 이미 /login 페이지에 갇혀 있습니다.
-        // 여기 도달했다는 건 무조건 Principal이 있다는 뜻입니다.
-        return "redirect:/myPage/info";
-    }
 }

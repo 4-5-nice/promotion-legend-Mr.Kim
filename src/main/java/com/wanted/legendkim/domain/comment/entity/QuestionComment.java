@@ -1,7 +1,7 @@
 package com.wanted.legendkim.domain.comment.entity;
 
 import com.wanted.legendkim.domain.questionboard.entity.QuestionBoardUser;
-import com.wanted.legendkim.domain.questionboard.entity.Questions;
+import com.wanted.legendkim.domain.questionboard.entity.BoardQuestions;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class QuestionComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private Questions question;
+    private BoardQuestions question;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,7 +33,7 @@ public class QuestionComment {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public QuestionComment(Questions question, QuestionBoardUser user, String content) {
+    public QuestionComment(BoardQuestions question, QuestionBoardUser user, String content) {
         this.question = question;
         this.user = user;
         this.content = content;
