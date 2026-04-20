@@ -15,7 +15,11 @@ public class QuestionsDTO {
     private int courseId;
     private int sectionId;
     private String title;
-    private String content;
+    private String option1;
+    private String option2;
+    private String option3;
+    private String option4;
+    private String option5;
     private int answer;
     private Date createdAt;
     private int viewCount;
