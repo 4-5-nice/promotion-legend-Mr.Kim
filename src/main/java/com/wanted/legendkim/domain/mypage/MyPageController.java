@@ -244,10 +244,4 @@ public class MyPageController {
         }
     }
 
-    @GetMapping("/")
-    public String index(Principal principal) {
-        // 시큐리티가 정상 작동하면, 로그인이 안 된 유저는 이미 /login 페이지에 갇혀 있습니다.
-        // 여기 도달했다는 건 무조건 Principal이 있다는 뜻입니다.
-        return "redirect:/myPage/info";
-    }
 }

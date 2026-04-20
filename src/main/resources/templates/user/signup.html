@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 - 지금부터 김부장</title>
+    <link rel="stylesheet" th:href="@{/css/usercss/signup.css}">
+</head>
+<body>
+<header class="top-nav">
+    <div class="nav-container">
+        <div class="brand-title">지금부터 김부장</div>
+        <div class="nav-actions">
+            <span class="text-muted">이미 회원이신가요?</span>
+            <a th:href="@{/auth/login}" class="btn-dark-sm">로그인</a>
+        </div>
+    </div>
+</header>
+
+<div class="signup-wrapper">
+    <div class="bg-blur blur-gold"></div>
+    <div class="bg-blur blur-blue"></div>
+
+    <div class="signup-card">
+        <div class="brand-panel">
+            <div class="brand-content">
+                <span class="badge-gold">EXECUTIVE PATHWAY</span>
+                <h2>김부장과 함께<br>당신의 가치를 증명하세요</h2>
+                <p class="brand-desc">단순한 학습을 넘어서, 상위 리더들의 사고방식과 실전 전략을 익히는 성장 경험을 제공합니다.</p>
+            </div>
+            <div class="brand-stats">
+                <div class="stat-item">
+                    <div class="stat-icon"></div>
+                    <div class="stat-text">
+                        <strong>수강 만족도 98%</strong>
+                        <span>데이터로 검증된 실전형 커리큘럼</span>
+                    </div>
+                </div>
+                <div class="brand-footer">
+                    LEGENDARY DIRECTOR KIM | EST. 2024
+                </div>
+            </div>
+        </div>
+
+        <div class="form-panel">
+            <div class="form-header">
+                <h2>신규 회원 등록</h2>
+                <p>교육 과정을 시작할 수 있도록 기본 정보를 입력해 주세요.</p>
+            </div>
+
+            <form th:action="@{/user/signup}" th:object="${signupDTO}" method="post" class="signup-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <div th:if="${message}" class="input-group">
+                    <span th:text="${message}" style="color: #b42318;"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>NAME</label>
+                    <input type="text" th:field="*{name}" placeholder="이름" required>
+                </div>
+                <div class="input-group">
+                    <label>DATE OF BIRTH</label>
+                    <input type="date" th:field="*{birthDate}" required>
+                </div>
+                <div class="input-group">
+                    <label>EMAIL ADDRESS</label>
+                    <input type="email" th:field="*{email}" placeholder="회사 또는 개인 이메일" required>
+                </div>
+                <div class="input-group">
+                    <label>PASSWORD</label>
+                    <input type="password" th:field="*{password}" placeholder="비밀번호 설정" required>
+                </div>
+                <div class="input-group">
+                    <label>SECURITY QUESTION</label>
+                    <select th:field="*{identifyQuestion}" required>
+                        <option value="">질문을 선택해 주세요</option>
+                        <option value="가장 좋아하는 물건은?">가장 좋아하는 물건은?</option>
+                        <option value="졸업한 초등학교 이름은?">졸업한 초등학교 이름은?</option>
+                        <option value="어릴 적 별명은?">어릴 적 별명은?</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>SECURITY ANSWER</label>
+                    <input type="text" th:field="*{identifyAnswer}" placeholder="답변을 입력해 주세요" required>
+                </div>
+
+                <!-- 약관 동의 체크박스 -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        본인은
+                        <a href="#" class="terms-link" onclick="openTermsModal('privacy'); return false;">개인정보 처리방침</a>
+                        및
+                        <a href="#" class="terms-link" onclick="openTermsModal('service'); return false;">이용약관</a>에
+                        동의하고, 지금부터 김부장의 회원으로 가입합니다.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit">회원가입</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="bottom-footer">
+    © 2026 지금부터 김부장 Education Group. All Rights Reserved.
+</footer>
+
+<!-- ===== 약관 모달 ===== -->
+<div id="termsModal" class="terms-modal-overlay">
+    <div class="terms-modal">
+
+        <!-- 탭 헤더 -->
+        <div class="terms-modal-header">
+            <div class="terms-tabs">
+                <button class="terms-tab active" id="tab-privacy" onclick="switchTab('privacy')">개인정보 처리방침</button>
+                <button class="terms-tab" id="tab-service" onclick="switchTab('service')">이용약관</button>
+            </div>
+            <button class="terms-close" onclick="closeTermsModal()">&times;</button>
+        </div>
+
+        <!-- 개인정보 처리방침 -->
+        <div class="terms-body" id="content-privacy">
+            <h3>개인정보 처리방침</h3>
+            <p class="terms-updated">최종 업데이트: 2026년 1월 1일</p>
+
+            <div class="terms-section">
+                <h4>제1조 (개인정보의 수집 및 이용 목적)</h4>
+                <p>(주)진급전설(이하 "회사")은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.</p>
+                <ul>
+                    <li>회원 가입 및 관리: 회원제 서비스 이용에 따른 본인 확인, 개인 식별, 불량 회원의 부정 이용 방지와 비인가 사용 방지, 가입 의사 확인, 연령 확인, 민원 처리, 공지사항 전달</li>
+                    <li>교육 서비스 제공: 강의 수강, 수강 이력 관리, 출결 현황 확인, 학습 진도 관리</li>
+                    <li>마케팅 및 광고 활용: 신규 서비스 개발 및 맞춤 서비스 제공, 이벤트 및 광고성 정보 제공, 서비스의 유효성 확인, 접속 빈도 파악, 회원의 서비스 이용에 대한 통계</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제2조 (수집하는 개인정보 항목)</h4>
+                <p>회사는 회원가입, 서비스 이용 등을 위해 아래와 같은 개인정보를 수집합니다.</p>
+                <ul>
+                    <li><strong>필수 항목:</strong> 이름, 생년월일, 이메일 주소, 비밀번호, 본인확인 질문 및 답변</li>
+                    <li><strong>자동 수집 항목:</strong> IP 주소, 쿠키, 접속 로그, 서비스 이용 기록, 불량 이용 기록</li>
+                    <li><strong>결제 시 수집 항목:</strong> 결제 수단 정보, 결제 내역</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제3조 (개인정보의 보유 및 이용 기간)</h4>
+                <p>회사는 법령에 따른 개인정보 보유·이용 기간 또는 정보 주체로부터 개인정보를 수집 시에 동의받은 개인정보 보유·이용 기간 내에서 개인정보를 처리·보유합니다.</p>
+                <ul>
+                    <li>회원 가입 및 관리: 회원 탈퇴 시까지 (단, 관계 법령 위반에 따른 수사·조사 등이 진행 중인 경우에는 해당 수사·조사 종료 시까지)</li>
+                    <li>전자상거래에서의 계약·청약철회, 대금결제, 재화 등의 공급 기록: 5년</li>
+                    <li>소비자의 불만 또는 분쟁 처리에 관한 기록: 3년</li>
+                    <li>로그 기록: 3개월</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제4조 (개인정보의 제3자 제공)</h4>
+                <p>회사는 원칙적으로 정보 주체의 개인정보를 수집·이용 목적으로 명시한 범위 내에서 처리하며, 정보 주체의 사전 동의 없이는 본래의 목적 범위를 초과하여 처리하거나 제3자에게 제공하지 않습니다. 단, 다음의 경우에는 예외로 합니다.</p>
+                <ul>
+                    <li>정보 주체로부터 별도의 동의를 받은 경우</li>
+                    <li>법률에 특별한 규정이 있거나 법령상 의무를 준수하기 위하여 불가피한 경우</li>
+                    <li>정보 주체 또는 법정 대리인이 의사표시를 할 수 없는 상태에 있거나 주소 불명 등으로 사전 동의를 받을 수 없는 경우로서 명백히 정보 주체 또는 제3자의 급박한 생명, 신체, 재산의 이익을 위하여 필요하다고 인정되는 경우</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제5조 (정보 주체의 권리·의무 및 행사 방법)</h4>
+                <p>정보 주체는 회사에 대해 언제든지 다음 각 호의 개인정보 보호 관련 권리를 행사할 수 있습니다.</p>
+                <ul>
+                    <li>개인정보 열람 요구</li>
+                    <li>오류 등이 있을 경우 정정 요구</li>
+                    <li>삭제 요구</li>
+                    <li>처리 정지 요구</li>
+                </ul>
+                <p>위 권리 행사는 회사에 대해 서면, 전화, 전자우편 등을 통하여 하실 수 있으며, 회사는 이에 대해 지체 없이 조치하겠습니다.</p>
+            </div>
+        </div>
+
+        <!-- 이용약관 -->
+        <div class="terms-body" id="content-service" style="display:none;">
+            <h3>이용약관</h3>
+            <p class="terms-updated">최종 업데이트: 2026년 1월 1일</p>
+
+            <div class="terms-section">
+                <h4>제1조 (목적)</h4>
+                <p>이 약관은 (주)진급전설(이하 "회사")이 운영하는 진급전설 김부장 플랫폼(이하 "서비스")을 이용함에 있어 회사와 이용자의 권리·의무 및 책임 사항을 규정함을 목적으로 합니다.</p>
+            </div>
+
+            <div class="terms-section">
+                <h4>제2조 (정의)</h4>
+                <ul>
+                    <li>"서비스"란 회사가 제공하는 온라인 교육 콘텐츠, 강의 수강, 커뮤니티 게시판 등 일체의 서비스를 의미합니다.</li>
+                    <li>"회원"이란 회사와 서비스 이용 계약을 체결하고 회사가 제공하는 서비스를 이용하는 자를 의미합니다.</li>
+                    <li>"유료 회원"이란 서비스 이용 요금을 납부하고 프리미엄 콘텐츠를 이용하는 회원을 의미합니다.</li>
+                    <li>"콘텐츠"란 회사가 서비스 내에서 제공하는 강의, 자료, 텍스트, 이미지 등 모든 정보를 의미합니다.</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제3조 (약관의 효력 및 변경)</h4>
+                <p>이 약관은 서비스를 이용하고자 하는 모든 회원에 대하여 그 효력을 발생합니다. 회사는 합리적인 사유가 발생할 경우 관련 법령에 위배되지 않는 범위 내에서 이 약관을 변경할 수 있으며, 변경된 약관은 서비스 화면에 공지함으로써 효력을 발생합니다.</p>
+            </div>
+
+            <div class="terms-section">
+                <h4>제4조 (회원 가입)</h4>
+                <p>이용자는 회사가 정한 가입 양식에 따라 회원 정보를 기입한 후 이 약관에 동의한다는 의사 표시를 함으로써 회원 가입을 신청합니다. 회사는 다음 각 호에 해당하는 신청에 대해서는 승낙하지 않거나 사후에 이용 계약을 해지할 수 있습니다.</p>
+                <ul>
+                    <li>가입 신청자가 이전에 회원 자격을 상실한 적이 있는 경우</li>
+                    <li>실명이 아니거나 타인의 명의를 이용한 경우</li>
+                    <li>허위의 정보를 기재하거나 회사가 제시하는 내용을 기재하지 않은 경우</li>
+                    <li>만 14세 미만의 아동인 경우</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제5조 (서비스의 제공 및 변경)</h4>
+                <p>회사는 다음과 같은 서비스를 제공합니다.</p>
+                <ul>
+                    <li>온라인 교육 강의 콘텐츠 제공</li>
+                    <li>수강 신청 및 수강 이력 관리</li>
+                    <li>커뮤니티 게시판 (자유게시판, 문제게시판)</li>
+                    <li>기타 회사가 추가 개발하거나 제휴 계약 등을 통해 회원에게 제공하는 서비스</li>
+                </ul>
+                <p>회사는 서비스의 내용, 이용 방법, 이용 시간에 대하여 변경이 있는 경우에는 변경 사유, 변경될 서비스의 내용 및 제공 일자 등을 그 변경 전에 해당 서비스 초기 화면에 게시합니다.</p>
+            </div>
+
+            <div class="terms-section">
+                <h4>제6조 (서비스 이용 요금 및 환불)</h4>
+                <p>프리미엄 서비스 이용을 위해서는 회사가 정한 이용 요금을 납부하여야 합니다. 환불은 다음의 기준에 따릅니다.</p>
+                <ul>
+                    <li>결제 후 7일 이내, 강의 수강 이력이 없는 경우: 전액 환불</li>
+                    <li>결제 후 7일 이내, 강의를 수강한 경우: 수강한 강의 비율에 따른 차감 후 환불</li>
+                    <li>결제 후 7일 초과: 환불 불가</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제7조 (회원의 의무)</h4>
+                <p>회원은 다음 행위를 하여서는 안 됩니다.</p>
+                <ul>
+                    <li>신청 또는 변경 시 허위 내용의 등록</li>
+                    <li>타인의 정보 도용</li>
+                    <li>회사가 게시한 정보의 변경</li>
+                    <li>회사가 정한 정보 이외의 정보(컴퓨터 프로그램 등) 등의 송신 또는 게시</li>
+                    <li>회사와 기타 제3자의 저작권 등 지식 재산권에 대한 침해</li>
+                    <li>회사 및 기타 제3자의 명예를 손상시키거나 업무를 방해하는 행위</li>
+                    <li>외설 또는 폭력적인 메시지, 화상, 음성, 기타 공서양속에 반하는 정보를 서비스에 공개 또는 게시하는 행위</li>
+                </ul>
+            </div>
+
+            <div class="terms-section">
+                <h4>제8조 (면책 조항)</h4>
+                <p>회사는 천재지변 또는 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다. 회사는 회원의 귀책 사유로 인한 서비스 이용의 장애에 대하여 책임을 지지 않습니다.</p>
+            </div>
+        </div>
+
+        <!-- 모달 푸터: 동의 버튼 -->
+        <div class="terms-modal-footer">
+            <div class="terms-agree-wrap">
+                <input type="checkbox" id="modalAgreeCheck">
+                <label for="modalAgreeCheck">위 내용을 모두 읽었으며, 개인정보 처리방침 및 이용약관에 동의합니다.</label>
+            </div>
+            <div class="terms-modal-btns">
+                <button class="terms-btn-cancel" onclick="closeTermsModal()">닫기</button>
+                <button class="terms-btn-agree" id="btnAgree" onclick="agreeTerms()" disabled>동의하고 계속하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 현재 활성 탭
+    let currentTab = 'privacy';
+
+    // 약관 모달 열기
+    function openTermsModal(tab) {
+        currentTab = tab || 'privacy';
+        switchTab(currentTab);
+        document.getElementById('termsModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 약관 모달 닫기
+    function closeTermsModal() {
+        document.getElementById('termsModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // 탭 전환
+    function switchTab(tab) {
+        currentTab = tab;
+        document.getElementById('content-privacy').style.display = tab === 'privacy' ? 'block' : 'none';
+        document.getElementById('content-service').style.display = tab === 'service'  ? 'block' : 'none';
+        document.getElementById('tab-privacy').classList.toggle('active', tab === 'privacy');
+        document.getElementById('tab-service').classList.toggle('active', tab === 'service');
+    }
+
+    // 모달 내 체크박스 → 동의 버튼 활성화
+    document.getElementById('modalAgreeCheck').addEventListener('change', function() {
+        document.getElementById('btnAgree').disabled = !this.checked;
+    });
+
+    // 동의하고 계속하기 → 폼의 체크박스 자동 체크 후 모달 닫기
+    function agreeTerms() {
+        document.getElementById('terms').checked = true;
+        closeTermsModal();
+    }
+
+    // 모달 바깥 클릭 시 닫기
+    document.getElementById('termsModal').addEventListener('click', function(e) {
+        if (e.target === this) closeTermsModal();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>문제 게시판</title>
+    <link rel="stylesheet" href="/css/board/questionboard.css">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- 왼쪽 사이드바 -->
+    <aside class="sidebar">
+        <div class="profile-box">
+            <div class="profile-img"></div>
+            <h3>김부장</h3>
+            <p>SENIOR DIRECTOR</p>
+        </div>
+
+        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
+        <button type="button" onclick="location.href='/user/lectures'">전체 강의</button>
+        <button type="button" class="active" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
+        <button type="button" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+    </aside>
+
+    <!-- 메인 영역 -->
+    <main class="content">
+
+        <header class="top-header">
+            <button type="button" class="home-title-btn" onclick="location.href='/'">
+                진급전설 김부장
+            </button>
+        </header>
+
+        <section class="board-header">
+            <div class="title-area">
+                <h1>퀴즈 게시판</h1>
+                <p>영상 학습 내용을 바탕으로 한 직급별 맞춤형 퀴즈입니다.</p>
+            </div>
+
+            <div class="write-area">
+                <span>상위 직급자만 출제가 가능합니다.</span>
+                <button type="button"
+                        class="write-btn"
+                        onclick="goToWritePage()">
+                    문제 출제하기
+                </button>
+            </div>
+        </section>
+
+        <!-- 직급 탭 -->
+        <section class="rank-tab-section">
+            <div class="rank-tabs">
+                <button type="button" class="rank-btn" data-rank="INTERN">인턴</button>
+                <button type="button" class="rank-btn" data-rank="CONTRACT">계약직</button>
+                <button type="button" class="rank-btn" data-rank="STAFF">정규직</button>
+                <button type="button" class="rank-btn" data-rank="ASSISTANT_MANAGER">대리</button>
+                <button type="button" class="rank-btn" data-rank="MANAGER">과장</button>
+                <button type="button" class="rank-btn" data-rank="DIRECTOR">부장</button>
+                <button type="button" class="rank-btn" data-rank="EXECUTIVE">임원</button>
+                <button type="button" class="rank-btn" data-rank="RETIRED">정년퇴직</button>
+            </div>
+        </section>
+
+        <!-- 문제 목록 -->
+        <section class="quiz-list-section">
+            <div id="quizList" class="quiz-list">
+                <!-- fetch 결과가 들어갈 자리 -->
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<script th:inline="javascript">
+    const alertMessage = /*[[${alertMessage}]]*/ null;
+
+    if (alertMessage) {
+        alert(alertMessage);
+    }
+
+    const myRank = /*[[${myRank}]]*/ "INTERN";
+
+    function goToWritePage() {
+        if (myRank === "INTERN") {
+            alert("승진하세요");
+            return;
+        }
+
+        location.href = "/questionboard/user/questionboard/write";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const rankButtons = document.querySelectorAll(".rank-btn");
+
+        rankButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                rankButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                const rank = this.dataset.rank;
+                loadQuizList(rank);
+            });
+        });
+
+        rankButtons.forEach(button => {
+            if (button.dataset.rank === myRank) {
+                button.classList.add("active");
+            } else {
+                button.classList.remove("active");
+            }
+        });
+
+        loadQuizList(myRank);
+    });
+
+    function loadQuizList(rank) {
+        fetch(`/questionboard/user/questionboard/list?rank=${rank}`)
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        throw new Error("해당 직급 문제를 조회할 권한이 없습니다.");
+                    }
+                    throw new Error("승진하세요.");
+                }
+                return response.json();
+            })
+            .then(quizzes => {
+                renderQuizList(quizzes);
+            })
+            .catch(error => {
+                console.error(error);
+                const quizList = document.getElementById("quizList");
+                quizList.innerHTML = `
+                    <div class="empty-message">
+                        ${error.message}
+                    </div>
+                `;
+            });
+    }
+
+    function renderQuizList(quizzes) {
+        const quizList = document.getElementById("quizList");
+        quizList.innerHTML = "";
+
+        if (!quizzes || quizzes.length === 0) {
+            quizList.innerHTML = `
+                <div class="empty-message">
+                    해당 직급의 문제가 없습니다.
+                </div>
+            `;
+            return;
+        }
+
+        quizzes.forEach(quiz => {
+            const statusClass = quiz.solved ? "done" : "new";
+            const statusText = quiz.solved ? "DONE" : "NEW";
+            const subText = quiz.solved ? "풀이 완료" : "미완료";
+
+            const item = `
+                <div class="quiz-item" onclick="location.href='/questionboard/user/questionboard/${quiz.id}'">
+                    <div class="quiz-status">
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                        <small>${subText}</small>
+                    </div>
+
+                    <div class="quiz-info">
+                        <h3>${quiz.title}</h3>
+                        <p>
+                            ${quiz.courseTitle} / ${quiz.sectionTitle}
+                            &nbsp;&nbsp;•&nbsp;&nbsp;
+                            ${quiz.authorName} (${quiz.authorRank})
+                            &nbsp;&nbsp;•&nbsp;&nbsp;
+                            ${quiz.createdAt}
+                        </p>
+                    </div>
+
+                    <div class="quiz-arrow">›</div>
+                </div>
+            `;
+
+            quizList.insertAdjacentHTML("beforeend", item);
+        });
+    }
+</script>
+
+</body>
+</html>

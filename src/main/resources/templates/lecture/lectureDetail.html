@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${lecture.title} + ' - 진급전설 김부장'">진급전설 김부장</title>
+    <link rel="stylesheet" th:href="@{/css/lecture/lectureDetail.css}" />
+</head>
+<body>
+
+<!-- ========================
+     NAV
+     ======================== -->
+<nav class="nav">
+    <div class="nav__logo">진급전설 김부장</div>
+    <div class="nav__actions">
+
+    </div>
+</nav>
+
+<!-- ========================
+     LAYOUT
+     ======================== -->
+<div class="layout">
+
+    <!-- ========================
+         SIDEBAR LEFT
+         ======================== -->
+    <aside class="sidebar">
+        <div class="sidebar__back">
+            <a href="javascript:history.back()" class="sidebar__back-btn">← 강의 목록으로</a>
+        </div>
+        <nav class="sidebar__nav">
+            <div class="sidebar__nav-item sidebar__nav-item--active">
+                <span class="sidebar__nav-icon"></span>소개
+            </div>
+            <div class="sidebar__nav-item">
+                <span class="sidebar__nav-icon"></span>경영 기초
+            </div>
+            <div class="sidebar__nav-item">
+                <span class="sidebar__nav-icon"></span>전략 프레임워크
+            </div>
+            <div class="sidebar__nav-item">
+                <span class="sidebar__nav-icon"></span>리더십 실습
+            </div>
+        </nav>
+    </aside>
+
+    <!-- ========================
+         MAIN CONTENT
+         ======================== -->
+    <main class="main">
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero__left">
+                <div class="hero__eyebrow">임원 학습 허브</div>
+                <div class="hero__title-row">
+                    <h1 class="hero__title" th:text="${lecture.title}">Legendary Decision Making</h1>
+                    <span class="hero__badge" th:if="${timeAttack != null and !timeAttack.expired}"
+                          th:text="'D-' + ${dDay}">D-7</span>
+                </div>
+                <div class="hero__tags">
+                    <span class="hero__tag">고급</span>
+                    <span class="hero__tag">리더십</span>
+                    <div class="hero__divider"></div>
+                    <div class="hero__meta">
+                        <span class="hero__meta-item">4주</span>
+                        <span class="hero__meta-item">10강</span>
+                        <span class="hero__meta-item hero__meta-item--gold">800 포인트</span>
+                    </div>
+                </div>
+                <p class="hero__quote">"결정이 당신의 유산을 만든다. 전설적인 이사의 정밀함으로<br/>고위험 기업 환경을 헤쳐나가는 법을 배우세요."</p>
+                <div class="hero__actions">
+                    <button class="hero__btn">수강신청</button>
+                </div>
+            </div>
+            <div class="hero__right">
+                <div class="hero__thumbnail">
+                    <img src="/images/movieUpload/kim.jpg" alt="강의 썸네일" />
+                    <div class="hero__thumbnail-overlay">
+                        <div class="hero__thumbnail-badge">
+                            <div class="hero__thumbnail-badge-label">다음 세션</div>
+                            <div class="hero__thumbnail-badge-date">2023.12.01 OPEN</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <button class="tab-bar__tab tab-bar__tab--active" onclick="switchTab(this, 'tab-overview')">개요</button>
+            <button class="tab-bar__tab" onclick="switchTab(this, 'tab-curriculum')">커리큘럼</button>
+            <button class="tab-bar__tab" onclick="switchTab(this, 'tab-review')">리뷰</button>
+            <button class="tab-bar__tab" onclick="switchTab(this, 'tab-qna')">질문답변</button>
+        </div>
+
+        <!-- 개요 탭 -->
+        <div id="tab-overview" class="tab-content">
+            <!-- 학습 목표 -->
+            <section class="section">
+                <div class="section__header">
+                    <div class="section__line"></div>
+                    <h2 class="section__title">학습 목표</h2>
+                </div>
+                <ul class="goal-list">
+                    <li class="goal-item">
+                        <span class="goal-item__dot"></span>
+                        <span>고압적인 기업 협상 뒤의 심리적 프레임워크를 마스터하세요.</span>
+                    </li>
+                    <li class="goal-item">
+                        <span class="goal-item__dot"></span>
+                        <span>변동성 높은 시장에서 실제 데이터를 분석해 정보에 기반한 결정을 내리세요.</span>
+                    </li>
+                    <li class="goal-item">
+                        <span class="goal-item__dot"></span>
+                        <span>모든 이사회에서 존경받는 리더십 존재감을 확립하세요.</span>
+                    </li>
+                    <li class="goal-item">
+                        <span class="goal-item__dot"></span>
+                        <span>임원 기준에 맞는 퍼스널 브랜드를 구축하세요.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 커리큘럼 미리보기 -->
+            <section class="section">
+                <h2 class="section__title--plain">커리큘럼 미리보기</h2>
+                <div class="curriculum-list">
+                    <div class="curriculum-item">
+                        <div class="curriculum-item__week">1주차</div>
+                        <div class="curriculum-item__title">기초: 임원의 사고방식</div>
+                        <div class="curriculum-item__desc">직원적 사고를 버리고 전설의 전략적 비전을 채택하세요.</div>
+                    </div>
+                    <div class="curriculum-item">
+                        <div class="curriculum-item__week">2주차</div>
+                        <div class="curriculum-item__title">전략적 게임 이론</div>
+                        <div class="curriculum-item__desc">회의가 시작되기 전에 경쟁자의 움직임을 예측하고 승리를 확보하세요.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 강사 카드 -->
+            <div class="instructor-card">
+                <div class="instructor-card__inner">
+                    <div class="instructor-card__header">
+                        <img src="/images/movieUpload/kim.jpg" alt="김부장" class="instructor-card__avatar" />
+                        <div>
+                            <div class="instructor-card__name">김부장 (Director Kim)</div>
+                            <div class="instructor-card__role">수석 멘토</div>
+                        </div>
+                    </div>
+                    <p class="instructor-card__desc">글로벌 대기업을 25년 이상 이끌어온 김부장은 대부분의 사람들이 평생 겪을 것보다 많은 기업 위기를 헤쳐왔습니다.</p>
+                    <div class="instructor-card__watermark">LEGEND</div>
+                </div>
+            </div>
+
+            <!-- 인증서 -->
+            <div class="cert-card">
+                <div class="cert-card__icon"></div>
+                <div class="cert-card__title">임원 인증서</div>
+                <div class="cert-card__desc">LinkedIn 프로필에 등록 가능한 공식 자격증을 취득하세요.</div>
+            </div>
+        </div>
+
+        <!-- 커리큘럼 탭 -->
+        <div id="tab-curriculum" class="tab-content" style="display:none;">
+            <div class="notes-card">
+                <h2>커리큘럼</h2>
+                <p>커리큘럼 상세 내용은 준비 중입니다.</p>
+            </div>
+        </div>
+
+        <!-- 리뷰 탭 -->
+        <div id="tab-review" class="tab-content" style="display:none;">
+            <div class="notes-card">
+                <h2>리뷰</h2>
+                <p>리뷰 기능은 준비 중입니다.</p>
+            </div>
+        </div>
+
+        <!-- 질문답변 탭 -->
+        <div id="tab-qna" class="tab-content" style="display:none;">
+            <div class="notes-card">
+                <h2>질문답변</h2>
+                <p>질문답변 기능은 준비 중입니다.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Footer Watermark -->
+<div class="footer-watermark">
+    <div class="footer-watermark__text">EXECUTIVE</div>
+    <div class="footer-watermark__sub">김부장 인증</div>
+</div>
+
+<script>
+    function switchTab(btn, targetId) {
+        document.querySelectorAll('.tab-bar__tab').forEach(t => {
+            t.classList.remove('tab-bar__tab--active');
+        });
+        btn.classList.add('tab-bar__tab--active');
+
+        document.querySelectorAll('.tab-content').forEach(c => {
+            c.style.display = 'none';
+        });
+        document.getElementById(targetId).style.display = 'block';
+    }
+</script>
+</body>
+</html>
