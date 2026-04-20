@@ -16,16 +16,79 @@
             <p>SENIOR DIRECTOR</p>
         </div>
 
-        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
-        <button type="button" onclick="location.href='/user/enrollments/list'">전체 강의</button>
-        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
-        <button type="button" class="active" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+        <nav class="side-nav">
+
+            <!-- 관리자면 관리자용 사이드바 -->
+            <th:block th:if="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments/list}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">
+                    자유게시판
+                </a>
+
+                <a th:href="@{/admin/locked-users}" class="nav-item">
+                    수강생 계정 관리
+                    <span class="nav-alert-badge"
+                          th:if="${lockedCount != null and lockedCount > 0}"
+                          th:text="${lockedCount}"></span>
+                </a>
+
+                <a th:href="@{/admin/attendance}" class="nav-item">
+                    수강생 출결 관리
+                </a>
+
+                <a th:href="@{/admin/course/section}" class="nav-item">
+                    강의 및 코스 등록
+                </a>
+
+                <a th:href="@{/freeboard/admin/freeboard}"
+                   class="nav-item active">
+                    자유게시판 관리
+                </a>
+
+                <a th:href="@{/questionboard/admin/questionboard}" class="nav-item">
+                    문제게시판 관리
+                </a>
+            </th:block>
+
+            <!-- 일반 사용자 -->
+            <th:block th:unless="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item active">
+                    자유게시판
+                </a>
+            </th:block>
+
+        </nav>
     </aside>
 
     <main class="content">
 
         <header class="top-header">
-            <button type="button" class="home-title-btn" onclick="location.href='/'">
+            <button type="button"
+                    class="home-title-btn"
+                    th:onclick="|location.href='${homePath}'|">
                 진급전설 김부장
             </button>
         </header>

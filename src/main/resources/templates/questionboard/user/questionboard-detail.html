@@ -11,22 +11,86 @@
 
     <!-- 왼쪽 사이드바 -->
     <aside class="sidebar">
+        <div class="portal-title" th:text="${isAdmin} ? '관리자 포털' : '임원 포털'">임원 포털</div>
+
         <div class="profile-box">
             <div class="profile-img"></div>
             <h3>김부장</h3>
-            <p>SENIOR DIRECTOR</p>
+            <p>김부장, 수석 이사</p>
         </div>
 
-        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
-        <button type="button" onclick="location.href='/user/enrollments/list'">전체 강의</button>
-        <button type="button" class="active" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
-        <button type="button" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+        <nav class="side-nav">
+
+            <th:block th:if="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments/list}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}"
+                   th:class="${pageType == 'user'} ? 'nav-item active' : 'nav-item'">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">
+                    자유게시판
+                </a>
+
+                <a th:href="@{/admin/locked-users}" class="nav-item">
+                    수강생 계정 관리
+                    <span class="nav-alert-badge"
+                          th:if="${lockedCount != null and lockedCount > 0}"
+                          th:text="${lockedCount}"></span>
+                </a>
+
+                <a th:href="@{/admin/attendance}" class="nav-item">
+                    수강생 출결 관리
+                </a>
+
+                <a th:href="@{/admin/course/section}" class="nav-item">
+                    강의 및 코스 등록
+                </a>
+
+                <a th:href="@{/freeboard/admin/freeboard}" class="nav-item">
+                    자유게시판 관리
+                </a>
+
+                <a th:href="@{/questionboard/admin/questionboard}"
+                   th:class="${pageType == 'admin'} ? 'nav-item active' : 'nav-item'">
+                    문제게시판 관리
+                </a>
+            </th:block>
+
+            <th:block th:unless="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item active">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">
+                    자유게시판
+                </a>
+            </th:block>
+
+        </nav>
     </aside>
 
     <!-- 메인 -->
     <main class="content">
         <header class="top-header">
-            <button type="button" class="home-title-btn" onclick="location.href='/'">
+            <button type="button"
+                    class="home-title-btn"
+                    th:onclick="|location.href='${homePath}'|">
                 진급전설 김부장
             </button>
         </header>
@@ -43,7 +107,7 @@
 
         <div id="resultBanner" class="result-banner hidden"></div>
 
-        <div class="back-link" onclick="location.href='/questionboard/user/questionboard'">← 목록으로</div>
+        <div class="back-link" id="backToListBtn">← 목록으로</div>
 
         <section class="question-section">
             <h1 class="question-title" th:text="${question.title}"></h1>
@@ -102,7 +166,6 @@
                       th:text="'피드백 (' + ${#lists.size(comments)} + ')'"></span>
             </div>
 
-            <!-- 잠금 오버레이 -->
             <div id="commentLock" class="comment-lock">
                 <div class="lock-card">
                     <div class="lock-icon">🔒</div>
@@ -111,7 +174,6 @@
                 </div>
             </div>
 
-            <!-- 댓글 영역 -->
             <div id="commentContent" class="comment-content locked">
                 <div class="comment-item" th:each="comment : ${comments}">
                     <div class="comment-avatar"></div>
@@ -177,6 +239,11 @@
     const correctAnswer = /*[[${question.answer}]]*/ 0;
     const solvedFromServer = /*[[${question.solved}]]*/ false;
     const myAnswer = /*[[${question.myAnswer}]]*/ null;
+    const pageType = /*[[${pageType}]]*/ "user";
+
+    const questionBasePath = pageType === "admin"
+        ? "/questionboard/admin/questionboard"
+        : "/questionboard/user/questionboard";
 
     let solvedState = solvedFromServer;
 
@@ -190,6 +257,7 @@
     const commentInput = document.getElementById("commentInput");
     const commentSubmitBtn = document.getElementById("commentSubmitBtn");
     const commentLength = document.getElementById("commentLength");
+    const backToListBtn = document.getElementById("backToListBtn");
 
     function unlockComments() {
         commentLock.classList.add("hidden");
@@ -270,7 +338,7 @@
             return;
         }
 
-        fetch(`/questionboard/user/questionboard/comments/${commentId}/edit`, {
+        fetch(`${questionBasePath}/comments/${commentId}/edit`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -305,7 +373,7 @@
             return;
         }
 
-        fetch(`/questionboard/user/questionboard/comments/${commentId}/delete`, {
+        fetch(`${questionBasePath}/comments/${commentId}/delete`, {
             method: "POST"
         })
             .then(response => {
@@ -327,6 +395,12 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
+        if (backToListBtn) {
+            backToListBtn.addEventListener("click", function () {
+                location.href = questionBasePath;
+            });
+        }
+
         if (solvedFromServer && myAnswer !== null) {
             applySolvedState(Number(myAnswer), Number(correctAnswer));
         }
@@ -346,7 +420,7 @@
 
         const selected = Number(checked.value);
 
-        fetch(`/questionboard/user/questionboard/${questionId}/solve`, {
+        fetch(`${questionBasePath}/${questionId}/solve`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -396,7 +470,7 @@
                 return;
             }
 
-            fetch(`/questionboard/user/questionboard/${questionId}/comments`, {
+            fetch(`${questionBasePath}/${questionId}/comments`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"

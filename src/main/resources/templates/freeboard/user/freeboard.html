@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>자유게시판</title>
@@ -10,44 +10,68 @@
 <div class="layout">
 
     <aside class="sidebar">
+        <div class="portal-title" th:text="${isAdmin} ? '관리자 포털' : '임원 포털'">임원 포털</div>
+
         <div class="profile-box">
             <div class="profile-img"></div>
             <h3>김부장</h3>
-            <p>SENIOR DIRECTOR</p>
+            <p>김부장, 수석 이사</p>
         </div>
 
-        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
-        <button type="button" onclick="location.href='/user/enrollments/list'">전체 강의</button>
-        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
-        <button type="button" class="active" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+        <nav class="side-nav">
+            <th:block th:if="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">마이페이지</a>
+                <a th:href="@{/user/enrollments/list}" class="nav-item">수강신청</a>
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item">문제게시판</a>
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">자유게시판</a>
+                <a th:href="@{/admin/locked-users}" class="nav-item">수강생 계정 관리</a>
+                <a th:href="@{/admin/attendance}" class="nav-item">수강생 출결 관리</a>
+                <a th:href="@{/admin/course/section}" class="nav-item">강의 및 코스 등록</a>
+                <a th:href="@{/freeboard/admin/freeboard}" class="nav-item">자유게시판 관리</a>
+                <a th:href="@{/questionboard/admin/questionboard}" class="nav-item">문제게시판 관리</a>
+            </th:block>
+
+            <th:block th:unless="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">마이페이지</a>
+                <a th:href="@{/user/enrollments/list}" class="nav-item">수강신청</a>
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item">문제게시판</a>
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">자유게시판</a>
+            </th:block>
+        </nav>
     </aside>
 
     <main class="content">
 
         <header class="top-header">
-            <button type="button" class="home-title-btn" onclick="location.href='/'">
+            <button type="button"
+                    class="home-title-btn"
+                    th:onclick="|location.href='${homePath}'|">
                 진급전설 김부장
             </button>
         </header>
 
-        <section class="board-title">
-            <p>COMMUNICATION HUB</p>
-            <h1>자유게시판</h1>
-            <span>부장님의 인사이트와 동료들의 성공 노하우가 공유되는 공간입니다.</span>
+        <section class="board-hero">
+            <div class="board-hero-left">
+                <p class="board-subtitle">COMMUNICATION HUB</p>
+                <h1>자유게시판</h1>
+                <span>
+                    부장님의 인사이트와 동료들의 성공 노하우가 공유되는 공간입니다.<br>
+                    품격 있는 비즈니스 매너를 준수해 주세요.
+                </span>
+            </div>
 
-            <button type="button" class="write-btn" onclick="location.href='/freeboard/user/freeboard/freeboard-write'">
+            <div class="board-hero-watermark">LEGEND</div>
+        </section>
+
+        <section class="board-action">
+            <button type="button" class="write-btn" id="writeBtn">
                 글쓰기
             </button>
         </section>
 
         <section class="filter-area">
-            <button type="button" id="allBtn" class="filter-btn active">
-                전체글
-            </button>
-
-            <button type="button" id="mineBtn" class="filter-btn">
-                내가 쓴 글
-            </button>
+            <button type="button" id="allBtn" class="filter-btn active">전체글</button>
+            <button type="button" id="mineBtn" class="filter-btn">내가 쓴 글</button>
         </section>
 
         <section class="board-list">
@@ -61,7 +85,6 @@
                     <th>DATE</th>
                 </tr>
                 </thead>
-
                 <tbody id="postTableBody">
                 <tr>
                     <td colspan="5" class="empty">게시글을 불러오는 중입니다.</td>
@@ -71,27 +94,44 @@
         </section>
 
     </main>
-
 </div>
 
-<script>
+<script th:inline="javascript">
+    const pageType = /*[[${pageType}]]*/ "user";
+    const boardBasePath = pageType === "admin"
+        ? "/freeboard/admin/freeboard"
+        : "/freeboard/user/freeboard";
+
     document.addEventListener("DOMContentLoaded", function () {
         const allBtn = document.getElementById("allBtn");
         const mineBtn = document.getElementById("mineBtn");
+        const writeBtn = document.getElementById("writeBtn");
 
-        allBtn.addEventListener("click", function () {
+        if (allBtn) {
+            allBtn.addEventListener("click", function () {
+                loadPosts("all");
+            });
+        }
+
+        if (mineBtn) {
+            mineBtn.addEventListener("click", function () {
+                loadPosts("mine");
+            });
+        }
+
+        if (writeBtn) {
+            writeBtn.addEventListener("click", function () {
+                location.href = boardBasePath + "/freeboard-write";
+            });
+        }
+
+        if (document.getElementById("postTableBody")) {
             loadPosts("all");
-        });
-
-        mineBtn.addEventListener("click", function () {
-            loadPosts("mine");
-        });
-
-        loadPosts("all");
+        }
     });
 
     function loadPosts(filter) {
-        fetch(`/freeboard/user/freeboard/posts?filter=${filter}`)
+        fetch(`${boardBasePath}/posts?filter=${filter}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("게시글 목록을 불러오지 못했습니다.");
@@ -99,8 +139,8 @@
                 return response.json();
             })
             .then(posts => {
-                changeActiveButton(filter);
                 renderPosts(posts);
+                changeActiveButton(filter);
             })
             .catch(error => {
                 console.error(error);
@@ -140,14 +180,21 @@
         document.querySelectorAll(".post-row").forEach(row => {
             row.addEventListener("click", function () {
                 const postId = this.dataset.postId;
-                location.href = `/freeboard/user/freeboard/${postId}`;
+                location.href = `${boardBasePath}/${postId}`;
             });
         });
     }
 
     function changeActiveButton(filter) {
-        document.getElementById("allBtn").classList.toggle("active", filter === "all");
-        document.getElementById("mineBtn").classList.toggle("active", filter === "mine");
+        const allBtn = document.getElementById("allBtn");
+        const mineBtn = document.getElementById("mineBtn");
+
+        if (allBtn) {
+            allBtn.classList.toggle("active", filter === "all");
+        }
+        if (mineBtn) {
+            mineBtn.classList.toggle("active", filter === "mine");
+        }
     }
 </script>
 
