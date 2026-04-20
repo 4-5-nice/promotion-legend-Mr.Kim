@@ -38,8 +38,8 @@ public class MPAttendance {
     }
 
     // Attendance.java 에 추가
-    public MPAttendance fillDetails(MPUsers user, LocalDateTime date, String status) {
-        this.userId = user;
+    public MPAttendance fillDetails(MPUsers userId, LocalDateTime date, String status) {
+        this.userId = userId;
         this.targetDate = date;
         this.status = status;
         return this;

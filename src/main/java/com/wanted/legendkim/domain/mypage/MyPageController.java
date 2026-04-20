@@ -3,6 +3,7 @@ package com.wanted.legendkim.domain.mypage;
 import com.wanted.legendkim.domain.mypage.entity.MPAttendance;
 import com.wanted.legendkim.domain.mypage.service.*;
 import com.wanted.legendkim.domain.mypage.DTO.UsersDTO;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -119,7 +120,7 @@ public class MyPageController {
     }
 
     //연차 사용
-    @PostMapping("myPage/PTOApply")
+    @PostMapping("/myPage/PTOApply")
     @ResponseBody
     public ResponseEntity<String> ptoApply(@RequestBody Map<String, Object> data, Principal principal) {
         // 1. 데이터가 비어있는지 체크 (안전장치) //받아온 정보가 없는지 확인
@@ -177,14 +178,19 @@ public class MyPageController {
 
     //회원 탈퇴 버튼 누르면 관련 정보 삭제
     @PostMapping("/myPage/deleteuser")
-    public String deleteUser(Principal principal) {
+    public String deleteUser(Principal principal, HttpSession session) {
         // 1. 누구인지 확인
         String loginId = principal.getName();
 
         // 2. 서비스야, 이 사람 데이터 싹 다 지워라 (순서대로 13개!)
         userService.deleteUserAllData(loginId);
 
-        return "redirect:/login"; //또는 "/" 메인으로? & 추후 합친 후엔 auth/login으로.
+        // 3. 세션 강제 종료 (이게 핵심입니다!)
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "redirect:/";
     }
 
     //관리자용 출결 조회 페이지(정보 가져오기만)
