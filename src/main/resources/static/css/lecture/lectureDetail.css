@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@800;900&family=Inter:wght@400;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #1A1A2E;
+    color: #F0F0F2;
+    font-family: 'WenQuanYi Zen Hei', 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+}
+
+/* ======================== NAV ======================== */
+.nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 64px;
+    background: rgba(2, 6, 23, 0.80);
+    backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+}
+.nav__logo {
+    font-family: 'Manrope', sans-serif;
+    font-size: 20px; font-weight: 800; color: #fff;
+}
+.nav__avatar { width: 32px; height: 32px; border-radius: 12px; border: 1px solid #C6C5D4; }
+
+/* ======================== LAYOUT ======================== */
+.layout {
+    display: flex;
+    padding-top: 64px;
+    min-height: 100vh;
+}
+
+/* ======================== SIDEBAR ======================== */
+.sidebar {
+    width: 288px;
+    min-height: 100vh;
+    background: #0F172A;
+    border-right: 1px solid rgba(30, 41, 59, 0.20);
+    display: flex; flex-direction: column;
+    padding-top: 64px;
+    position: fixed; top: 0; left: 0; bottom: 0;
+}
+.sidebar__section { padding: 32px; }
+.sidebar__label {
+    font-size: 12px; font-weight: 400; color: #F59E0B;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    margin-bottom: 4px;
+}
+.sidebar__progress-text {
+    font-size: 10px; color: #94A3B8; font-family: 'Inter', sans-serif;
+    margin-bottom: 12px;
+}
+.sidebar__progress-bar {
+    height: 4px; background: #1E293B; overflow: hidden;
+}
+.sidebar__progress-fill { height: 4px; background: #F59E0B; }
+
+.sidebar__back { padding: 24px 24px 8px; }
+.sidebar__back-btn {
+    font-size: 13px; font-weight: 600; color: #F59E0B;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.sidebar__back-btn:hover { color: #fff; }
+
+.sidebar__nav { flex: 1; }
+.sidebar__nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px;
+    font-size: 10px; font-weight: 400; color: #94A3B8;
+    text-transform: uppercase; letter-spacing: 1px;
+    cursor: pointer;
+}
+.sidebar__nav-item--active {
+    background: rgba(255,255,255,0.05);
+    border-left: 4px solid #F59E0B;
+    color: #fff; font-weight: 700;
+    padding-left: 20px;
+}
+.sidebar__nav-icon {
+    width: 16px; height: 16px;
+    background: currentColor; opacity: 0.6;
+    display: inline-block;
+}
+
+.sidebar__footer { padding: 32px; }
+.sidebar__cta {
+    width: 100%; padding: 12px;
+    background: #D97706; border: none;
+    font-size: 10px; font-weight: 700; color: #fff;
+    text-transform: uppercase; letter-spacing: 1px;
+    cursor: pointer;
+}
+
+/* ======================== MAIN ======================== */
+.main {
+    margin-left: 288px;
+    flex: 1;
+    padding: 96px 48px 48px 48px;
+    max-width: 1280px;
+}
+
+/* ======================== HERO ======================== */
+.hero {
+    display: flex; gap: 48px; align-items: flex-start;
+    margin-bottom: 48px;
+}
+.hero__left { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+.hero__eyebrow {
+    font-size: 12px; font-weight: 700; color: #405A64;
+    text-transform: uppercase; letter-spacing: 2.4px;
+}
+.hero__title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.hero__title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 60px; font-weight: 800; color: #fff;
+    line-height: 1;
+}
+.hero__badge {
+    padding: 6px 12px;
+    background: #F59E0B; border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 900; color: #1A1A2E;
+    white-space: nowrap;
+}
+.hero__tags { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.hero__tag {
+    padding: 4px 12px;
+    outline: 1px solid #F59E0B;
+    font-size: 10px; font-weight: 700; color: #F59E0B;
+    letter-spacing: 1px;
+}
+.hero__divider { width: 1px; height: 16px; background: #334155; }
+.hero__meta { display: flex; gap: 24px; align-items: center; }
+.hero__meta-item { font-size: 14px; color: #94A3B8; }
+.hero__meta-item--gold { color: #F59E0B; }
+
+.hero__quote {
+    font-size: 18px; font-weight: 300; font-style: italic;
+    color: #94A3B8; line-height: 1.625;
+}
+.hero__actions { padding-top: 16px; }
+.hero__btn {
+    padding: 16px 40px;
+    background: #F59E0B; border: none;
+    font-size: 16px; font-weight: 700; color: #172554;
+    cursor: pointer;
+}
+
+.hero__right { width: 358px; flex-shrink: 0; }
+.hero__thumbnail { position: relative; overflow: hidden; }
+.hero__thumbnail img { width: 100%; display: block; }
+.hero__thumbnail-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, #1A1A2E 0%, transparent 50%);
+    display: flex; align-items: flex-end; padding: 24px;
+}
+.hero__thumbnail-badge {
+    padding: 8px 16px;
+    background: rgba(23, 37, 84, 0.80);
+    border-left: 2px solid #F59E0B;
+    backdrop-filter: blur(4px);
+}
+.hero__thumbnail-badge-label { font-size: 10px; font-weight: 700; color: #F59E0B; }
+.hero__thumbnail-badge-date { font-size: 14px; font-weight: 700; color: #F0F0F2; }
+
+/* ======================== TAB BAR ======================== */
+.tab-bar {
+    display: flex; gap: 48px;
+    border-bottom: 1px solid #1E293B;
+    margin-bottom: 48px;
+}
+.tab-bar__tab {
+    padding-bottom: 16px;
+    background: none; border: none;
+    font-size: 14px; font-weight: 700; color: #64748B;
+    text-transform: uppercase; letter-spacing: 1.4px;
+    cursor: pointer;
+}
+.tab-bar__tab--active {
+    color: #fff;
+    border-bottom: 2px solid #F59E0B;
+}
+
+/* ======================== SECTIONS ======================== */
+.section { margin-bottom: 64px; }
+.section__header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+.section__line { width: 48px; height: 1px; background: #F59E0B; }
+.section__title { font-size: 24px; font-weight: 700; color: #F0F0F2; }
+.section__title--plain { font-size: 24px; font-weight: 700; color: #F0F0F2; margin-bottom: 32px; }
+
+/* 학습 목표 */
+.goal-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+.goal-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 12px 0;
+    font-size: 16px; color: #94A3B8; line-height: 1.5;
+}
+.goal-item__dot {
+    width: 20px; height: 20px; background: #F59E0B;
+    flex-shrink: 0; margin-top: 2px;
+}
+
+/* 커리큘럼 */
+.curriculum-list { display: flex; flex-direction: column; }
+.curriculum-item {
+    padding: 32px;
+    background: rgba(15, 23, 42, 0.50);
+    outline: 1px solid #1E293B;
+    margin-bottom: -1px;
+}
+.curriculum-item__week { font-size: 10px; font-weight: 700; color: #F59E0B; margin-bottom: 8px; }
+.curriculum-item__title { font-size: 18px; font-weight: 700; color: #F0F0F2; margin-bottom: 8px; }
+.curriculum-item__desc { font-size: 14px; color: #64748B; line-height: 1.5; }
+
+/* 강사 카드 */
+.instructor-card {
+    margin-bottom: 48px;
+}
+.instructor-card__inner {
+    padding: 32px;
+    background: #0F172A;
+    border-left: 4px solid #F59E0B;
+    position: relative; overflow: hidden;
+}
+.instructor-card__header { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; }
+.instructor-card__avatar { width: 64px; height: 64px; border-radius: 12px; border: 2px solid rgba(245,158,11,0.20); }
+.instructor-card__name { font-size: 18px; color: #fff; margin-bottom: 4px; }
+.instructor-card__role { font-size: 12px; font-weight: 700; color: #F59E0B; letter-spacing: 1.2px; }
+.instructor-card__desc { font-size: 14px; color: #94A3B8; line-height: 1.625; }
+.instructor-card__watermark {
+    position: absolute; left: -110px; top: -16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 96px; font-style: italic; color: #F0F0F2;
+    opacity: 0.05; pointer-events: none; line-height: 1;
+}
+
+/* 인증서 카드 */
+.cert-card {
+    padding: 24px;
+    background: rgba(255,255,255,0.05);
+    outline: 1px solid rgba(255,255,255,0.10);
+    text-align: center;
+    margin-bottom: 48px;
+}
+.cert-card__icon { width: 24px; height: 32px; background: #F59E0B; margin: 0 auto 16px; }
+.cert-card__title {
+    font-size: 12px; font-weight: 700; color: #F0F0F2;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    margin-bottom: 4px;
+}
+.cert-card__desc { font-size: 10px; color: #64748B; line-height: 1.5; }
+
+/* 기타 탭 */
+.notes-card { padding: 32px; background: rgba(15,23,42,0.50); outline: 1px solid #1E293B; }
+.notes-card h2 { font-size: 20px; color: #F0F0F2; margin-bottom: 12px; }
+.notes-card p { font-size: 14px; color: #64748B; }
+
+/* ======================== FOOTER WATERMARK ======================== */
+.footer-watermark {
+    text-align: center;
+    padding: 96px 0;
+    opacity: 0.2;
+    margin-left: 288px;
+}
+.footer-watermark__text {
+    font-family: 'Manrope', sans-serif;
+    font-size: 96px; font-weight: 900;
+    color: rgba(241, 245, 249, 0.10);
+    line-height: 1;
+}
+.footer-watermark__sub {
+    font-size: 12px; color: #94A3B8;
+    letter-spacing: 6px; margin-top: 16px;
+}

@@ -17,4 +17,10 @@ public class SectionViewController {
     public String courseSectionPage() {
         return "movie/courseSection/courseSection";
     }
+
+    // 수강신청 페이지
+    @GetMapping("/user/enrollments/list")
+    public String enrollmentListPage() {
+        return "enrollment/enrollmentList";
+    }
 }

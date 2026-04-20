@@ -3,6 +3,7 @@ package com.wanted.legendkim.domain.section;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wanted.legendkim.domain.course.Course;
+import com.wanted.legendkim.domain.watch.dto.SectionSummary;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,18 +66,20 @@ public class Section {
     @Column(name = "video_url")
     private String videoUrl;
 
-    // uploadSuccess 컬럼 구성
+    // upload_success 컬럼 구성
     @Column(name = "upload_success")
     private Boolean uploadSuccess;
 
+    // note 컬럼 구성 — 섹션별 강의 노트
+    @Column(name = "note", columnDefinition = "TEXT")
+    private String note;
 
-    public static Section create(Course course, String title) {
+
+    public static Section create(Course course, String title, String note) {
         Section section = new Section();
         section.course = course;
         section.title = title;
-        // Section 생성 시점에는 영상이 없기 때문에 false 로 고정.
-        // 우리는 생성자 내부에서 강제로 고정해서 실수로 true 로 만드는 것을
-        // 차단할 수 있다.
+        section.note = note;
         section.uploadSuccess = false;
         return section;
     }
@@ -88,4 +91,6 @@ public class Section {
         this.videoUrl = videoUrl;
         this.uploadSuccess = true;
     }
+
+
 }

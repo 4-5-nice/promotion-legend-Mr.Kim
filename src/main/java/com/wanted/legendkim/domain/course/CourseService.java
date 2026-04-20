@@ -15,9 +15,9 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     // 코스 등록 코드 블록
-    public void registerCourse(String title, String description) {
+    public void registerCourse(String title, String description, int dueDate) {
 
-        Course course = Course.create(title, description);
+        Course course = Course.create(title, description, dueDate);
         courseRepository.save(course);
     }
 
@@ -26,4 +26,5 @@ public class CourseService {
     public List<Course> getCourseList() {
         return courseRepository.findAll();
     }
+
 }
