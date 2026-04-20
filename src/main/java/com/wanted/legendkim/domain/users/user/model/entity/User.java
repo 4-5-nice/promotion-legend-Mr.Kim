@@ -92,6 +92,7 @@ public class User {
         this.identifyQuestion = identifyQuestion;
     }
 
+    // --- Builder methods for chaining (수동 체이닝 메서드) ---
     public User email(String email) {
         this.email = email;
         return this;
