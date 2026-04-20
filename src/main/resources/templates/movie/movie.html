@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${watchInfo.courseTitle} + ' - 진급전설 김부장'">진급전설 김부장 — 수강 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/movie/movie.css}" />
+</head>
+<body>
+
+<!-- ========================
+     WATERMARK
+     ======================== -->
+<div class="watermark">김부장</div>
+
+<!-- ========================
+     NAV
+     ======================== -->
+<nav class="nav">
+    <div style="display:flex; align-items:center; gap:48px;">
+        <span class="nav__logo">진급전설 김부장</span>
+        <div class="nav__links">
+            <a href="#" class="nav__link">대시보드</a>
+            <a href="#" class="nav__link nav__link--active">커리큘럼</a>
+        </div>
+    </div>
+    <div class="nav__actions">
+    </div>
+</nav>
+
+<!-- ========================
+     LAYOUT
+     ======================== -->
+<div class="layout">
+
+    <!-- ========================
+         SIDEBAR LEFT
+         ======================== -->
+    <aside class="sidebar-left">
+
+        <!-- Course Header -->
+        <div class="sidebar-left__header">
+            <div class="sidebar-left__course-title" th:text="${watchInfo.courseTitle}">임원 교육 과정</div>
+            <div class="sidebar-left__course-tag">MANAGEMENT 101</div>
+        </div>
+
+            <div class="sidebar-left__sections">
+
+            <!-- 섹션 리스트 — DB 데이터 바인딩 -->
+            <div class="module">
+                <div class="module__header">
+                    <span class="module__title" th:text="${watchInfo.courseTitle}">모듈</span>
+                    <span class="module__chevron"></span>
+                </div>
+
+                <th:block th:each="section, stat : ${watchInfo.sections}">
+                    <div th:if="${stat.first}"
+                         class="lecture-item lecture-item--active"
+                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}, data-note=${section.note}"
+                         onclick="changeVideo(this)">
+                        <div class="lecture-item__dot lecture-item__dot--active"></div>
+                        <div class="lecture-item__info">
+                            <span class="lecture-item__title lecture-item__title--active" th:text="${section.title}">강의 제목</span>
+                        </div>
+                    </div>
+                    <div th:unless="${stat.first}"
+                         class="lecture-item lecture-item--inactive"
+                         th:attr="data-video=${section.videoUrl}, data-title=${section.title}, data-note=${section.note}"
+                         onclick="changeVideo(this)">
+                        <div class="lecture-item__dot lecture-item__dot--inactive"></div>
+                        <div class="lecture-item__info">
+                            <span class="lecture-item__title lecture-item__title--inactive" th:text="${section.title}">강의 제목</span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+
+        </div>
+
+
+
+    </aside>
+
+    <!-- ========================
+         MAIN CONTENT
+         ======================== -->
+    <main class="main">
+
+        <!-- Video Player -->
+        <div class="video-player">
+            <video id="main-video"
+                   th:with="firstUrl=${watchInfo.sections != null and !#lists.isEmpty(watchInfo.sections) ? watchInfo.sections[0].videoUrl : ''}"
+                   th:attr="src=${firstUrl != null and #strings.startsWith(firstUrl, 'http')} ? ${firstUrl} : ('/video/' + ${firstUrl})"
+                   controls style="width:100%; height:100%;"></video>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <div class="tab-bar__tabs">
+                <button class="tab-bar__tab tab-bar__tab--active" onclick="switchTab(this, 'tab-notes')">강의 노트</button>
+                <button class="tab-bar__tab tab-bar__tab--inactive" onclick="switchTab(this, 'tab-materials')">자료실</button>
+                <button class="tab-bar__tab tab-bar__tab--inactive" onclick="switchTab(this, 'tab-board')">문제 게시판</button>
+            </div>
+        </div>
+
+        <!-- 강의 노트 -->
+        <div id="tab-notes" class="tab-content">
+            <div class="notes-card">
+                <h2 class="notes-card__title" id="note-title">강의 노트</h2>
+                <p class="notes-card__body" id="note-content"
+                   th:text="${watchInfo.sections != null and !#lists.isEmpty(watchInfo.sections) ? watchInfo.sections[0].note : '등록된 강의 노트가 없습니다.'}">
+                </p>
+            </div>
+        </div>
+
+        <!-- 자료실 -->
+        <div id="tab-materials" class="tab-content" style="display:none;">
+            <div class="notes-card">
+                <h2 class="notes-card__title">자료실</h2>
+                <p class="notes-card__body">자료실 기능은 준비 중입니다.</p>
+            </div>
+        </div>
+
+        <!-- 문제 게시판 -->
+        <div id="tab-board" class="tab-content" style="display:none;">
+            <div class="notes-card">
+                <h2 class="notes-card__title">문제 게시판</h2>
+                <p class="notes-card__body">문제 게시판 기능은 준비 중입니다.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================
+         SIDEBAR RIGHT
+         ======================== -->
+    <aside class="sidebar-right">
+
+        <!-- Instructor Card -->
+        <div class="instructor-card">
+            <div class="instructor-card__header">
+                <img class="instructor-card__avatar"
+                     src="/images/movieUpload/kim.jpg"
+                     alt="김부장" />
+                <div>
+                    <div class="instructor-card__name" th:text="${watchInfo.instructorName} ?: '김부장'">김부장</div>
+                    <div class="instructor-card__role">전략 운영 총괄</div>
+                </div>
+            </div>
+            <hr class="instructor-card__divider" />
+            <p class="instructor-card__quote">
+                "진급은 실력이 아니라 태도에서 시작됩니다.
+                당신의 다음 스테이지를 위해 내가 직접 가이드하겠습니다."
+            </p>
+        </div>
+
+
+
+    </aside>
+
+</div><!-- /.layout -->
+
+<!-- ========================
+     수강 완료 Alert 모달
+     ======================== -->
+<div id="complete-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:36px 40px; max-width:400px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+        <div style="font-size:2rem; margin-bottom:12px;">🎓</div>
+        <h2 style="font-size:1.2rem; font-weight:700; color:#1a2340; margin-bottom:8px;">수강이 완료되었습니다!</h2>
+        <p style="font-size:0.95rem; color:#555; margin-bottom:28px;">문제 게시판으로 넘어가시겠습니까?</p>
+        <div style="display:flex; gap:12px; justify-content:center;">
+            <button onclick="handleComplete()" style="padding:10px 28px; background:#b8a062; color:#fff; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer;">예</button>
+            <button onclick="closeModal()" style="padding:10px 28px; background:#eee; color:#333; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer;">아니오</button>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const enrollmentId = /*[[${enrollmentId}]]*/ null;
+
+    // 수강 완료 처리 후 리다이렉트
+    async function handleComplete() {
+        try {
+            await fetch(`/user/enrollments/${enrollmentId}/complete`, {
+                method: 'PATCH'
+            });
+        } catch (e) {
+            console.error('완료 처리 실패', e);
+        }
+        window.location.href = '/board';
+    }
+
+    // 모달 닫기
+    function closeModal() {
+        document.getElementById('complete-modal').style.display = 'none';
+    }
+
+    // 영상 종료 감지
+    document.addEventListener('DOMContentLoaded', function () {
+        const video = document.getElementById('main-video');
+        video.addEventListener('ended', function () {
+            document.getElementById('complete-modal').style.display = 'flex';
+        });
+    });
+
+    // 영상 변경
+    function changeVideo(el) {
+        const rawUrl = el.getAttribute('data-video');
+        const videoUrl = (rawUrl && rawUrl.startsWith('http')) ? rawUrl : '/video/' + rawUrl;
+        const note = el.getAttribute('data-note') || '등록된 강의 노트가 없습니다.';
+        const title = el.getAttribute('data-title') || '강의 노트';
+
+        const video = document.getElementById('main-video');
+        video.src = videoUrl;
+        video.load();
+        video.play();
+
+        // 강의 노트 교체
+        document.getElementById('note-title').textContent = title;
+        document.getElementById('note-content').textContent = note;
+
+        // 사이드바 active 상태 교체
+        document.querySelectorAll('.lecture-item').forEach(item => {
+            item.classList.remove('lecture-item--active');
+            item.classList.add('lecture-item--inactive');
+            const dot = item.querySelector('.lecture-item__dot');
+            dot.classList.remove('lecture-item__dot--active');
+            dot.classList.add('lecture-item__dot--inactive');
+            const span = item.querySelector('.lecture-item__title');
+            span.classList.remove('lecture-item__title--active');
+            span.classList.add('lecture-item__title--inactive');
+        });
+
+        el.classList.remove('lecture-item--inactive');
+        el.classList.add('lecture-item--active');
+        const dot = el.querySelector('.lecture-item__dot');
+        dot.classList.remove('lecture-item__dot--inactive');
+        dot.classList.add('lecture-item__dot--active');
+        const span = el.querySelector('.lecture-item__title');
+        span.classList.remove('lecture-item__title--inactive');
+        span.classList.add('lecture-item__title--active');
+    }
+
+    // 탭 전환
+    function switchTab(btn, targetId) {
+        // 탭 버튼 active 교체
+        document.querySelectorAll('.tab-bar__tab').forEach(t => {
+            t.classList.remove('tab-bar__tab--active');
+            t.classList.add('tab-bar__tab--inactive');
+        });
+        btn.classList.remove('tab-bar__tab--inactive');
+        btn.classList.add('tab-bar__tab--active');
+
+        // 콘텐츠 show/hide
+        document.querySelectorAll('.tab-content').forEach(c => {
+            c.style.display = 'none';
+        });
+        document.getElementById(targetId).style.display = 'block';
+    }
+</script>
+</body>
+</html>

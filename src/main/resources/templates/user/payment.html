@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 - 진급전설 김부장</title>
+    <link rel="stylesheet" th:href="@{/css/usercss/payment.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Manrope:wght@400;700;800;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 상단 네비게이션 -->
+<header class="pay-header">
+    <div class="pay-header-inner">
+        <span class="pay-brand">진급전설 김부장</span>
+        <!-- "회원가입 취소" → "결제 취소" 로 변경 -->
+        <a th:href="@{/}" class="pay-cancel-btn">결제 취소</a>
+    </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<main class="pay-main">
+    <div class="pay-container">
+
+        <!-- 타이틀 영역 -->
+        <div class="pay-title-area">
+            <p class="pay-label">ORDER CONFIRMATION</p>
+            <h1 class="pay-title">주문서 작성</h1>
+        </div>
+
+        <!-- 상품 카드 -->
+        <div class="pay-product-card">
+            <div class="pay-product-left-bar"></div>
+            <div class="pay-product-info">
+                <div class="pay-product-badge">PREMIUM COURSE</div>
+                <h2 class="pay-product-name">초고속 승진의 정석: 김부장의 비밀노트</h2>
+                <div class="pay-product-sub">
+                    <span class="pay-product-sub-bar"></span>
+                    <span>전설적인 디렉터의 인사이트 패키지</span>
+                </div>
+            </div>
+            <div class="pay-product-price">₩12,000,000</div>
+        </div>
+
+        <!-- 결제 패널 -->
+        <div class="pay-panel">
+            <div class="pay-panel-bg-text">LEGEND</div>
+
+            <div class="pay-panel-inner">
+                <p class="pay-exec-label">EXECUTIVE SUMMARY</p>
+
+                <div class="pay-summary-row">
+                    <span class="pay-summary-name">최종 결제 금액</span>
+                    <span class="pay-summary-amount">₩12,000,000</span>
+                </div>
+
+                <div class="pay-actions">
+                    <!-- 약관 동의 체크박스: 텍스트 클릭 시 모달 열림 -->
+                    <label class="pay-agree">
+                        <span class="pay-checkbox">
+                            <input type="checkbox" id="agreeCheck">
+                            <span class="pay-checkmark"></span>
+                        </span>
+                        <span class="pay-agree-text">
+                            모든 결제 정보 및
+                            <a href="#" class="pay-terms-link" onclick="openPayTermsModal(); return false;">서비스 이용약관</a>에
+                            동의하며 결제를 진행합니다.
+                        </span>
+                    </label>
+
+                    <form th:action="@{/payment/process}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="pay-btn" id="payBtn" disabled>
+                            결제하기
+                            <span class="pay-btn-arrow">→</span>
+                        </button>
+                    </form>
+                </div>
+
+                <p class="pay-security">SECURITY ENCRYPTED BY KIM-BU-JANG SYSTEMS. © 2024</p>
+            </div>
+        </div>
+
+        <!-- 인용구 카드 -->
+        <div class="pay-quote-card">
+            <div class="pay-quote-accent"></div>
+            <blockquote class="pay-quote-text">
+                "진급은 속도가 아니라 방향입니다. 하지만 방향을 안다면 가장 빠르게 올라가야<br>합니다. 오늘 당신의 결단이 전설의 시작입니다."
+            </blockquote>
+            <cite class="pay-quote-author">— 김부장, <em>Legendary Director</em></cite>
+        </div>
+
+    </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="pay-footer">
+    <div class="pay-footer-inner">
+        <p class="pay-footer-brand">진급전설 김부장</p>
+        <p class="pay-footer-sub">Master your career with the legendary mentor.</p>
+    </div>
+</footer>
+
+<!-- ===== 서비스 이용약관 모달 ===== -->
+<div id="payTermsModal" class="pay-terms-overlay">
+    <div class="pay-terms-modal">
+
+        <!-- 헤더 -->
+        <div class="pay-terms-header">
+            <h3>서비스 이용약관</h3>
+            <button class="pay-terms-close" onclick="closePayTermsModal()">&times;</button>
+        </div>
+
+        <!-- 본문 -->
+        <div class="pay-terms-body">
+            <p class="pay-terms-updated">최종 업데이트: 2026년 1월 1일</p>
+
+            <div class="pay-terms-section">
+                <h4>제1조 (목적)</h4>
+                <p>(주)진급전설(이하 "회사")이 운영하는 진급전설 김부장 플랫폼(이하 "서비스")을 이용함에 있어 회사와 이용자의 권리·의무 및 책임 사항을 규정함을 목적으로 합니다.</p>
+            </div>
+
+            <div class="pay-terms-section">
+                <h4>제2조 (결제 및 이용권)</h4>
+                <p>프리미엄 서비스를 이용하기 위해서는 회사가 정한 이용 요금을 납부하여야 합니다. 결제가 완료되면 즉시 프리미엄 콘텐츠에 대한 이용 권한이 부여됩니다.</p>
+                <ul>
+                    <li>결제 수단: 신용카드, 체크카드, 계좌이체 등 회사가 지정한 수단</li>
+                    <li>이용 기간: 결제일로부터 서비스 종료 시까지 (별도 공지 없는 한 기간 제한 없음)</li>
+                    <li>이용 범위: 결제한 회원 본인에 한하며, 계정 공유 및 양도는 불가합니다</li>
+                </ul>
+            </div>
+
+            <div class="pay-terms-section">
+                <h4>제3조 (환불 정책)</h4>
+                <p>회사는 다음의 기준에 따라 환불을 처리합니다.</p>
+                <ul>
+                    <li><strong>결제 후 7일 이내 + 미수강:</strong> 전액 환불</li>
+                    <li><strong>결제 후 7일 이내 + 수강 이력 있음:</strong> 수강한 강의 비율에 따라 차감 후 환불</li>
+                    <li><strong>결제 후 7일 초과:</strong> 환불 불가 (단, 서비스 하자의 경우 예외 처리)</li>
+                </ul>
+                <p>환불 신청은 학습지원센터를 통해 접수하며, 승인 후 3~5 영업일 이내 처리됩니다.</p>
+            </div>
+
+            <div class="pay-terms-section">
+                <h4>제4조 (개인정보 및 결제 정보 보호)</h4>
+                <p>회사는 결제 과정에서 수집되는 개인정보 및 결제 정보를 관련 법령에 따라 안전하게 관리합니다. 수집된 결제 정보는 결제 처리 목적 외의 용도로 활용되지 않습니다.</p>
+                <ul>
+                    <li>모든 결제는 SSL 암호화 통신을 통해 안전하게 처리됩니다</li>
+                    <li>결제 정보는 PCI-DSS 기준에 따라 관리됩니다</li>
+                    <li>결제 내역은 전자상거래법에 따라 5년간 보관됩니다</li>
+                </ul>
+            </div>
+
+            <div class="pay-terms-section">
+                <h4>제5조 (서비스 이용 제한)</h4>
+                <p>다음의 행위는 금지되며, 위반 시 서비스 이용이 제한될 수 있습니다.</p>
+                <ul>
+                    <li>강의 콘텐츠의 무단 녹화, 캡처, 재배포</li>
+                    <li>계정 공유 또는 제3자에게 이용권 양도</li>
+                    <li>서비스를 통해 취득한 정보의 상업적 이용</li>
+                    <li>기타 회사의 지식재산권을 침해하는 행위</li>
+                </ul>
+            </div>
+
+            <div class="pay-terms-section">
+                <h4>제6조 (면책 조항)</h4>
+                <p>회사는 천재지변, 불가항력, 회원의 귀책 사유로 인한 서비스 이용 장애에 대해 책임을 지지 않습니다. 단, 회사의 고의 또는 중과실에 의한 경우는 예외로 합니다.</p>
+            </div>
+        </div>
+
+        <!-- 푸터 -->
+        <div class="pay-terms-footer">
+            <div class="pay-terms-agree-wrap">
+                <input type="checkbox" id="payModalAgreeCheck">
+                <label for="payModalAgreeCheck">위 내용을 모두 읽었으며, 서비스 이용약관에 동의합니다.</label>
+            </div>
+            <div class="pay-terms-btns">
+                <button class="pay-terms-btn-cancel" onclick="closePayTermsModal()">닫기</button>
+                <button class="pay-terms-btn-agree" id="payBtnAgree" onclick="agreePayTerms()" disabled>동의하고 계속하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const checkbox = document.getElementById('agreeCheck');
+    const payBtn   = document.getElementById('payBtn');
+
+    // 체크박스 → 결제 버튼 활성화
+    checkbox.addEventListener('change', function () {
+        payBtn.disabled = !this.checked;
+    });
+
+    // 모달 열기
+    function openPayTermsModal() {
+        document.getElementById('payTermsModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 모달 닫기
+    function closePayTermsModal() {
+        document.getElementById('payTermsModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // 모달 내 체크박스 → 동의 버튼 활성화
+    document.getElementById('payModalAgreeCheck').addEventListener('change', function () {
+        document.getElementById('payBtnAgree').disabled = !this.checked;
+    });
+
+    // 동의하고 계속하기 → 폼 체크박스 자동 체크 + 모달 닫기
+    function agreePayTerms() {
+        checkbox.checked = true;
+        payBtn.disabled  = false;
+        closePayTermsModal();
+    }
+
+    // 모달 바깥 클릭 시 닫기
+    document.getElementById('payTermsModal').addEventListener('click', function (e) {
+        if (e.target === this) closePayTermsModal();
+    });
+</script>
+</body>
+</html>

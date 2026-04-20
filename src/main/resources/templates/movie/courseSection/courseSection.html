@@ -123,6 +123,20 @@
             </div>
           </div>
 
+          <!-- Due Date -->
+          <div class="form-field">
+            <label class="form-label form-label--gold">DUE DATE (일)</label>
+            <div class="form-input-wrapper">
+              <input
+                      id="course-duedate"
+                      class="form-input"
+                      type="number"
+                      min="1"
+                      placeholder="수강 기간을 입력하세요 (예: 30)"
+              />
+            </div>
+          </div>
+
           <!-- Submit Button -->
           <button class="btn btn--course" onclick="registerCourse()">
             <span class="btn__label">코스 등록하기</span>
@@ -169,6 +183,18 @@
               </div>
             </div>
 
+            <!-- Section Note -->
+            <div class="form-field form-field--pb">
+              <label class="form-label form-label--navy">LECTURE NOTE</label>
+              <div class="form-input-wrapper form-input-wrapper--textarea">
+                <textarea
+                        id="section-note"
+                        class="form-textarea"
+                        placeholder="강의 노트를 입력하세요"
+                ></textarea>
+              </div>
+            </div>
+
             <!-- Submit Button -->
             <button class="btn btn--section" onclick="registerSection()">
               <span class="btn__label">섹션 등록하기</span>
@@ -212,13 +238,16 @@
   function registerCourse() {
     const title = document.getElementById('course-title').value.trim();
     const description = document.getElementById('course-description').value.trim();
+    const dueDate = document.getElementById('course-duedate').value;
 
     if (!title) { alert('코스명을 입력해주세요.'); return; }
     if (!description) { alert('코스 설명을 입력해주세요.'); return; }
+    if (!dueDate || dueDate <= 0) { alert('수강 기간을 입력해주세요.'); return; }
 
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
+    formData.append('dueDate', dueDate);
 
     fetch('/admin/courses', {
       method: 'POST',
@@ -232,7 +261,8 @@
       alert('김부장의 칭찬 : 코스 등록 완료! 역시 믿을 수 있어.');
       document.getElementById('course-title').value = '';
       document.getElementById('course-description').value = '';
-      loadCourses(); // 섹션 등록 셀렉트박스 갱신
+      document.getElementById('course-duedate').value = '';
+      loadCourses();
     })
     .catch(() => alert('❌ 코스 등록에 실패했습니다.'));
   }
@@ -241,12 +271,14 @@
   function registerSection() {
     const courseId = document.getElementById('section-course-select').value;
     const title = document.getElementById('section-title').value.trim();
+    const note = document.getElementById('section-note').value.trim();
 
     if (!courseId) { alert('코스를 선택해주세요.'); return; }
     if (!title) { alert('섹션명을 입력해주세요.'); return; }
 
     const formData = new FormData();
     formData.append('title', title);
+    formData.append('note', note);
 
     fetch(`/admin/courses/${courseId}/sections`, {
       method: 'POST',
@@ -259,6 +291,7 @@
     .then(() => {
       alert('김부장의 칭찬 : 섹션 등록 완료! 좋아, 계속 이 기세로 가.');
       document.getElementById('section-title').value = '';
+      document.getElementById('section-note').value = '';
     })
     .catch(() => alert('❌ 섹션 등록에 실패했습니다.'));
   }
