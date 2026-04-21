@@ -1,6 +1,7 @@
 package com.wanted.legendkim.domain.mypage;
 
 import com.wanted.legendkim.domain.mypage.entity.MPAttendance;
+import com.wanted.legendkim.domain.mypage.entity.MPPayments;
 import com.wanted.legendkim.domain.mypage.service.*;
 import com.wanted.legendkim.domain.mypage.DTO.UsersDTO;
 import com.wanted.legendkim.domain.users.auth.model.dto.AuthDetails;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -258,7 +260,7 @@ public class MyPageController {
 
     //영수증 보기
     @GetMapping("/receipt")
-    public String viewReceipt(@AuthenticationPrincipal AuthDetails authDetails, Model model) {
+    public String viewReceipt(@AuthenticationPrincipal AuthDetails authDetails, Model model, Principal principal) {
 
         // 1. 로그인 체크 (세션 확인)
         if (authDetails == null) {
@@ -269,10 +271,17 @@ public class MyPageController {
         Long userId = authDetails.getUserId();
         UsersDTO user = userService.findByTargetUserId(userId);
 
+        // 1. 현재 로그인한 사용자의 아이디(이메일 등) 가져오기
+        String loginId = principal.getName();
+
+        // 2. DB에서 사용자 상세 정보 조회 (Service/Repository 이용)
+        UsersDTO userPay = userService.findByEmail(loginId);
+
         // 3. @PostMapping("/process")의 영수증 생성 로직 그대로 적용
         // (여기서 실제 DB의 payment 테이블을 조회하게 고칠 수도 있지만, 일단 가상 데이터로 가시죠!)
-        String receiptNo = "KBJ-" + LocalDateTime.now().getYear() + "-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        String paymentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss"));
+        List<MPPayments> list = userPay.getPayments();
+        Date paymentDate = list.get(0).getCreatedAt();
+        String receiptNo = "KBJ-" + (paymentDate.getYear() + 1900) + "-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
         // 4. 모델에 데이터 담기 (사용자 이름 등을 실데이터로 넣으면 더 그럴싸합니다)
         model.addAttribute("receiptNo", receiptNo);
