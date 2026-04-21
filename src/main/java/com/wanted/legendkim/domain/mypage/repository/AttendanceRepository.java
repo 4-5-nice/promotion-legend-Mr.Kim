@@ -6,7 +6,10 @@ import com.wanted.legendkim.domain.mypage.entity.MPUsers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AttendanceRepository extends JpaRepository<MPAttendance, Integer> {
@@ -15,4 +18,7 @@ public interface AttendanceRepository extends JpaRepository<MPAttendance, Intege
     List<MPAttendance> findByUserId_UserId(int userId);
 
     void deleteByUserId(MPUsers user);
+
+
+    Optional<MPAttendance> findByUserIdAndTargetDate(MPUsers user, LocalDateTime today);
 }

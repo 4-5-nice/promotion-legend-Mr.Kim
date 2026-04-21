@@ -83,6 +83,8 @@ public class MyPageController {
         //로그인 사용자의 정보
         String loginId = principal.getName();
 
+        attendanceService.checkAttendanceByEmail(loginId); //오늘 결근인지 판단해서 DB 저장
+
         // 1. 화면에 뿌릴 유저 정보(DTO)
         UsersDTO userDTO = userService.findByEmail(loginId);
 
@@ -109,6 +111,8 @@ public class MyPageController {
     public String usePTO(Model model, Principal principal){
         //로그인한 사용자
         String loginId = principal.getName();
+
+        attendanceService.checkAttendanceByEmail(loginId); // [추가]
 
         // 1. 화면에 뿌릴 유저 정보(DTO)
         UsersDTO userDTO = userService.findByEmail(loginId);
@@ -212,6 +216,7 @@ public class MyPageController {
 
         // 2. [중앙 카드 & 출결 달력] 관리 대상 수강생 정보
         if (targetUserId != null) {
+            attendanceService.checkAttendanceByEmail(targetUserId); // [추가]
             // 수강생 기본 정보 (상단 카드용)
             //수정할 사용자의 정보(브라우저 /{userId} 아이디 기준)
             UsersDTO targetUser = userService.findByTargetUserId(targetUserId);
