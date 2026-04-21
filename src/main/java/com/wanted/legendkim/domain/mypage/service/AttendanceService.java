@@ -189,6 +189,7 @@ public class AttendanceService {
 
             return true;
         } catch (Exception e) {
+            System.out.println("❌ 연차 저장 실패 원인: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
