@@ -32,7 +32,7 @@ public class SecurityConfig {
                                            AuthFailHandler authFailHandler) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/user/enrollments/**", "/user/lectures/**", "/admin/**", "/myPage/**")
+                        .ignoringRequestMatchers("/user/enrollments/**", "/user/lectures/**", "/admin/**", "/myPage/**","/questionboard/user/**")
                 )
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()

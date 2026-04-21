@@ -27,15 +27,21 @@
                 <a th:href="@{/admin/locked-users}" class="nav-item">수강생 계정 관리</a>
                 <a th:href="@{/admin/attendance}" class="nav-item">수강생 출결 관리</a>
                 <a th:href="@{/admin/course/section}" class="nav-item">강의 및 코스 등록</a>
-                <a th:href="@{/freeboard/admin/freeboard}" class="nav-item">자유게시판 관리</a>
+                <a th:href="@{/freeboard/admin/freeboard}"
+                   th:class="${pageType == 'admin'} ? 'nav-item active' : 'nav-item'">
+                    자유게시판 관리
+                </a>
                 <a th:href="@{/questionboard/admin/questionboard}" class="nav-item">문제게시판 관리</a>
             </th:block>
 
             <th:block th:unless="${isAdmin}">
                 <a th:href="@{/myPage/info}" class="nav-item">마이페이지</a>
                 <a th:href="@{/user/enrollments/list}" class="nav-item">수강신청</a>
+                <a th:href="@{/freeboard/user/freeboard}"
+                   th:class="${pageType == 'user'} ? 'nav-item active' : 'nav-item'">
+                    자유게시판
+                </a>
                 <a th:href="@{/questionboard/user/questionboard}" class="nav-item">문제게시판</a>
-                <a th:href="@{/freeboard/user/freeboard}" class="nav-item">자유게시판</a>
             </th:block>
         </nav>
     </aside>
@@ -50,47 +56,71 @@
             </button>
         </header>
 
-        <section class="board-hero">
-            <div class="board-hero-left">
+        <section class="freeboard-wrap">
+
+            <section class="board-hero">
                 <p class="board-subtitle">COMMUNICATION HUB</p>
-                <h1>자유게시판</h1>
-                <span>
+                <h1 class="board-title">자유게시판</h1>
+                <p class="board-desc">
                     부장님의 인사이트와 동료들의 성공 노하우가 공유되는 공간입니다.<br>
                     품격 있는 비즈니스 매너를 준수해 주세요.
-                </span>
-            </div>
+                </p>
+                <div class="board-hero-watermark">LEGEND</div>
+            </section>
 
-            <div class="board-hero-watermark">LEGEND</div>
-        </section>
+            <section class="board-toolbar">
+                <div class="filter-area">
+                    <button type="button" id="allBtn" class="filter-btn active">전체글</button>
+                    <button type="button" id="mineBtn" class="filter-btn">내가 쓴 글</button>
+                </div>
 
-        <section class="board-action">
-            <button type="button" class="write-btn" id="writeBtn">
-                글쓰기
-            </button>
-        </section>
+                <div class="write-area">
+                    <button type="button" class="write-btn" id="writeBtn">
+                        글쓰기
+                    </button>
+                </div>
+            </section>
 
-        <section class="filter-area">
-            <button type="button" id="allBtn" class="filter-btn active">전체글</button>
-            <button type="button" id="mineBtn" class="filter-btn">내가 쓴 글</button>
-        </section>
+            <section class="board-table-wrap">
+                <div class="board-table-scroll">
+                    <table class="board-table">
+                        <colgroup>
+                            <col class="col-no">
+                            <col class="col-title">
+                            <col class="col-author">
+                            <col class="col-views">
+                            <col class="col-date">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>NO.</th>
+                            <th>SUBJECT / TITLE</th>
+                            <th>AUTHOR</th>
+                            <th>VIEWS</th>
+                            <th>DATE</th>
+                        </tr>
+                        </thead>
+                        <tbody id="postTableBody">
+                        <tr>
+                            <td colspan="5" class="empty">게시글을 불러오는 중입니다.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-        <section class="board-list">
-            <table>
-                <thead>
-                <tr>
-                    <th>NO.</th>
-                    <th>SUBJECT / TITLE</th>
-                    <th>AUTHOR</th>
-                    <th>VIEWS</th>
-                    <th>DATE</th>
-                </tr>
-                </thead>
-                <tbody id="postTableBody">
-                <tr>
-                    <td colspan="5" class="empty">게시글을 불러오는 중입니다.</td>
-                </tr>
-                </tbody>
-            </table>
+            <section class="pagination-area">
+                <button type="button" class="page-btn">&laquo;</button>
+                <button type="button" class="page-btn">&lsaquo;</button>
+                <button type="button" class="page-btn active">1</button>
+                <button type="button" class="page-btn">2</button>
+                <button type="button" class="page-btn">3</button>
+                <button type="button" class="page-btn">4</button>
+                <button type="button" class="page-btn">5</button>
+                <button type="button" class="page-btn">&rsaquo;</button>
+                <button type="button" class="page-btn">&raquo;</button>
+            </section>
+
         </section>
 
     </main>
@@ -168,11 +198,13 @@
         posts.forEach(post => {
             tbody.insertAdjacentHTML("beforeend", `
                 <tr class="post-row" data-post-id="${post.id}">
-                    <td>${post.id}</td>
-                    <td class="title">${post.title}</td>
-                    <td>${post.authorName}</td>
-                    <td>${post.viewCount}</td>
-                    <td>${post.createdAt}</td>
+                    <td class="td-no">${post.id}</td>
+                    <td class="td-title">
+                        <span class="title-text">${post.title}</span>
+                    </td>
+                    <td class="td-author">${post.authorName}</td>
+                    <td class="td-views">${post.viewCount}</td>
+                    <td class="td-date">${post.createdAt}</td>
                 </tr>
             `);
         });
