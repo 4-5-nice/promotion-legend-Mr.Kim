@@ -203,12 +203,18 @@
             document.getElementById('complete-modal').style.display = 'flex';
         });
 
-        // 배속 제한 — ratechange 이벤트로 초과 시 강제 복구
+        // 배속 제한 — ratechange 이벤트 + 100ms 폴링 이중으로 초과 시 강제 복구
+        // 우클릭 메뉴는 허용하되, maxPlaybackRate 초과 시에만 강제 복구한다.
         video.addEventListener('ratechange', function () {
             if (video.playbackRate > maxPlaybackRate) {
                 video.playbackRate = maxPlaybackRate;
             }
         });
+        setInterval(function () {
+            if (video.playbackRate > maxPlaybackRate) {
+                video.playbackRate = maxPlaybackRate;
+            }
+        }, 100);
     });
 
     // 영상 변경
