@@ -25,8 +25,8 @@ body {
 .nav__link--active { font-weight: 700; color: #312E81; border-bottom: 2px solid #F59E0B; padding-bottom: 4px; }
 .nav__right { display: flex; align-items: center; gap: 12px; }
 .nav__avatar { width: 32px; height: 32px; border-radius: 12px; border: 1px solid #C6C5D4; }
-.nav__logout { font-size: 14px; font-weight: 600; color: #312E81; cursor: pointer; padding-left: 16px; border-left: 1px solid rgba(198,197,212,0.30); }
-
+.nav__logout { font-size: 14px; font-weight: 600; color: #312E81; cursor: pointer; padding-left: 16px; border-left: 1px solid rgba(198,197,212,0.30); background: none; border-top: none; border-right: none; border-bottom: none; }
+.nav__logo { font-size: 24px; font-weight: 900; color: #1E1B4B; text-decoration: none; }
 /* ======================== LAYOUT ======================== */
 .layout {
     display: flex;
