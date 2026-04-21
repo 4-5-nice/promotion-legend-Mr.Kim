@@ -100,10 +100,10 @@
             <h1>문제 출제하기</h1>
         </section>
 
-        <form id="questionForm" method="post" class="question-form"
-              th:action="${pageType == 'admin'}
-                            ? @{/questionboard/admin/questionboard/submit}
-                            : @{/questionboard/user/questionboard/submit}">
+        <form id="questionForm"
+              method="post"
+              class="question-form"
+              th:action="${pageType == 'admin' ? '/questionboard/admin/questionboard/submit' : '/questionboard/user/questionboard/submit'}">
             <div class="write-layout">
 
                 <!-- 왼쪽 입력 영역 -->
