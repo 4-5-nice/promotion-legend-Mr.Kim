@@ -60,7 +60,7 @@
                 </div>
                 <div class="input-group">
                     <label>DATE OF BIRTH</label>
-                    <input type="date" th:field="*{birthDate}" required>
+                    <input type="date" th:field="*{birthDate}" id="birthDate" required>
                 </div>
                 <div class="input-group">
                     <label>EMAIL ADDRESS</label>
@@ -68,7 +68,9 @@
                 </div>
                 <div class="input-group">
                     <label>PASSWORD</label>
-                    <input type="password" th:field="*{password}" placeholder="비밀번호 설정" required>
+                    <input type="password" th:field="*{password}" placeholder="비밀번호 설정"
+                           id="password" minlength="8" maxlength="16" required>
+                    <span id="pwMsg" style="font-size:12px; margin-top:4px; display:none;"></span>
                 </div>
                 <div class="input-group">
                     <label>SECURITY QUESTION</label>
@@ -269,6 +271,46 @@
         </div>
     </div>
 </div>
+
+<script>
+    // 생년월일 최대값을 오늘로 설정 (미래 날짜 선택 불가)
+    document.getElementById('birthDate').max = new Date().toISOString().split('T')[0];
+
+    // 비밀번호 실시간 길이 검증 (8자 이상 16자 미만)
+    const pwInput = document.getElementById('password');
+    const pwMsg   = document.getElementById('pwMsg');
+
+    pwInput.addEventListener('input', function () {
+        const len = this.value.length;
+        if (len === 0) {
+            pwMsg.style.display = 'none';
+            return;
+        }
+        pwMsg.style.display = 'block';
+        if (len < 8) {
+            pwMsg.style.color = '#EF4444';
+            pwMsg.textContent = `비밀번호는 8자 이상이어야 합니다. (현재 ${len}자)`;
+        } else if (len >= 16) {
+            pwMsg.style.color = '#EF4444';
+            pwMsg.textContent = '비밀번호는 16자 미만이어야 합니다.';
+        } else {
+            pwMsg.style.color = '#10B981';
+            pwMsg.textContent = `사용 가능한 비밀번호입니다. (${len}자)`;
+        }
+    });
+
+    // 폼 제출 전 최종 검증
+    document.querySelector('.signup-form').addEventListener('submit', function (e) {
+        const len = pwInput.value.length;
+        if (len < 8 || len >= 16) {
+            e.preventDefault();
+            pwMsg.style.display  = 'block';
+            pwMsg.style.color    = '#EF4444';
+            pwMsg.textContent    = '비밀번호는 8자 이상 16자 미만으로 입력해 주세요.';
+            pwInput.focus();
+        }
+    });
+</script>
 
 <script>
     // 현재 활성 탭
