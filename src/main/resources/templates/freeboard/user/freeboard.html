@@ -51,7 +51,7 @@
         <header class="top-header">
             <button type="button"
                     class="home-title-btn"
-                    th:onclick="|location.href='${homePath}'|">
+                    onclick="location.href='/'">
                 진급전설 김부장
             </button>
         </header>
@@ -195,10 +195,10 @@
             return;
         }
 
-        posts.forEach(post => {
+        posts.forEach((post, index) => {
             tbody.insertAdjacentHTML("beforeend", `
                 <tr class="post-row" data-post-id="${post.id}">
-                    <td class="td-no">${post.id}</td>
+                    <td class="td-no">${posts.length - index}</td>
                     <td class="td-title">
                         <span class="title-text">${post.title}</span>
                     </td>
