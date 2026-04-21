@@ -1,6 +1,6 @@
 package com.wanted.legendkim.domain.watch.dto;
 
-import com.wanted.legendkim.domain.section.Section;
+import com.wanted.legendkim.domain.section.entity.Section;
 import lombok.*;
 
 @NoArgsConstructor

@@ -1,7 +1,7 @@
 package com.wanted.legendkim.domain.enrollment.dto;
 // 내 수강목록 화면용 축약. Response DTO (리스트를 한 줄에 표시할 정보)
-import com.wanted.legendkim.domain.enrollment.Enrollment;
-import com.wanted.legendkim.domain.enrollment.EnrollmentStatus;
+import com.wanted.legendkim.domain.enrollment.entity.Enrollment;
+import com.wanted.legendkim.domain.enrollment.entity.EnrollmentStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
