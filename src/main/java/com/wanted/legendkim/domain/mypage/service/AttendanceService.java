@@ -202,14 +202,24 @@ public class AttendanceService {
 
     @Transactional
     public void checkAttendance(MPUsers user) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(); // 오늘 날짜 (시간 없음)
         LocalDateTime now = LocalDateTime.now();
 
-        // 1. 오늘 이미 기록(PRESENT, LATE, ABSENT, EXCUSED)이 있는지 조회
-        Optional<MPAttendance> existing = attendanceRepository.findByUserIdAndTargetDate(user, today.atStartOfDay());
+        // 1. 유저의 전체 출결 기록을 일단 긁어옵니다. (혹은 최근 기록만)
+        List<MPAttendance> allRecords = attendanceRepository.findByUserId(user);
 
-        // 이미 기록이 있으면 더 이상 아무것도 하지 않음 (중복 방지)
-        if (existing.isPresent()) {
+        // 2. [핵심] DB 데이터들 중 오늘 날짜와 일치하는 게 있는지 '시간 떼고' 비교
+        boolean isAlreadyChecked = allRecords.stream()
+                .anyMatch(record -> {
+                    // DB에 저장된 LocalDateTime에서 시간 떼기
+                    LocalDate recordDate = record.getTargetDate().toLocalDate();
+                    // 오늘 날짜와 비교
+                    return recordDate.equals(today);
+                });
+
+        // 이미 오늘 날짜로 기록이 있으면 조용히 퇴근!
+        if (isAlreadyChecked) {
+            System.out.println("📢 이미 오늘자 출결 기록이 존재합니다. (중복 방지)");
             return;
         }
 
