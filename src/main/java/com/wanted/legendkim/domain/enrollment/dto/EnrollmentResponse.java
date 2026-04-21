@@ -1,7 +1,7 @@
 package com.wanted.legendkim.domain.enrollment.dto;
 // 수강 신청 결과를 JSON 으로 내려주는 응답 전용 DTO
-import com.wanted.legendkim.domain.enrollment.Enrollment;
-import com.wanted.legendkim.domain.enrollment.EnrollmentStatus;
+import com.wanted.legendkim.domain.enrollment.entity.Enrollment;
+import com.wanted.legendkim.domain.enrollment.entity.EnrollmentStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;

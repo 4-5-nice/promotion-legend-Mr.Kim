@@ -18,7 +18,7 @@
      ======================== -->
 <nav class="nav">
     <div style="display:flex; align-items:center; gap:48px;">
-        <span class="nav__logo">진급전설 김부장</span>
+        <a href="/" class="nav__logo" style="text-decoration:none;">진급전설 김부장</a>
         <div class="nav__links">
             <a href="#" class="nav__link">대시보드</a>
             <a href="#" class="nav__link nav__link--active">커리큘럼</a>
@@ -98,8 +98,7 @@
         <div class="tab-bar">
             <div class="tab-bar__tabs">
                 <button class="tab-bar__tab tab-bar__tab--active" onclick="switchTab(this, 'tab-notes')">강의 노트</button>
-                <button class="tab-bar__tab tab-bar__tab--inactive" onclick="switchTab(this, 'tab-materials')">자료실</button>
-                <button class="tab-bar__tab tab-bar__tab--inactive" onclick="switchTab(this, 'tab-board')">문제 게시판</button>
+                <button class="tab-bar__tab tab-bar__tab--inactive" onclick="window.location.href='/questionboard/user/questionboard'">문제 게시판</button>
             </div>
         </div>
 
@@ -113,21 +112,7 @@
             </div>
         </div>
 
-        <!-- 자료실 -->
-        <div id="tab-materials" class="tab-content" style="display:none;">
-            <div class="notes-card">
-                <h2 class="notes-card__title">자료실</h2>
-                <p class="notes-card__body">자료실 기능은 준비 중입니다.</p>
-            </div>
-        </div>
-
-        <!-- 문제 게시판 -->
-        <div id="tab-board" class="tab-content" style="display:none;">
-            <div class="notes-card">
-                <h2 class="notes-card__title">문제 게시판</h2>
-                <p class="notes-card__body">문제 게시판 기능은 준비 중입니다.</p>
-            </div>
-        </div>
+        <!-- 문제 게시판 탭은 리다이렉트로 처리 -->
 
     </main>
 
@@ -177,6 +162,20 @@
 
 <script th:inline="javascript">
     const enrollmentId = /*[[${enrollmentId}]]*/ null;
+    const userRank = /*[[${watchInfo.userRank}]]*/ '인턴';
+
+    // 직급별 최대 재생속도 매핑
+    const maxSpeedMap = {
+        '인턴': 1.0,
+        '계약직': 1.25,
+        '정규직': 1.5,
+        '대리': 1.75,
+        '과장': 2.0,
+        '부장': 2.0,
+        '임원': 2.0,
+        '정년퇴직': 2.0
+    };
+    const maxPlaybackRate = maxSpeedMap[userRank] ?? 1.0;
 
     // 수강 완료 처리 후 리다이렉트
     async function handleComplete() {
@@ -187,7 +186,7 @@
         } catch (e) {
             console.error('완료 처리 실패', e);
         }
-        window.location.href = '/board';
+        window.location.href = '/questionboard/user/questionboard';
     }
 
     // 모달 닫기
@@ -198,9 +197,24 @@
     // 영상 종료 감지
     document.addEventListener('DOMContentLoaded', function () {
         const video = document.getElementById('main-video');
+
+        // 영상 종료 감지 → 모달 오픈
         video.addEventListener('ended', function () {
             document.getElementById('complete-modal').style.display = 'flex';
         });
+
+        // 배속 제한 — ratechange 이벤트 + 100ms 폴링 이중으로 초과 시 강제 복구
+        // 우클릭 메뉴는 허용하되, maxPlaybackRate 초과 시에만 강제 복구한다.
+        video.addEventListener('ratechange', function () {
+            if (video.playbackRate > maxPlaybackRate) {
+                video.playbackRate = maxPlaybackRate;
+            }
+        });
+        setInterval(function () {
+            if (video.playbackRate > maxPlaybackRate) {
+                video.playbackRate = maxPlaybackRate;
+            }
+        }, 100);
     });
 
     // 영상 변경

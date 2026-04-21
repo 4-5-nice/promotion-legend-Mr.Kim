@@ -1,6 +1,6 @@
 package com.wanted.legendkim.domain.lecture.dto;
 // 수강 마감일 정보를 내려주는 응답 DTO. 만료 여부까지 함께 계산해서 포함.
-import com.wanted.legendkim.domain.enrollment.Enrollment;
+import com.wanted.legendkim.domain.enrollment.entity.Enrollment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

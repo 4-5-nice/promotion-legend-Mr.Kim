@@ -1,6 +1,6 @@
 package com.wanted.legendkim.domain.enrollment.dto;
 // 진행률 업데이트/조회의 응답 DTO
-import com.wanted.legendkim.domain.enrollment.Enrollment;
+import com.wanted.legendkim.domain.enrollment.entity.Enrollment;
 import lombok.*;
 
 @NoArgsConstructor

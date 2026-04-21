@@ -221,6 +221,12 @@ public class User {
     public String getIdentifyAnswer() {return identifyAnswer;
     }
 
+    // 수강 완료 시 포인트를 1 증가시키는 비즈니스 메서드
+    // 외부에서 point 필드를 직접 조작하지 않고, 이 메서드를 통해서만 포인트를 적립한다.
+    public void earnPoint() {
+        this.point += 1;
+    }
+
     @Override
     public String toString() {
         return "User{" +
