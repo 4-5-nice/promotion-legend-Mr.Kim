@@ -31,7 +31,7 @@ public class QuestionSubmissionsService {
         int incorrectCount = submissionRepository.countByUserIdAndIsCorrectFalse(user);
 
         // 맞으면 +1, 틀리면 -1
-        int totalPoints = correctCount - incorrectCount;
+        int totalPoints = (correctCount * 5) - (incorrectCount * 2);
 
         Map<String, Object> stats = new HashMap<>();
         stats.put("history", history);
