@@ -33,6 +33,7 @@ public class MPAttendance {
     @Column(name = "status", columnDefinition = "ENUM('PRESENT', 'LATE', 'ABSENT', 'EXCUSED')")
     private String status;
 
+
     // Attendance.java 엔티티
     public MPAttendance changeStatus(String status) {
         this.status = status;
@@ -45,5 +46,11 @@ public class MPAttendance {
         this.targetDate = date;
         this.status = status;
         return this;
+    }
+
+    public MPAttendance(MPUsers user, LocalDateTime loginTime, String status) {
+        this.userId = user;
+        this.targetDate = loginTime;
+        this.status = status;
     }
 }

@@ -1,16 +1,20 @@
 package com.wanted.legendkim.domain.mypage.service;
 
 import com.wanted.legendkim.domain.mypage.entity.MPAttendance;
+import com.wanted.legendkim.domain.mypage.entity.MPLoginHistory;
 import com.wanted.legendkim.domain.mypage.entity.MPUsers;
 import com.wanted.legendkim.domain.mypage.entity.MPVacationHistory;
 import com.wanted.legendkim.domain.mypage.repository.AttendanceRepository;
+import com.wanted.legendkim.domain.mypage.repository.LoginHistoryRepository;
 import com.wanted.legendkim.domain.mypage.repository.UsersRepository;
 import com.wanted.legendkim.domain.mypage.repository.VacationHistoryRepository;
+import com.wanted.legendkim.domain.users.user.model.entity.LoginHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -20,6 +24,7 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final UsersRepository userRepository;
     private final VacationHistoryRepository vacationHistoryRepository;
+    private final LoginHistoryRepository loginHistoryRepository;
 
     //출결 조회
     public List<MPAttendance> attendanceList(String email) {
@@ -193,5 +198,67 @@ public class AttendanceService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Transactional
+    public void checkAttendance(MPUsers user) {
+        LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+
+        // 1. 오늘 이미 기록(PRESENT, LATE, ABSENT, EXCUSED)이 있는지 조회
+        Optional<MPAttendance> existing = attendanceRepository.findByUserIdAndTargetDate(user, today.atStartOfDay());
+
+        // 이미 기록이 있으면 더 이상 아무것도 하지 않음 (중복 방지)
+        if (existing.isPresent()) {
+            return;
+        }
+
+        // 2. 오늘 성공한 로그인 기록 중 가장 빠른 것 하나 조회
+        Optional<MPLoginHistory> firstLogin = loginHistoryRepository
+                .findFirstByUserIdAndIsSuccessAndCreatedAtAfterOrderByCreatedAtAsc(
+                        user, true, today.atStartOfDay());
+
+        if (firstLogin.isPresent()) {
+            // [케이스 A] 로그인 기록이 있는 경우: 시간에 따라 출석 또는 지각
+            LocalDateTime loginTime = firstLogin.get().getCreatedAt();
+            String status = (loginTime.getHour() < 9) ? "PRESENT" : "LATE";
+
+            MPAttendance attendance = new MPAttendance(user, loginTime, status);
+            attendanceRepository.save(attendance);
+            attendanceRepository.flush(); // 즉시 DB 반영 시도 (에러나면 여기서 바로 터짐)
+            System.out.println("✅ 출결 저장 완료: " + status);
+
+        } else {
+            // [케이스 B] 로그인 기록이 없는 경우: 18시가 넘었으면 결근으로 확정 저장
+//            if (now.getHour() >= 18) {
+                MPAttendance absent = new MPAttendance(user, now, "ABSENT");
+                attendanceRepository.save(absent);
+                attendanceRepository.flush();
+                System.out.println("✅ 결근 저장 완료");
+//            }
+        }
+    }
+
+    // AttendanceService.java 내부
+    @Transactional
+    public void checkAttendanceByEmail(String email) {
+        // 1. 이메일로 유저 엔티티 찾기
+        List<MPUsers> userList = userRepository.findByEmail(email);
+        if (userList.isEmpty()) return;
+        MPUsers user = userList.get(0);
+
+        // 2. 부장님이 만드신 기존 로직 그대로 호출
+        this.checkAttendance(user);
+    }
+
+    // [오버로딩] ID(Long)로 출결 체크하는 버전
+    @Transactional
+    public void checkAttendanceByEmail(Long userId) {
+        // 1. ID로 유저 찾기
+        List<MPUsers> users = userRepository.findByUserId(userId);
+        if (users == null || users.isEmpty()) return;
+
+        // 2. 부장님이 만드신 기존 로직 호출
+        this.checkAttendance(users.get(0));
     }
 }
