@@ -2,6 +2,7 @@ package com.wanted.legendkim.domain.users.user.controller;
 
 import com.wanted.legendkim.domain.users.user.model.dto.SignupDTO;
 import com.wanted.legendkim.domain.users.user.model.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,8 @@ public class UserController {
         return "user/signup";
     }
 
+    //DTO로 받아오면서 @Valid로 다시 DTO의 제약조건 검증
+    @Valid
     @PostMapping("/signup")
     public ModelAndView signup(@ModelAttribute SignupDTO signupDTO, ModelAndView mv){
 
