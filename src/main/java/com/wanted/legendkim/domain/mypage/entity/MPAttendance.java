@@ -1,5 +1,6 @@
 package com.wanted.legendkim.domain.mypage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @ToString
+@JsonIgnoreProperties({"userId", "hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "attendance")
 public class MPAttendance {
