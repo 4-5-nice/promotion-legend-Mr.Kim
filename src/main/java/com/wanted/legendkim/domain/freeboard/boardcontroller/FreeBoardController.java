@@ -44,13 +44,14 @@ public class FreeBoardController {
     // 상세 조회
     @GetMapping("/{postId}")
     public String detail(@PathVariable Long postId, // url 경로의 변수값(게시글 아이디) 받아오기
-                         Principal principal,Model model
-    ) {
+                         @RequestParam(defaultValue = "false") boolean skipCount, // 댓글 등록 했는지 체크
+                         Principal principal, Model model) {
+
         String email = principal.getName();
         // principal에 저장된 email 꺼내오기
 
         // 게시글 상세정보 가져오기
-        FreeBoardDetailDTO post = freeBoardService.getPostDetail(postId, email);
+        FreeBoardDetailDTO post = freeBoardService.getPostDetail(postId, email, !skipCount);
         // 댓글들 불러오기
         List<FreeCommentDTO> comments = freeCommentService.getComments(postId, email);
 
@@ -89,7 +90,7 @@ public class FreeBoardController {
 
         FreeBoardDetailDTO post = freeBoardService.getEditPost(postId, email); // 게시글 수정하기
 
-        model.addAttribute("pageType", "user");
+        model.addAttribute("pageType", "user"); // 유저 전용 페이지로 가기 위함
         model.addAttribute("post", post); // 수정한 게시글 정보 담기
         model.addAttribute("isEdit", true);
         // 현재 등록모드(false)인지 수정모드(true)인지 체크

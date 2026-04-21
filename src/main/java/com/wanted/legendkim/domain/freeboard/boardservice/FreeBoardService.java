@@ -52,13 +52,15 @@ public class FreeBoardService {
     }
 
     @Transactional
-    public FreeBoardDetailDTO getPostDetail(Long postId, String email) {
+    public FreeBoardDetailDTO getPostDetail(Long postId, String email, boolean increaseView) {
 
         FreeBoardPost post = freeBoardPostRepository.findById(postId)
                                             // 게시글 아이디로 게시글 정보 가져오기
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        post.increaseViewCount(); // 조회수 1 올리기
+        if (increaseView) {
+            post.increaseViewCount(); // 조회수 1 올리기
+        }
 
         boolean mine = email != null && post.getUser().getEmail().equals(email);
         // 로그인한 사용자의 email과 게시글 작성자의 email을 비교해서

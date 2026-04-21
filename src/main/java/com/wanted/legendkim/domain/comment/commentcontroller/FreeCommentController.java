@@ -26,7 +26,7 @@ public class FreeCommentController {
 
         freeCommentService.writeComment(postId, content, email); // 댓글 쓰는 기능
 
-        return "redirect:/freeboard/user/freeboard/" + postId; // 다시 게시글 상세 페이지로 이동
+        return "redirect:/freeboard/user/freeboard/" + postId + "?skipCount=true"; // 다시 게시글 상세 페이지로 이동
     }
 
     // 댓글 수정
@@ -37,7 +37,7 @@ public class FreeCommentController {
 
         Long postId = freeCommentService.editComment(commentId, content, email); // 댓글 수정하기
 
-        return "redirect:/freeboard/user/freeboard/" + postId; // 다시 게시글 상세 페이지로 이동
+        return "redirect:/freeboard/user/freeboard/" + postId + "?skipCount=true"; // 다시 게시글 상세 페이지로 이동
     }
 
     // 댓글 삭제
@@ -48,6 +48,6 @@ public class FreeCommentController {
 
         Long postId = freeCommentService.deleteComment(commentId, email); // 댓글 삭제
 
-        return "redirect:/freeboard/user/freeboard/" + postId; // 다시 게시글 상세 페이지로 이동
+        return "redirect:/freeboard/user/freeboard/" + postId + "?skipCount=true"; // 다시 게시글 상세 페이지로 이동
     }
 }
