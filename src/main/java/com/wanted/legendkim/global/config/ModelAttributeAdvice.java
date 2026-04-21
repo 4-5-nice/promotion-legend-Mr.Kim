@@ -20,5 +20,7 @@ public class ModelAttributeAdvice {
 
         model.addAttribute("isAdmin", isAdmin); // 있으면 model에 담기
 
+
+
     }
 }

@@ -2,6 +2,7 @@ package com.wanted.legendkim.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -14,8 +15,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private final PaymentConfigInterceptor paymentConfigInterceptor;
+
     @Value("${file.upload-dir}")
     private String uploadDir;
+
+    public WebConfig(PaymentConfigInterceptor paymentConfigInterceptor) {
+        this.paymentConfigInterceptor = paymentConfigInterceptor;
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -24,4 +31,22 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + uploadDir + "/");
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(paymentConfigInterceptor)
+                //인터셉터 적용
+                .addPathPatterns(
+                        "/user/lectures/**",
+                        "/user/enrollments/**",
+                        "/questionboard/user/**",
+                        "/freeboard/user/**"
+                )
+                //인터셉터 미적용
+                .excludePathPatterns(
+                        "/payment/**",
+                        "/",
+                        "/auth/**",
+                        "/css/**", "/js/**", "/images/**", "/error"
+                );
+    }
 }
