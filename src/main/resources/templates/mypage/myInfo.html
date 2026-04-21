@@ -138,7 +138,7 @@
 
 <div class="layout-wrapper">
     <header class="global-header">
-        <a href="/" class="hover:opacity-80 transition-opacity">
+        <a href="javascript:history.back()" class="hover:opacity-80 transition-opacity">
             <h1 class="text-[#000666] font-extrabold text-xl tracking-tight">진급전설 김부장</h1>
         </a>
         <form th:action="@{/logout}" method="post">
@@ -255,7 +255,7 @@
                     </div>
                     <div class="flex items-center gap-6">
                         <span class="text-sm font-extrabold text-[#000666]" th:text="${#numbers.formatInteger(pay.amount, 0, 'COMMA')} + '원'">50,000원</span>
-                        <a th:href="@{/user/receipt(paymentId=${pay.paymentId})}" class="border border-gray-200 px-3 py-1.5 rounded text-[11px] font-medium text-gray-600 hover:bg-gray-50">영수증 보기</a>
+                        <a th:href="@{/receipt}" class="border border-gray-200 px-3 py-1.5 rounded text-[11px] font-medium text-gray-600 hover:bg-gray-50">영수증 보기</a>
                     </div>
                 </section>
             </div>

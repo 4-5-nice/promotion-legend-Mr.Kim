@@ -35,7 +35,7 @@ public class UsersDTO {
     // 출결 정보 담을 변수
     private List<MPAttendance> attendance;
 
-    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<MPPayments> paymentsList) {
+    public UsersDTO(String name, String email, int point, String rank, int vacationCoupon, List<MPPayments> payments) {
         this.name = name;
         this.email = email;
         this.point = point;
