@@ -1,0 +1,191 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Noto Sans KR", Arial, sans-serif;
+    background: #f7f7fa;
+    color: #222;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background: #f4f4f7;
+    padding: 28px 0 40px;
+}
+
+.portal-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #17105f;
+    padding: 0 30px;
+    margin-bottom: 42px;
+}
+
+.profile-box {
+    text-align: center;
+    margin-bottom: 34px;
+    padding: 0 30px;
+}
+
+.profile-img {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 14px;
+    border-radius: 12px;
+    background: #1b174f;
+}
+
+.profile-box h3 {
+    color: #17105f;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.profile-box p {
+    color: #9aa0ae;
+    font-size: 12px;
+}
+
+.sidebar button {
+    width: 100%;
+    height: 56px;
+    border: none;
+    background: transparent;
+    color: #8b90a1;
+    text-align: left;
+    padding: 0 30px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.sidebar button.active,
+.sidebar button:hover {
+    color: #17105f;
+    background: #ffffff;
+    border-left: 4px solid #d8a32d;
+}
+
+.content {
+    flex: 1;
+    padding: 0 46px 60px;
+    background: #fafafa;
+}
+
+.top-header {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ececf1;
+    margin-bottom: 48px;
+}
+
+.home-title-btn {
+    border: none;
+    background: transparent;
+    color: #17105f;
+    font-size: 22px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.board-header {
+    position: relative;
+    margin-bottom: 36px;
+}
+
+.board-header::after {
+    content: "LEGEND";
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 140px;
+    font-weight: 900;
+    color: #f0f0f6;
+    z-index: 0;
+}
+
+.board-header * {
+    position: relative;
+    z-index: 1;
+}
+
+.category {
+    color: #8c802e;
+    font-size: 11px;
+    letter-spacing: 4px;
+    margin-bottom: 14px;
+}
+
+.board-header h1 {
+    font-size: 56px;
+    color: #17105f;
+    font-weight: 500;
+    margin-bottom: 14px;
+}
+
+.description {
+    color: #555;
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+.board-list {
+    background: white;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.04);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f4f4f6;
+}
+
+th {
+    height: 52px;
+    color: #8d9099;
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+td {
+    height: 94px;
+    border-bottom: 1px solid #f0f0f3;
+    font-size: 15px;
+    color: #333;
+    text-align: center;
+    padding: 0 12px;
+}
+
+td.title {
+    text-align: left;
+    color: #17105f;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.post-row {
+    cursor: pointer;
+}
+
+.post-row:hover {
+    background: #f8f8ff;
+}
+
+.empty {
+    height: 140px;
+    color: #999;
+    text-align: center;
+}

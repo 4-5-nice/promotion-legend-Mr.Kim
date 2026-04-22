@@ -2,86 +2,216 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>자유게시판 글쓰기</title>
-    <link rel="stylesheet" href="/css/freeboard-write.css">
+    <title th:text="${isEdit} ? '자유게시판 글 수정' : '자유게시판 글쓰기'">자유게시판 글쓰기</title>
+    <link rel="stylesheet" href="/css/board/freeboard-write.css">
 </head>
 <body>
 
 <div class="layout">
 
     <aside class="sidebar">
+        <div class="portal-title" th:text="${isAdmin} ? '관리자 포털' : '임원 포털'">임원 포털</div>
+
         <div class="profile-box">
             <div class="profile-img"></div>
             <h3>김부장</h3>
-            <p>SENIOR DIRECTOR</p>
+            <p>김부장, 수석 이사</p>
         </div>
 
-        <button type="button" onclick="location.href='/user/mypage/myInfo'">마이페이지</button>
-        <button type="button" onclick="location.href='/user/lectures'">전체 강의</button>
-        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제 게시판</button>
-        <button type="button" class="active" onclick="location.href='/freeboard/user/freeboard'">자유 게시판</button>
+        <nav class="side-nav">
+
+            <th:block th:if="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments/list}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}"
+                   th:class="${pageType == 'user'} ? 'nav-item active' : 'nav-item'">
+                    자유게시판
+                </a>
+
+                <a th:href="@{/admin/locked-users}" class="nav-item">
+                    수강생 계정 관리
+                    <span class="nav-alert-badge"
+                          th:if="${lockedCount != null and lockedCount > 0}"
+                          th:text="${lockedCount}"></span>
+                </a>
+
+                <a th:href="@{/admin/attendance}" class="nav-item">
+                    수강생 출결 관리
+                </a>
+
+                <a th:href="@{/admin/course/section}" class="nav-item">
+                    강의 및 코스 등록
+                </a>
+
+                <a th:href="@{/freeboard/admin/freeboard}"
+                   th:class="${pageType == 'admin'} ? 'nav-item active' : 'nav-item'">
+                    자유게시판 관리
+                </a>
+
+                <a th:href="@{/questionboard/admin/questionboard}" class="nav-item">
+                    문제게시판 관리
+                </a>
+            </th:block>
+
+            <th:block th:unless="${isAdmin}">
+                <a th:href="@{/myPage/info}" class="nav-item">
+                    마이페이지
+                </a>
+
+                <a th:href="@{/user/enrollments/list}" class="nav-item">
+                    수강신청
+                </a>
+
+                <a th:href="@{/questionboard/user/questionboard}" class="nav-item">
+                    문제게시판
+                </a>
+
+                <a th:href="@{/freeboard/user/freeboard}" class="nav-item active">
+                    자유게시판
+                </a>
+            </th:block>
+
+        </nav>
     </aside>
 
     <main class="content">
 
         <header class="top-header">
-            <h2>진급전설 김부장</h2>
+            <button type="button"
+                    class="home-title-btn"
+                    onclick="location.href='/'">
+                진급전설 김부장
+            </button>
         </header>
 
         <section class="write-wrap">
 
             <div class="write-header">
                 <p class="category">COMMUNITY SPACE</p>
-                <h1>자유게시판 글쓰기</h1>
+                <h1 th:text="${isEdit} ? '자유게시판 글 수정' : '자유게시판 글쓰기'">자유게시판 글쓰기</h1>
                 <div class="description-line">
                     <span></span>
-                    <p>부장님의 소중한 경험과 노하우를 공유해 주세요.</p>
+                    <p th:text="${isEdit} ? '기존 게시글 내용을 수정해 주세요.' : '부장님의 소중한 경험과 노하우를 공유해 주세요.'">
+                        부장님의 소중한 경험과 노하우를 공유해 주세요.
+                    </p>
                 </div>
             </div>
 
-            <form action="/freeboard/user/freeboard/freeboard-write"
-                  method="post"
-                  class="write-form">
+            <!-- user 페이지일 때 -->
+            <th:block th:if="${pageType == 'user'}">
+                <form th:action="${isEdit}
+                                    ? @{/freeboard/user/freeboard/{postId}/freeboard-edit(postId=${post.id})}
+                                    : @{/freeboard/user/freeboard/freeboard-write}"
+                      method="post"
+                      class="write-form">
 
-                <div class="form-card">
+                    <div class="form-card">
 
-                    <div class="form-group title-group">
-                        <label for="title">ARTICLE TITLE</label>
-                        <input type="text"
-                               id="title"
-                               name="title"
-                               placeholder="제목을 입력해 주세요"
-                               maxlength="255"
-                               required>
-                    </div>
-
-                    <div class="form-group content-group">
-                        <label for="content">CONTENT EDITOR</label>
-                        <textarea id="content"
-                                  name="content"
-                                  placeholder="내용을 입력해 주세요"
-                                  required></textarea>
-                    </div>
-
-                    <div class="form-bottom">
-                        <div></div>
-
-                        <div class="button-area">
-                            <button type="button"
-                                    class="cancel-btn"
-                                    onclick="location.href='/freeboard/user/freeboard'">
-                                취소
-                            </button>
-
-                            <button type="submit" class="submit-btn">
-                                등록하기 ▷
-                            </button>
+                        <div class="form-group title-group">
+                            <label for="title">ARTICLE TITLE</label>
+                            <input type="text"
+                                   id="title"
+                                   name="title"
+                                   th:value="${isEdit} ? ${post.title} : ''"
+                                   placeholder="제목을 입력해 주세요"
+                                   maxlength="255"
+                                   required>
                         </div>
+
+                        <div class="form-group content-group">
+                            <label for="content">CONTENT EDITOR</label>
+                            <textarea id="content"
+                                      name="content"
+                                      placeholder="내용을 입력해 주세요"
+                                      required
+                                      th:text="${isEdit} ? ${post.content} : ''"></textarea>
+                        </div>
+
+                        <div class="form-bottom">
+                            <div></div>
+
+                            <div class="button-area">
+                                <button type="button"
+                                        class="cancel-btn"
+                                        th:onclick="${isEdit} ? |location.href='/freeboard/user/freeboard/${post.id}'| : |location.href='/freeboard/user/freeboard'|">
+                                    취소
+                                </button>
+
+                                <button type="submit"
+                                        class="submit-btn"
+                                        th:text="${isEdit} ? '수정완료 ▷' : '등록하기 ▷'">
+                                    등록하기 ▷
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
 
-                </div>
+                </form>
+            </th:block>
 
-            </form>
+            <!-- admin 페이지일 때 -->
+            <th:block th:if="${pageType == 'admin'}">
+                <form th:action="${isEdit}
+                                    ? @{/freeboard/admin/freeboard/{postId}/freeboard-edit(postId=${post.id})}
+                                    : @{/freeboard/admin/freeboard/freeboard-write}"
+                      method="post"
+                      class="write-form">
+
+                    <div class="form-card">
+
+                        <div class="form-group title-group">
+                            <label for="title-admin">ARTICLE TITLE</label>
+                            <input type="text"
+                                   id="title-admin"
+                                   name="title"
+                                   th:value="${isEdit} ? ${post.title} : ''"
+                                   placeholder="제목을 입력해 주세요"
+                                   maxlength="255"
+                                   required>
+                        </div>
+
+                        <div class="form-group content-group">
+                            <label for="content-admin">CONTENT EDITOR</label>
+                            <textarea id="content-admin"
+                                      name="content"
+                                      placeholder="내용을 입력해 주세요"
+                                      required
+                                      th:text="${isEdit} ? ${post.content} : ''"></textarea>
+                        </div>
+
+                        <div class="form-bottom">
+                            <div></div>
+
+                            <div class="button-area">
+                                <button type="button"
+                                        class="cancel-btn"
+                                        th:onclick="${isEdit} ? |location.href='/freeboard/admin/freeboard/${post.id}'| : |location.href='/freeboard/admin/freeboard'|">
+                                    취소
+                                </button>
+
+                                <button type="submit"
+                                        class="submit-btn"
+                                        th:text="${isEdit} ? '수정완료 ▷' : '등록하기 ▷'">
+                                    등록하기 ▷
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+            </th:block>
 
         </section>
 

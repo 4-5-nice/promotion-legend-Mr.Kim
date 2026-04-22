@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>관리자 문제 상세조회</title>
+    <link rel="stylesheet" href="/css/board/admin-questionboard-detail.css">
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-top-title">임원 포털</div>
+
+        <div class="profile-box">
+            <div class="profile-img"></div>
+            <h3>김부장</h3>
+            <p>김부장, 수석 이사</p>
+        </div>
+
+        <button type="button" onclick="location.href='/myPage/info'">마이페이지</button>
+        <button type="button" onclick="location.href='/user/enrollments/list'">수강신청</button>
+        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제게시판</button>
+        <button type="button" onclick="location.href='/freeboard/user/freeboard'">자유게시판</button>
+
+        <button type="button" onclick="location.href='/admin/locked-users'">수강생 계정 관리</button>
+        <button type="button" onclick="location.href='/admin/attendance'">수강생 출결 관리</button>
+        <button type="button" onclick="location.href='/admin/course/section'">강의 및 코스 등록</button>
+        <button type="button" class="active" onclick="location.href='/freeboard/admin/freeboard'">자유게시판 관리</button>
+        <button type="button" onclick="location.href='/questionboard/admin/questionboard'">문제게시판 관리</button>
+    </aside>
+
+    <main class="content">
+        <header class="top-header">
+            <button type="button" class="home-title-btn" onclick="location.href='/admin/main'">
+                진급전설 김부장
+            </button>
+        </header>
+
+        <div class="breadcrumb">
+            <span>퀴즈 게시판</span>
+            <span> &gt; </span>
+            <span th:text="${question.authorRank}"></span>
+            <span> &gt; </span>
+            <span th:text="${question.courseTitle}"></span>
+            <span> / </span>
+            <span th:text="${question.sectionTitle}"></span>
+        </div>
+
+        <div class="question-top-line">
+            <span class="question-label">STRATEGIC MANAGEMENT</span>
+            <span class="question-seq" th:text="'Question ' + ${question.id}"></span>
+        </div>
+
+        <div class="question-header-actions">
+            <div class="back-link" onclick="location.href='/questionboard/admin/questionboard'">← 목록으로</div>
+            <button type="button" class="delete-question-btn" id="deleteQuestionBtn">문제 삭제</button>
+        </div>
+
+        <section class="question-section">
+            <h1 class="question-title" th:text="${question.title}"></h1>
+
+            <div class="question-meta">
+                <span th:text="${question.courseTitle}"></span>
+                <span>•</span>
+                <span th:text="${question.sectionTitle}"></span>
+                <span>•</span>
+                <span th:text="${question.authorName + ' (' + question.authorRank + ')'}"></span>
+                <span>•</span>
+                <span th:text="${question.createdAt}"></span>
+            </div>
+
+            <div class="option-list">
+                <div class="option-item" th:classappend="${question.answer == 1} ? ' correct'">
+                    <span class="option-number">1</span>
+                    <span class="option-text" th:text="${question.option1}"></span>
+                </div>
+
+                <div class="option-item" th:classappend="${question.answer == 2} ? ' correct'">
+                    <span class="option-number">2</span>
+                    <span class="option-text" th:text="${question.option2}"></span>
+                </div>
+
+                <div class="option-item" th:classappend="${question.answer == 3} ? ' correct'">
+                    <span class="option-number">3</span>
+                    <span class="option-text" th:text="${question.option3}"></span>
+                </div>
+
+                <div class="option-item" th:classappend="${question.answer == 4} ? ' correct'">
+                    <span class="option-number">4</span>
+                    <span class="option-text" th:text="${question.option4}"></span>
+                </div>
+
+                <div class="option-item" th:classappend="${question.answer == 5} ? ' correct'">
+                    <span class="option-number">5</span>
+                    <span class="option-text" th:text="${question.option5}"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="comment-section">
+            <div class="comment-header">
+                <h2>부장님들의 한마디 (댓글)</h2>
+                <span class="comment-count" th:text="'전략가들의 피드백 (' + ${#lists.size(comments)} + ')'"></span>
+            </div>
+
+            <div id="commentList">
+                <div class="comment-item" th:each="comment : ${comments}" th:attr="data-comment-id=${comment.id}">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-body">
+                        <div class="comment-top">
+                            <div class="comment-author-wrap">
+                                <strong th:text="${comment.authorName}"></strong>
+                                <div class="comment-admin-actions">
+                                    <button type="button" class="comment-delete-btn" th:attr="data-comment-id=${comment.id}">
+                                        삭제
+                                    </button>
+                                </div>
+                            </div>
+                            <span th:text="${comment.createdAt}"></span>
+                        </div>
+                        <p th:text="${comment.content}"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    const questionId = /*[[${question.id}]]*/ 0;
+
+    const deleteQuestionBtn = document.getElementById("deleteQuestionBtn");
+    const commentDeleteButtons = document.querySelectorAll(".comment-delete-btn");
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+    deleteQuestionBtn.addEventListener("click", function () {
+        if (!confirm("정말 이 문제를 삭제하시겠습니까?")) {
+            return;
+        }
+
+        fetch(`/questionboard/admin/questionboard/${questionId}/questionboard-delete`, {
+            method: "POST",
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("문제 삭제에 실패했습니다.");
+                }
+                alert("문제가 삭제되었습니다.");
+                location.href = "/questionboard/admin/questionboard";
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message);
+            });
+    });
+
+    commentDeleteButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const commentId = this.dataset.commentId;
+
+            if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+                return;
+            }
+
+            fetch(`/questionboard/admin/questionboard/${questionId}/comments/${commentId}`, {
+                method: "DELETE"
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("댓글 삭제에 실패했습니다.");
+                    }
+                    alert("댓글이 삭제되었습니다.");
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert(error.message);
+                });
+        });
+    });
+</script>
+</body>
+</html>

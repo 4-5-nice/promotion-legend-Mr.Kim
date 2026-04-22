@@ -1,0 +1,487 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Pretendard", "Noto Sans KR", sans-serif;
+    background: #f7f7f9;
+    color: #222;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== 왼쪽 배너 ===== */
+.sidebar {
+    width: 300px;
+    background: #f0f0f3;
+    padding: 28px 0 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.portal-title {
+    padding: 0 32px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1f1d6b;
+    margin-bottom: 44px;
+}
+
+.profile-box {
+    text-align: center;
+    margin-bottom: 26px;
+    padding: 0 20px;
+}
+
+.profile-img {
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 16px;
+    border-radius: 16px;
+    background: #1f1d6b;
+}
+
+.profile-box h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #1f1d6b;
+}
+
+.profile-box p {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #9a9aac;
+    line-height: 1.5;
+}
+
+.side-nav {
+    display: flex;
+    flex-direction: column;
+    margin-top: 6px;
+}
+
+/* ===== 왼쪽 메뉴 버튼 ===== */
+.nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    padding: 0 32px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #8f90a6;
+    background: transparent;
+    transition: all 0.18s ease;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.45);
+    color: #1f1d6b;
+}
+
+.nav-item.active {
+    background: #ffffff;
+    color: #1f1d6b;
+    font-weight: 700;
+}
+
+.nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #d2aa46;
+}
+
+.nav-alert-badge {
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #d9534f;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* ===== 본문 ===== */
+.content {
+    flex: 1;
+    min-width: 0;
+    background: #f7f7f9;
+    padding: 18px 46px 34px;
+}
+
+/* ===== 상단 헤더 ===== */
+.top-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e3e3e8;
+    margin-bottom: 42px;
+}
+
+.home-title-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: #1f1d6b;
+    cursor: pointer;
+    letter-spacing: -0.3px;
+}
+
+/* ===== 자유게시판 전체 래퍼 ===== */
+.freeboard-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 1280px;
+}
+
+/* ===== 히어로 영역 ===== */
+.board-hero {
+    position: relative;
+    min-height: 240px;
+    margin-bottom: 26px;
+    padding-right: 300px;
+}
+
+.board-subtitle {
+    margin: 0 0 18px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 5px;
+    color: #9c8540;
+    position: relative;
+    z-index: 2;
+}
+
+.board-title {
+    margin: 0;
+    font-size: 56px;
+    line-height: 1.04;
+    letter-spacing: -1.8px;
+    font-weight: 800;
+    color: #1f1d6b;
+    position: relative;
+    z-index: 2;
+}
+
+.board-desc {
+    margin: 24px 0 0;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #53546a;
+    max-width: 620px;
+    position: relative;
+    z-index: 2;
+}
+
+.board-hero-watermark {
+    position: absolute;
+    right: 0;
+    top: 16px;
+    font-size: 150px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    color: #ececf1;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+/* ===== 툴바 ===== */
+.board-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 22px;
+}
+
+.filter-area {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #f2f2f5;
+    padding: 8px;
+    min-height: 58px;
+    flex: 1;
+    max-width: 760px;
+}
+
+.filter-btn {
+    border: none;
+    background: transparent;
+    min-width: 82px;
+    height: 36px;
+    padding: 0 16px;
+    cursor: pointer;
+    color: #6f7283;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.18s ease;
+}
+
+.filter-btn:hover {
+    color: #1f1d6b;
+}
+
+.filter-btn.active {
+    background: #ffffff;
+    color: #1f1d6b;
+    box-shadow: 0 0 0 1px #ececf2 inset;
+}
+
+.write-area {
+    flex-shrink: 0;
+}
+
+.write-btn {
+    border: none;
+    background: #1f1d6b;
+    color: #ffffff;
+    height: 56px;
+    min-width: 132px;
+    padding: 0 28px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 700;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.write-btn:hover {
+    background: #181654;
+    transform: translateY(-1px);
+}
+
+/* ===== 테이블 영역 ===== */
+.board-table-wrap {
+    width: 100%;
+    background: #ffffff;
+}
+
+.board-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: #ffffff;
+}
+
+.board-table .col-no {
+    width: 80px;
+}
+
+.board-table .col-title {
+    width: auto;
+}
+
+.board-table .col-author {
+    width: 150px;
+}
+
+.board-table .col-views {
+    width: 100px;
+}
+
+.board-table .col-date {
+    width: 170px;
+}
+
+.board-table thead th {
+    height: 56px;
+    background: #f2f2f5;
+    color: #8d8e9b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+}
+
+.board-table tbody tr {
+    background: #ffffff;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.board-table tbody tr:hover {
+    background: #fafafe;
+}
+
+.board-table tbody td {
+    height: 86px;
+    border-top: 1px solid #f0f0f4;
+    color: #2f3040;
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0 12px;
+}
+
+.board-table .td-no {
+    color: #66697a;
+    font-weight: 500;
+}
+
+.board-table .td-title {
+    text-align: left;
+    padding: 0 18px;
+}
+
+.board-table .title-text {
+    display: inline-block;
+    color: #1f1d6b;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.6;
+    word-break: keep-all;
+}
+
+.board-table .td-author,
+.board-table .td-views,
+.board-table .td-date {
+    color: #2f3040;
+    font-size: 14px;
+}
+
+.empty {
+    text-align: center !important;
+    color: #9b9cab !important;
+    font-weight: 500;
+    padding: 40px 20px !important;
+}
+
+/* ===== 페이지네이션 ===== */
+.pagination-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 34px 0 0;
+}
+
+.page-btn {
+    min-width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: #55596d;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.page-btn:hover {
+    color: #1f1d6b;
+}
+
+.page-btn.active {
+    background: #1f1d6b;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(31, 29, 107, 0.18);
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 260px;
+    }
+
+    .content {
+        padding: 18px 28px 30px;
+    }
+
+    .board-hero {
+        padding-right: 180px;
+        min-height: 220px;
+    }
+
+    .board-title {
+        font-size: 48px;
+    }
+
+    .board-hero-watermark {
+        font-size: 110px;
+        top: 34px;
+    }
+}
+
+@media (max-width: 900px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .board-hero {
+        min-height: auto;
+        padding-right: 0;
+    }
+
+    .board-title {
+        font-size: 40px;
+    }
+
+    .board-hero-watermark {
+        display: none;
+    }
+
+    .board-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-area {
+        max-width: none;
+    }
+
+    .write-area {
+        width: 100%;
+    }
+
+    .write-btn {
+        width: 100%;
+    }
+
+    .board-table-scroll {
+        overflow-x: auto;
+    }
+
+    .board-table {
+        min-width: 760px;
+    }
+}

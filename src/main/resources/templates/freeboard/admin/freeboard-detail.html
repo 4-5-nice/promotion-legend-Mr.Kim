@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 자유게시판 상세조회</title>
+    <link rel="stylesheet" href="/css/board/admin-freeboard-detail.css">
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="portal-title">임원 포털</div>
+
+        <div class="profile-box">
+            <div class="profile-img"></div>
+            <h3>김부장</h3>
+            <p>김부장, 수석 이사</p>
+        </div>
+
+        <button type="button" onclick="location.href='/myPage/info'">마이페이지</button>
+        <button type="button" onclick="location.href='/user/enrollments/list'">수강신청</button>
+        <button type="button" onclick="location.href='/questionboard/user/questionboard'">문제게시판</button>
+        <button type="button" onclick="location.href='/freeboard/user/freeboard'">자유게시판</button>
+
+        <button type="button" onclick="location.href='/admin/locked-users'">수강생 계정 관리</button>
+        <button type="button" onclick="location.href='/admin/attendance'">수강생 출결 관리</button>
+        <button type="button" onclick="location.href='/admin/course/section'">강의 및 코스 등록</button>
+        <button type="button" class="active" onclick="location.href='/freeboard/admin/freeboard'">자유게시판 관리</button>
+        <button type="button" onclick="location.href='/questionboard/admin/questionboard'">문제게시판 관리</button>
+    </aside>
+
+    <main class="content">
+
+        <header class="top-header">
+            <button type="button" class="home-title-btn" onclick="location.href='/admin/main'">
+                진급전설 김부장
+            </button>
+        </header>
+
+        <section class="detail-wrap">
+
+            <button type="button" class="back-btn" onclick="location.href='/freeboard/admin/freeboard'">
+                ← 목록으로
+            </button>
+
+            <div class="detail-top">
+                <p class="category">COMMUNICATION HUB</p>
+
+                <div class="title-row">
+                    <h1 th:text="${post.title}">게시글 제목</h1>
+
+                    <div class="action-area">
+                        <form th:action="@{/freeboard/admin/freeboard/{postId}/freeboard-delete(postId=${post.id})}"
+                              method="post"
+                              onsubmit="return confirm('게시글을 삭제하시겠습니까?');">
+                            <button type="submit" class="delete-btn">게시글 삭제</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="meta-box">
+                    <div class="author-icon">♙</div>
+                    <div>
+                        <strong th:text="${post.authorName}">작성자</strong>
+                        <p th:text="${post.createdAt}">2026.04.19 13:00</p>
+                    </div>
+
+                    <div class="post-stats">
+                        <span>👁 <span th:text="${post.viewCount}">0</span></span>
+                        <span>💬 <span th:text="${#lists.size(comments)}">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <article class="post-content">
+                <p th:text="${post.content}">게시글 내용</p>
+            </article>
+
+            <section class="comment-section">
+                <h3>댓글 관리 <span th:text="${#lists.size(comments)}">0</span></h3>
+
+                <div class="comment-list">
+                    <div class="comment-item" th:each="comment : ${comments}">
+                        <div class="comment-avatar"></div>
+
+                        <div class="comment-body">
+                            <div class="comment-top">
+                                <strong th:text="${comment.authorName}">작성자</strong>
+                                <span class="time" th:text="${comment.createdAt}">2026.04.19 13:00</span>
+                            </div>
+
+                            <p th:text="${comment.content}">댓글 내용</p>
+
+                            <div class="comment-action">
+                                <form th:action="@{/freeboard/admin/freeboard/comments/{commentId}/delete(commentId=${comment.id})}"
+                                      method="post"
+                                      onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
+                                    <button type="submit" class="delete-btn small">댓글 삭제</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(comments)}" class="comment-empty">
+                        등록된 댓글이 없습니다.
+                    </div>
+                </div>
+            </section>
+
+        </section>
+
+    </main>
+</div>
+
+</body>
+</html>

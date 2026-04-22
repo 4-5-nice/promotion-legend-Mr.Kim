@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Executive Learning Archive - 신청한 강의 조회</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --navy-primary: #000666;
+            --gold-accent: #735C00;
+            --bg-gray: #F3F3F5;
+            --border-color: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Manrope', 'Noto Sans KR', sans-serif;
+            margin: 0;
+            background-color: #F8F9FB;
+        }
+
+        .layout-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .global-header {
+            height: 64px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-shrink: 0;
+        }
+
+        .content-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .global-sidebar {
+            width: 256px;
+            background: var(--bg-gray);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-profile {
+            padding: 32px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-img-container {
+            width: 64px;
+            height: 80px;
+            margin: 0 auto 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: #D1D5DB;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6B7280;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            color: var(--navy-primary);
+        }
+
+        .sidebar-active {
+            background-color: #FFFFFF !important;
+            color: var(--navy-primary) !important;
+            font-weight: 700 !important;
+            border-right: 4px solid var(--navy-primary);
+        }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .global-main {
+            flex: 1;
+            background: #F8F9FB;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
+
+        .gold-text { color: #C5A059; }
+        .navy-blue { color: #000666; }
+        .navy-bg { background-color: #303866; }
+        .status-badge-complete { background-color: #F8E7A4; color: #8A6D3B; border-radius: 9999px; padding: 2px 12px; font-size: 12px; font-weight: 600; }
+        .status-progressing { color: #A0A0A0; font-style: italic; font-size: 12px; }
+
+        .promotion-bg-text {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 100px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            opacity: 0.05;
+            pointer-events: none;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <header class="global-header">
+        <a href="/" class="hover:opacity-80 transition-opacity">
+            <h1 class="text-[#000666] font-extrabold text-xl tracking-tight">진급전설 김부장</h1>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="bg-[#303866] text-white text-xs px-4 py-2 rounded-sm font-medium hover:bg-[#1a2044] transition-colors">
+                로그아웃
+            </button>
+        </form>
+    </header>
+
+    <div class="content-container">
+        <aside class="global-sidebar">
+            <div class="sidebar-profile">
+                <div class="profile-img-container">
+                    <img alt="User Avatar" class="w-full h-full object-cover" src="/images/profile.png"/>
+                </div>
+                <h3 class="text-lg font-bold text-[#000666]" th:text="${#strings.substring(user.name, 0, 1) + user.rank}">김부장</h3>
+                <p class="text-[10px] text-gray-400 font-medium mt-1 uppercase" th:text="${user.name} + ', 믿겠네'">NAME, 믿겠네</p>
+            </div>
+
+            <nav class="flex-1 mt-4 overflow-y-auto custom-scrollbar">
+                <ul class="space-y-1">
+                    <li><a class="menu-item" href="/myPage/info"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>나의 정보</a></li>
+                    <li><a class="menu-item sidebar-active" href="#"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>신청한 강의 조회</a></li>
+                    <li><a class="menu-item" href="/myPage/attendance"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>출결 조회</a></li>
+                    <li><a class="menu-item" href="/myPage/quizhistory"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>내가 푼 문제</a></li>
+                    <li><a class="menu-item" href="/auth/reset-password"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>비밀번호 변경</a></li>
+                    <li><a class="menu-item" href="/myPage/endjourney"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 12h3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>회원 탈퇴</a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a class="flex items-center text-sm text-gray-500 hover:text-gray-800 transition-colors" href="mailto:support@legeno.com">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>지원
+                </a>
+            </div>
+        </aside>
+
+        <main class="global-main custom-scrollbar p-10">
+            <div class="flex justify-between items-start mb-12">
+                <div>
+                    <span class="gold-text text-sm font-bold tracking-widest uppercase">EXECUTIVE LEARNING ARCHIVE</span>
+                    <h2 class="text-5xl font-black navy-blue mt-2">신청한 강의 조회</h2>
+                </div>
+                <div class="text-right">
+                    <div class="flex items-end justify-end gap-1">
+                        <span class="text-5xl font-black navy-blue" th:text="${user.point}">380</span>
+                        <span class="text-lg font-bold navy-blue mb-1">Pts</span>
+                    </div>
+                    <p class="gold-text text-xs font-bold tracking-widest mt-1">TOTAL PROMOTION POINTS</p>
+                </div>
+            </div>
+
+            <section class="bg-white rounded-lg shadow-sm p-8 mb-12 border border-gray-100 overflow-hidden relative">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                    <tr class="text-[11px] text-gray-400 font-bold border-b border-gray-100">
+                        <th class="pb-6 pl-10">과목명</th>
+                        <th class="pb-6">담당 교수</th>
+                        <th class="pb-6">신청 날짜</th>
+                        <th class="pb-6 pr-10">수강 상태</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                    <tr th:each="enroll : ${appliedCourse}" class="hover:bg-gray-50 transition-colors">
+                        <td class="py-8 pl-10">
+                            <p class="navy-blue font-bold text-base" th:text="${enroll.courseId?.title}">강의 제목</p>
+                            <p class="gold-text text-[10px] font-bold tracking-wider mt-1 uppercase">EXECUTIVE COURSE</p>
+                        </td>
+                        <td class="py-8 text-sm text-gray-600 font-medium" th:text="${enroll.courseId?.instructorName}">교수명</td>
+                        <td class="py-8 text-sm text-gray-500"
+                            th:text="${enroll.startAt != null ? #dates.format(enroll.startAt, 'yyyy.MM.dd') : '-'}">
+                            2023.11.01
+                        </td>
+                        <td class="py-8 pr-10">
+                            <div th:if="${enroll.status == 'IN_PROGRESS'}" class="status-progressing flex flex-col"
+                                 th:with="
+                                    startDate=${enroll.startAt.toInstant().atZone(T(java.time.ZoneId).systemDefault()).toLocalDate()},
+                                    finishDate=${startDate.plusDays(enroll.courseId.duedate)},
+                                    today=${T(java.time.LocalDate).now()},
+                                    daysLeft=${T(java.time.temporal.ChronoUnit).DAYS.between(today, finishDate)}
+                                 ">
+                                <span class="navy-blue font-bold text-sm"
+                                      th:text="${daysLeft > 0 ? 'D-' + daysLeft : (daysLeft == 0 ? 'D-Day' : '기간 만료')}">
+                                    D-7
+                                </span>
+                                <p class="text-[10px] italic">수강 중</p>
+                            </div>
+
+                            <span th:if="${enroll.status == 'COMPLETED'}" class="status-badge-complete"
+                                  th:text="${enroll.finishDate != null ? #dates.format(enroll.finishDate, 'yyyy.MM.dd') : '수강 완료'}">
+                                2023.12.15
+                            </span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(appliedCourse)}">
+                        <td colspan="4" class="py-20 text-center text-gray-400">신청한 강의가 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <div class="grid grid-cols-12 gap-6 relative mb-10">
+                <div class="col-span-4 relative h-80 rounded-lg overflow-hidden group shadow-sm">
+                    <img alt="Office View" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
+                        <p class="text-[10px] gold-text font-bold tracking-widest uppercase mb-1">OFFICE PHILOSOPHY</p>
+                        <h3 class="text-white text-xl font-bold">The Corner Office Mindset</h3>
+                    </div>
+                </div>
+                <div class="col-span-8 bg-white border border-gray-100 rounded-lg p-12 relative overflow-hidden flex flex-col justify-between shadow-sm">
+                    <div class="absolute top-0 right-8 text-[160px] font-black text-gray-100 select-none opacity-50" style="line-height: 0.8;">99</div>
+                    <div class="relative z-10">
+                        <h3 class="text-3xl font-light navy-blue">
+                            Director’s Insight: <span class="gold-text font-bold italic">Continuous Evolution</span>
+                        </h3>
+                        <div class="mt-8 space-y-4">
+                            <p class="text-lg text-gray-600 leading-relaxed font-medium">
+                                "실력 없는 연차는 독이다. 직급이 올라갈수록 당신이 보여줘야 하는 건 '경험'이 아니라 '통찰'이다. 통찰은 멈추지 않는 학습에서 나온다. 오늘 당신이 수강한 이 강의가 단순히 포인트 획득을 넘어, 당신의 다음 승진을 결정짓는 결정적 한 수가 되길 바란다. 김부장은 결과를 내지 않는 공부는 가르치지 않는다."
+                            </p>
+                        </div>
+                    </div>
+                    <div class="relative z-10 flex items-center gap-4 mt-8">
+                        <div class="h-[2px] w-16 bg-[#735C00]"></div>
+                        <span class="text-sm font-bold navy-blue tracking-wider uppercase">SENIOR DIRECTOR 김부장</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="promotion-bg-text">PROMOTION</div>
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

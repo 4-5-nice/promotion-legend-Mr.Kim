@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>진급전설 - 수강생 출결 관리</title>
+    <link rel="stylesheet" th:href="@{/css/usercss/main.css}">
+    <style>
+        .admin-content { padding: 40px; }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .page-header h2 { font-size: 20px; font-weight: bold; color: #1A1C1D; }
+
+        .search-area { display: flex; gap: 10px; }
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            width: 280px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: #000666; }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .admin-table th {
+            background: #F8FAFC;
+            color: #64748B;
+            font-weight: 600;
+            padding: 18px;
+            text-align: left;
+            border-bottom: 2px solid #EDF2F7;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+        .admin-table td {
+            padding: 18px;
+            border-bottom: 1px solid #EDF2F7;
+            color: #1E293B;
+            font-size: 14px;
+        }
+        .admin-table tbody tr:last-child td { border-bottom: none; }
+        .admin-table tbody tr:hover { background: #FAFBFC; }
+
+        .btn-attendance {
+            display: inline-block;
+            background: #6366F1;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-attendance:hover { background: #4F46E5; }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 30px;
+        }
+        .page-link {
+            padding: 8px 14px;
+            border-radius: 6px;
+            background: #fff;
+            border: 1px solid #E2E8F0;
+            color: #64748B;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .page-link:hover { background: #F8FAFC; }
+        .page-link.active { background: #000666; color: #fff; border-color: #000666; }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="profile-section">
+            <!-- 관리자 프로필 -->
+            <div sec:authorize="hasAuthority('ADMIN')" class="profile-info">
+                <div class="profile-img-wrap active admin-outline">
+                    <img th:src="@{/images/userImg/unknown-profile.jpeg}" alt="Admin">
+                </div>
+                <div class="profile-name">
+                    <span th:text="${#authentication.principal.name}">관리자</span> 님
+                </div>
+                <div class="profile-role admin-role">ADMIN</div>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <!-- 공통 메뉴 -->
+            <a th:href="@{/myPage/info}" class="nav-item">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                마이페이지
+            </a>
+            <a th:href="@{/user/enrollments/list}" class="nav-item">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+                수강신청
+            </a>
+            <a th:href="@{/questionboard/user/questionboard}" class="nav-item">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6M7 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><rect x="7" y="2" width="10" height="4" rx="1"/></svg>
+                문제게시판
+            </a>
+            <a th:href="@{/freeboard/user/freeboard}" class="nav-item">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v12H4z"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>
+                자유게시판
+            </a>
+
+            <!-- 관리자 전용 메뉴 -->
+            <a th:href="@{/admin/locked-users}" class="nav-item nav-item--admin-danger">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                수강생 계정 관리
+                <span class="nav-alert-badge"
+                      th:if="${lockedCount != null and lockedCount > 0}"
+                      th:text="${lockedCount}"
+                      style="display:inline-flex"></span>
+            </a>
+            <!-- 현재 페이지: active -->
+            <a th:href="@{/admin/attendance}" class="nav-item nav-item--admin active">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 11l3 3L22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                수강생 출결 관리
+            </a>
+            <a th:href="@{/admin/course/section}" class="nav-item nav-item--admin">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                강의 및 코스 등록
+            </a>
+            <a th:href="@{/freeboard/admin/freeboard}" class="nav-item nav-item--admin">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M4 4h16v12H4z"/>
+                    <path d="M8 20h8M12 16v4"/>
+                </svg>
+                자유게시판 관리
+            </a>
+            <a th:href="@{/questionboard/admin/questionboard}" class="nav-item nav-item--admin">
+                <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 12h6m-6 4h6M7 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/>
+                    <rect x="7" y="2" width="10" height="4" rx="1"/>
+                </svg>
+                문제게시판 관리
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="brand-title">진급전설 김부장</div>
+            <div class="header-actions">
+                <form th:action="@{/logout}" method="post" class="inline-form">
+                    <button type="submit" class="btn-dark">로그아웃</button>
+                </form>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <div class="page-header">
+                <h2>수강생 출결 관리</h2>
+                <form th:action="@{/admin/attendance}" method="get" class="search-area">
+                    <input type="text" name="keyword" th:value="${keyword}"
+                           placeholder="수강생 성함 검색..." class="search-input">
+                    <button type="submit" class="btn-dark" style="padding: 10px 20px;">조회</button>
+                </form>
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, stat : ${users.content}">
+                    <td th:text="${stat.count + (users.number * users.size)}">1</td>
+                    <td th:text="${user.name}" style="font-weight: 600;">성함</td>
+                    <td th:text="${user.email}" style="color: #64748B;">이메일</td>
+                    <td>
+                        <a th:href="@{/myPage/adminattendance/{id}(id=${user.userId})}"
+                           class="btn-attendance">출결 수정</a>
+                    </td>
+                </tr>
+                <tr th:if="${users.empty}">
+                    <td colspan="4" style="text-align:center; padding:50px; color:#94A3B8;">
+                        조회된 수강생이 없습니다.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination" th:if="${users.totalPages > 0}">
+                <th:block th:each="p : ${#numbers.sequence(0, users.totalPages - 1)}">
+                    <a class="page-link"
+                       th:text="${p + 1}"
+                       th:href="@{/admin/attendance(page=${p}, keyword=${keyword})}"
+                       th:classappend="${p == users.number} ? 'active'">1</a>
+                </th:block>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
