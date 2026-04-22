@@ -22,7 +22,7 @@ public class AdminFreeCommentService {
 
     public List<FreeCommentDTO> getComments(Long postId) {
         // 게시글 아이디로 찾은 댓글들을 날짜순으로 찾기
-        return freeCommentRepository.findByPostIdOrderByCreatedAtAsc(postId)
+        return freeCommentRepository.findByPostIdWithUserOrderByCreatedAtAsc(postId)
                 .stream()
                 .map(comment -> new FreeCommentDTO(
                         comment.getId(),

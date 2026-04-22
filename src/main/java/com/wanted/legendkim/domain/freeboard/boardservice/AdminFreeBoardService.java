@@ -25,7 +25,7 @@ public class AdminFreeBoardService {
 
     public List<FreeBoardDTO> getAdminPosts() {
         // 모든 게시글을 날짜순으로 조회
-        return freeBoardPostRepository.findAllByOrderByCreatedAtDesc()
+        return freeBoardPostRepository.findAllWithUserOrderByCreatedAtDesc()
                 .stream()
                 .map(post -> new FreeBoardDTO(
                         post.getId(),

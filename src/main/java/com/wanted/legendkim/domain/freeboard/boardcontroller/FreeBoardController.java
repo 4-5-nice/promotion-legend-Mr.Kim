@@ -106,7 +106,7 @@ public class FreeBoardController {
 
         freeBoardService.editPost(postId, title, content, email); // 게시글 수정하기
 
-        return "redirect:/freeboard/user/freeboard/" + postId; // 다시 상세조회 페이지로 이동
+        return "redirect:/freeboard/user/freeboard/" + postId + "?skipCount=true"; // 다시 상세조회 페이지로 이동
     }
 
     // 글 삭제
