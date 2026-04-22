@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>관리자 문제 상세조회</title>
     <link rel="stylesheet" href="/css/board/admin-questionboard-detail.css">
 </head>
@@ -132,13 +134,19 @@
     const deleteQuestionBtn = document.getElementById("deleteQuestionBtn");
     const commentDeleteButtons = document.querySelectorAll(".comment-delete-btn");
 
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
     deleteQuestionBtn.addEventListener("click", function () {
         if (!confirm("정말 이 문제를 삭제하시겠습니까?")) {
             return;
         }
 
         fetch(`/questionboard/admin/questionboard/${questionId}/questionboard-delete`, {
-            method: "DELETE"
+            method: "POST",
+            headers: {
+                [csrfHeader]: csrfToken
+            }
         })
             .then(response => {
                 if (!response.ok) {

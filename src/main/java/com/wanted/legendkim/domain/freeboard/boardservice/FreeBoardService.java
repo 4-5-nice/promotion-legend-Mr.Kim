@@ -23,23 +23,52 @@ public class FreeBoardService {
     private final FreeBoardUserRepository freeBoardUserRepository;
     private final FreeCommentRepository freeCommentRepository;
 
+//    public List<FreeBoardDTO> getPosts(String filter, String email) {
+//        List<FreeBoardPost> posts;
+//
+//        if ("mine".equalsIgnoreCase(filter)) {// 대소문자 상관 없이 비교한다
+//            // 내가 쓴 글만 조회
+//            FreeBoardUser user = freeBoardUserRepository.findByEmail(email) // 이메일로 사용자 찾기
+//                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+//                                        // 없으면 오류 반환
+//
+//            posts = freeBoardPostRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+//                                        // 이 사용자의 글을 최신순으로 가져오기
+//        } else {// 전체 글 조회
+//            posts = freeBoardPostRepository.findAllByOrderByCreatedAtDesc();
+//                                        // 모든 글을 최신순으로 가져오기
+//        }
+//
+//        return posts.stream()
+//                .map(post -> new FreeBoardDTO(
+//                        post.getId(),
+//                        post.getTitle(),
+//                        post.getUser().getName(),
+//                        post.getViewCount(),
+//                        post.getCreatedAt().toLocalDate().toString()
+//                ))
+//                .toList();
+//        // entity 를 하나씩 꺼내서 DTO로 변환
+//    }
+
+    @Transactional(readOnly = true)
     public List<FreeBoardDTO> getPosts(String filter, String email) {
+
         List<FreeBoardPost> posts;
 
-        if ("mine".equalsIgnoreCase(filter)) {// 대소문자 상관 없이 비교한다
-            // 내가 쓴 글만 조회
-            FreeBoardUser user = freeBoardUserRepository.findByEmail(email) // 이메일로 사용자 찾기
-                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-                                        // 없으면 오류 반환
+        if ("mine".equalsIgnoreCase(filter)) {
 
-            posts = freeBoardPostRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
-                                        // 이 사용자의 글을 최신순으로 가져오기
-        } else {// 전체 글 조회
-            posts = freeBoardPostRepository.findAllByOrderByCreatedAtDesc();
-                                        // 모든 글을 최신순으로 가져오기
+            FreeBoardUser user = freeBoardUserRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+            posts = freeBoardPostRepository.findByUserIdWithUserOrderByCreatedAtDesc(user.getId());
+        } else {
+            posts = freeBoardPostRepository.findAllWithUserOrderByCreatedAtDesc();
         }
 
-        return posts.stream()
+        System.out.println("========== [getPosts DTO 변환 시작] ==========");
+        long mapStart = System.currentTimeMillis();
+
+        List<FreeBoardDTO> result = posts.stream()
                 .map(post -> new FreeBoardDTO(
                         post.getId(),
                         post.getTitle(),
@@ -48,7 +77,13 @@ public class FreeBoardService {
                         post.getCreatedAt().toLocalDate().toString()
                 ))
                 .toList();
-        // entity 를 하나씩 꺼내서 DTO로 변환
+
+        long mapEnd = System.currentTimeMillis();
+        double mapMs = (mapEnd - mapStart) / 1_000_000.0;
+        System.out.println("[getPosts] DTO 변환 시간 = " + mapMs + "ms");
+        System.out.println("========== [getPosts DTO 변환 종료] ==========");
+
+        return result;
     }
 
     @Transactional
@@ -150,7 +185,7 @@ public class FreeBoardService {
 
     @Transactional(readOnly = true)
     public List<FreeBoardDTO> getAdminPosts() {
-        return freeBoardPostRepository.findAllByOrderByCreatedAtDesc()
+        return freeBoardPostRepository.findAllWithUserOrderByCreatedAtDesc()
                 .stream()
                 .map(post -> new FreeBoardDTO(
                         post.getId(),

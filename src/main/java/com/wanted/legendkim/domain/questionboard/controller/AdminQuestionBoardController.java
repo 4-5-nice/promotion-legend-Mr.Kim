@@ -51,10 +51,10 @@ public class AdminQuestionBoardController {
     }
 
     // 문제삭제하기
-    @DeleteMapping("/{questionId}/questionboard-delete")
+    @PostMapping("/{questionId}/questionboard-delete")
     @ResponseBody
     public ResponseEntity<String> deleteQuestion(@PathVariable Long questionId) {
         adminQuestionBoardService.deleteQuestion(questionId); // 문제 아이디로 삭제
-        return ResponseEntity.ok("문제가 삭제되었습니다."); // 알림 메세지 전달
+        return ResponseEntity.ok().build(); // 알림 메세지 전달
     }
 }

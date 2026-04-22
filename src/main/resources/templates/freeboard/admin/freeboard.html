@@ -109,10 +109,10 @@
             return;
         }
 
-        posts.forEach(post => {
+        posts.forEach((post, index) => {
             tbody.insertAdjacentHTML("beforeend", `
                 <tr class="post-row" data-post-id="${post.id}">
-                    <td>${post.id}</td>
+                    <td class="td-no">${posts.length - index}</td>
                     <td class="title">${post.title}</td>
                     <td>${post.authorName}</td>
                     <td>${post.viewCount}</td>

@@ -54,11 +54,30 @@ public class FreeCommentService {
         freeCommentRepository.save(freeComment);
     }
 
-    // 댓글 가져오기
+//    // 댓글 가져오기
+//    public List<FreeCommentDTO> getComments(Long postId, String email) {
+//        return freeCommentRepository.findByPostIdOrderByCreatedAtAsc(postId)
+//                                  // 게시글 아이디로 댓글들을 날짜순으로 조회
+//                .stream()
+//                .map(comment -> new FreeCommentDTO(
+//                        comment.getId(),
+//                        comment.getUser().getName(),
+//                        comment.getContent(),
+//                        comment.getCreatedAt().format(COMMENT_DATE_FORMATTER),
+//                        email != null && comment.getUser().getEmail().equals(email)
+//                ))
+//                .toList();
+//    } // entity를 하나씩 빼서 FreeCommentDTO 리스트로 바꿔서 반환
+
     public List<FreeCommentDTO> getComments(Long postId, String email) {
-        return freeCommentRepository.findByPostIdOrderByCreatedAtAsc(postId)
-                                  // 게시글 아이디로 댓글들을 날짜순으로 조회
-                .stream()
+
+        List<FreeComment> comments = freeCommentRepository.findByPostIdWithUserOrderByCreatedAtAsc(postId);
+
+        System.out.println("========== [getComments DTO 변환 시작] ==========");
+
+        long mapStart = System.nanoTime();
+
+        List<FreeCommentDTO> result = comments.stream()
                 .map(comment -> new FreeCommentDTO(
                         comment.getId(),
                         comment.getUser().getName(),
@@ -67,7 +86,15 @@ public class FreeCommentService {
                         email != null && comment.getUser().getEmail().equals(email)
                 ))
                 .toList();
-    } // entity를 하나씩 빼서 FreeCommentDTO 리스트로 바꿔서 반환
+
+        long mapEnd = System.nanoTime();
+
+        double mapMs = (mapEnd - mapStart) / 1_000_000.0;
+        System.out.println("[getComments] DTO 변환 시간 = " + mapMs + "ms");
+        System.out.println("========== [getComments DTO 변환 종료] ==========");
+
+        return result;
+    }
 
     @Transactional
     public Long editComment(Long commentId, String content, String email) {
