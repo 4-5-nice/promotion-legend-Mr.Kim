@@ -435,8 +435,8 @@
                 }
                 return response.json();
             })
-            .then(result => {
-                applySolvedState(Number(result.myAnswer), Number(result.correctAnswer));
+            .then(() => {
+                location.href = `${questionBasePath}/${questionId}`;
             })
             .catch(error => {
                 console.error(error);

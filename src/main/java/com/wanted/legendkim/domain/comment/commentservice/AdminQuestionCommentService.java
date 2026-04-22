@@ -22,6 +22,7 @@ public class AdminQuestionCommentService {
     private static final DateTimeFormatter COMMENT_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
+
     public List<QuestionCommentDTO> getComments(Long questionId) {
         questionBoardRepository.findById(questionId) // 문제 아이디로 문제 정보 찾기
                 .orElseThrow(() -> new IllegalArgumentException("문제를 찾을 수 없습니다."));
