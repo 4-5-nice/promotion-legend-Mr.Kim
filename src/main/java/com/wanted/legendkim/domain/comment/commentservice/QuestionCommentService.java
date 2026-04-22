@@ -42,6 +42,10 @@ public class QuestionCommentService {
             throw new IllegalArgumentException("문제를 풀어야 댓글을 볼 수 있습니다.");
         }
 
+        System.out.println("questionId = " + questionId);
+        System.out.println("userId = " + user.getId());
+        System.out.println("solved = " + solved);
+
         // true 라면?                    문제 아이디로 찾은 댓글들을 날짜순으로 찾기
         return questionCommentRepository.findByQuestion_IdOrderByCreatedAtAsc(questionId)
                 .stream()
